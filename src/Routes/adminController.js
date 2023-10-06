@@ -37,6 +37,11 @@ const removePatient = async (req, res) => {
   }
 };
 
+
+const getPatient = async (req, res) => {
+    //Req. 22 code here
+}
+
 //---------------------------------------PHARMACIST-----------------------------------------------
 
 const removePharmacist = async (req, res) => {
@@ -51,6 +56,10 @@ const removePharmacist = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+const getPharmacist = async (req, res) => {
+    //Req. 23 code here
+}
 
 //---------------------------------------PHARMACIST REGISTRATION REQUESTS-----------------------------------------------
 
