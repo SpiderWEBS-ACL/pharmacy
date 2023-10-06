@@ -13,6 +13,16 @@ const registerPharmacist = async (req, res) => {
   }
 };
 
+//------------------------------------MEDICINE------------------------------------
+
+const addMedicine = async (req, res) => {
+    //Req. 16 code here
+}
+
+const updateMedicine = async (req, res) => {
+    //Req. 18 code here
+}
+
 //---------------------------------------EXPORTS-----------------------------------------------
 
 module.exports = {
