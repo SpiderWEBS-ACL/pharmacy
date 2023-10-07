@@ -1,5 +1,6 @@
 const pharmacistModel = require("../Models/Pharmacist");
 const PharmacistRegisterRequestModel = require("../Models/PharmacistRegisterRequest");
+const medicineModel = require("../Models/Medicine");
 const { default: mongoose } = require("mongoose");
 
 //---------------------------------------REGISTRATION REQUEST-----------------------------------------------
@@ -15,6 +16,30 @@ const registerPharmacist = async (req, res) => {
 
 //------------------------------------MEDICINE------------------------------------
 
+const getMedicineDetails = async (req , res) => {
+  try {
+    const MedicineDetails = await MedicineModel.find({});
+    res.status(200).json(MedicineDetails);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+const filterMedicineByMedicinalUse = async (req,res) => {
+  const medicinalUse = req.body.MedicinalUse;
+  if (medicinalUse==null) {
+      return res.status(400).json({ error: 'MedicinalUse parameter is required' });
+    }
+  try{
+      const medicine = await medicineModel.find({ MedicinalUse: { $regex: medicinalUse, $options: "i"} }); 
+      res.status(200).json(medicine);
+  } catch (error) {
+      res.status(500).json({ error: 'An error occurred while searching' });
+  }
+};
+
+
 const addMedicine = async (req, res) => {
     //Req. 16 code here
 }
@@ -27,4 +52,5 @@ const updateMedicine = async (req, res) => {
 
 module.exports = {
   registerPharmacist,
+  filterMedicineByMedicinalUse
 };
