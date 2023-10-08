@@ -3,6 +3,17 @@ const PharmacistRegisterRequestModel = require("../Models/PharmacistRegisterRequ
 const MedicineModel = require("../Models/Medicine");
 const { default: mongoose } = require("mongoose");
 
+
+// FOR TESTING
+const addPharmacist = async (req,res) => {
+    try {
+        const newPharm = await pharmacistModel.create(req.body);
+        res.status(201).json(newPharm);
+    }catch(error){
+        res.status(400).json({ error: error.message });
+    }
+}
+
 //---------------------------------------REGISTRATION REQUEST-----------------------------------------------
 
 const registerPharmacist = async (req, res) => {
@@ -24,13 +35,6 @@ const addMedicine = async (req, res) => {
     }catch(error){
         res.status(400).json({ error: error.message });
     }
- 
-
-    //Req. 16 code here
-}
-
-const updateMedicine = async (req, res) => {
-    //Req. 18 code here
 }
 
 const searchForMedicine = async (req,res) => {
@@ -51,5 +55,6 @@ const searchForMedicine = async (req,res) => {
 module.exports = {
   registerPharmacist,
   addMedicine,
-  searchForMedicine
+  searchForMedicine,
+  addPharmacist
 };
