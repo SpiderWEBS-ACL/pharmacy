@@ -88,6 +88,20 @@ const addMedicine = async (req, res) => {
   }
 };
 
+const updateMedicine = async (req,res) => {
+  const id = req.body.id;
+  const updates = req.body;
+  try{
+      const updateMedicine = await MedicineModel.findByIdAndUpdate(id, updates);
+      if(!updateMedicine){
+          return res.status(404).json({error: "Medicine not found "});
+      }
+      res.status(200).json(updateMedicine);
+  }catch(error) { 
+      res.status(500).json({error: error.message});
+  }
+}
+
 const searchForMedicine = async (req, res) => {
   const Name = req.body.Name;
   if (Name == null) {
@@ -114,6 +128,7 @@ module.exports = {
   registerPharmacist,
   addPharmacist,
   addMedicine,
+  updateMedicine,
   searchForMedicine,
   filterMedicineByMedicinalUse,
   getMedicineDetails,
