@@ -61,6 +61,5 @@ app.get("/admin/getpharmacist", getPharmacist);
 //-------------------Pharmacist Routes--------------------
 app.post("/pharmacist/register", registerPharmacist);
 
-
 //------------------Patient Routes---------------------
 app.post("/patient/register", registerPatient);

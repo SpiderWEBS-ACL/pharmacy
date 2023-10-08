@@ -77,6 +77,7 @@ const getPharmacist = async (req, res) => {
     }
 }
 
+
 //---------------------------------------PHARMACIST REGISTRATION REQUESTS-----------------------------------------------
 
 const getAllPharmsRegistrationReqs = async (req, res) => {
