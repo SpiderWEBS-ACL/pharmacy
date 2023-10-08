@@ -3,6 +3,7 @@ const adminModel = require("../Models/Admin");
 const pharmacistModel = require("../Models/Pharmacist");
 const patientModel = require("../Models/Patient");
 const pharmacistRegisterRequestModel = require("../Models/PharmacistRegisterRequest");
+const medicineModel = require("../Models/Medicine");
 
 const { default: mongoose } = require("mongoose");
 
@@ -37,10 +38,24 @@ const removePatient = async (req, res) => {
   }
 };
 
-
 const getPatient = async (req, res) => {
-    //Req. 22 code here
-}
+  try {
+    const id = req.body.id;
+    
+    if(!id){
+      return res.status(404).json({ error: "ID parameter required" });
+    }
+    
+    const patient = await patientModel.findById(id);
+
+    if (!patient) {
+      return res.status(404).json({ error: "Patient Not Found" });
+    }
+    res.status(200).json(patient);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
 //---------------------------------------PHARMACIST-----------------------------------------------
 
@@ -58,8 +73,23 @@ const removePharmacist = async (req, res) => {
 };
 
 const getPharmacist = async (req, res) => {
-    //Req. 23 code here
-}
+  try {
+    const id = req.body.id;
+
+    if(!id){
+      return res.status(404).json({ error: "ID parameter required" });
+    }
+
+    const pharmacist = await pharmacistModel.findById(id);
+
+    if (!pharmacist) {
+      return res.status(404).json({ error: "Pharmacist Not Found" });
+    }
+    res.status(200).json(pharmacist);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
 //---------------------------------------PHARMACIST REGISTRATION REQUESTS-----------------------------------------------
 
@@ -95,4 +125,6 @@ module.exports = {
   removePatient,
   getAllPharmsRegistrationReqs,
   getPharmRegistrationReqDetails,
+  getPatient,
+  getPharmacist,
 };

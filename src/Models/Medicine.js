@@ -4,32 +4,36 @@ const Schema = mongoose.Schema;
 const medicineSchema = new Schema(
   {
     Name: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
     Description: {
-        type: String,
-        required: true,
+      type: String,
+      required: false,
     },
     Price: {
-        type: Number,
-        required: true,
+      type: Number,
+      required: true,
     },
     ActiveIngredients: {
-        type: [String],
-        required: true,
+      type: [String],
+      required: true,
     },
-    Quantity:{
-        type: Number,
-        required: true,
+    Quantity: {
+      type: Number,
+      required: true,
     },
-    MedicinalUse:{
-        type: String,
-        required: true,
+    MedicinalUse: {
+      type: String,
+      required: false,
     },
     imageURL: {
-        type: String,
-        required: false,
+      type: String,
+      required: false,
+    },
+    Sales: {
+      type: Number,
+      required: false,
     },
   },
   { timestamps: true }

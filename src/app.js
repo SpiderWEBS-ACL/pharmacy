@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 require("dotenv").config();
 
-const MongoURI = process.env.MONGO_URI;
+const MongoURI = "mongodb+srv://zeinahezzah:el7a2ny%40DB@cluster0.mr96uvv.mongodb.net/Pharmacy";
 const PORT = process.env.PORT || "5000";
 
 //-------------------IMPORT MODELS---------------------------
@@ -13,10 +13,26 @@ const {
   removePatient,
   getAllPharmsRegistrationReqs,
   getPharmRegistrationReqDetails,
+  getPatient,
+  getPharmacist,
 } = require("./Routes/adminController");
-const { registerPharmacist, addPharmacist } = require("./Routes/pharmacistController");
+
+const {
+  registerPharmacist,
+  addPharmacist,
+  addMedicine,
+  updateMedicine,
+  getMedicineDetails,
+  getMedicineQuantitySales,
+} = require("./Routes/pharmacistController");
+
 const { registerPatient } = require("./Routes/patientController");
-const Pharmacist = require("./Models/Pharmacist");
+
+const {
+  getAllMedicines,
+  searchForMedicine,
+  filterMedicineByMedicinalUse,
+} = require("./Routes/medicineController");
 
 //----------------------CONFIGURATIONS------------------------
 
@@ -24,7 +40,7 @@ const app = express();
 
 // MongoDB Connection
 mongoose
-  .connect(MongoURI,{ useNewUrlParser: true })
+  .connect(MongoURI, { useNewUrlParser: true })
   .then(() => {
     console.log("MongoDB is now connected!");
     // Starting server
@@ -39,11 +55,9 @@ app.get("/", (req, res) => {
 });
 app.use(express.json());
 
+//---------------------------------------ENDPOINTS-----------------------------------------------
 
-//---------------------------------------ROUTES-----------------------------------------------
-
-
-//-----------------Admin Routes---------------------
+//-----------------Admin Endpoints---------------------
 app.post("/admin/addAdmin", addAdmin);
 
 app.delete("/admin/removePharmacist", removePharmacist);
@@ -51,13 +65,24 @@ app.delete("/admin/removePatient", removePatient);
 
 app.get("/admin/registrationRequests", getAllPharmsRegistrationReqs);
 app.get("/admin/registrationRequestDetails", getPharmRegistrationReqDetails);
+app.get("/admin/getPatient", getPatient);
+app.get("/admin/getPharmacist", getPharmacist);
 
-//-------------------Pharmacist Routes--------------------
+//-------------------Pharmacist Endpoints--------------------
 app.post("/pharmacist/addPharmacist", addPharmacist);
 app.post("/pharmacist/register", registerPharmacist);
 
-//------------------Patient Routes---------------------
+app.post("/pharmacist/addMedicine", addMedicine),
+app.put("/pharmacist/updateMedicine", updateMedicine),
+app.get("/pharmacist/getMedicineDetails", getMedicineDetails);
+app.get("/pharmacist/getMedicineQuantitySales", getMedicineQuantitySales);
+
+//------------------Patient Endpoints---------------------
 app.post("/patient/register", registerPatient);
 
+//------------------Medicine Endpoints------------------
+app.get("/medicine/viewMedicines", getAllMedicines),
 
+app.get("/medicine/searchForMedicine", searchForMedicine);
+app.get("/medicine/filterMedicineByMedicinalUse", filterMedicineByMedicinalUse);
 
