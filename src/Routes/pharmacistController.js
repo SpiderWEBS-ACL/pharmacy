@@ -25,6 +25,30 @@ const registerPharmacist = async (req, res) => {
 };
 
 //------------------------------------MEDICINE------------------------------------
+const getMedicineDetails = async (req , res) => {
+  try {
+    const medicineDetails = await medicineModel.find({}, 'Name Quantity Sales');
+     res.status(200).json(medicineDetails);
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+const filterMedicineByMedicinalUse = async (req,res) => {
+  const medicinalUse = req.body.MedicinalUse;
+  if (medicinalUse==null) {
+      return res.status(400).json({ error: 'MedicinalUse parameter is required' });
+    }
+  try{
+      const medicine = await medicineModel.find({ MedicinalUse: { $regex: medicinalUse, $options: "i"} }); 
+      res.status(200).json(medicine);
+  } catch (error) {
+      res.status(500).json({ error: 'An error occurred while searching' });
+  }
+};
+
 
 const addMedicine = async (req, res) => {
   try {
@@ -62,4 +86,6 @@ module.exports = {
   addPharmacist,
   addMedicine,
   searchForMedicine,
+  filterMedicineByMedicinalUse,
+  getMedicineDetails,
 };

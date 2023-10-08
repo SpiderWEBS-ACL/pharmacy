@@ -18,6 +18,8 @@ const {
 const {
   registerPharmacist,
   addPharmacist,
+  filterMedicineByMedicinalUse, 
+  getMedicineDetails,
 } = require("./Routes/pharmacistController");
 
 const {
@@ -58,17 +60,22 @@ app.get("/admin/registrationRequests", getAllPharmsRegistrationReqs);
 app.get("/admin/registrationRequestDetails", getPharmRegistrationReqDetails);
 
 app.get("/admin/searchForMedicine", searchForMedicine);
+app.get("/admin/filterMedicineByMedicinalUse", filterMedicineByMedicinalUse);
 
 //-------------------Pharmacist Routes--------------------
 app.post("/pharmacist/addPharmacist", addPharmacist);
 app.post("/pharmacist/register", registerPharmacist);
 
 app.get("/pharmacist/searchForMedicine", searchForMedicine);
+app.get("/pharmacist/filterMedicineByMedicinalUse", filterMedicineByMedicinalUse);
+app.get("/pharmacist/getMedicineDetails", getMedicineDetails);
+
+
+
 
 //------------------Patient Routes---------------------
 app.post("/patient/register", registerPatient);
 
 app.get("/patient/searchForMedicine", searchForMedicine);
-
-
+app.get("/patient/filterMedicineByMedicinalUse", filterMedicineByMedicinalUse);
 
