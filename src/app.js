@@ -69,3 +69,6 @@ app.get("/pharmacist/searchForMedicine", searchForMedicine);
 app.post("/patient/register", registerPatient);
 
 app.get("/patient/searchForMedicine", searchForMedicine);
+
+
+
