@@ -18,15 +18,18 @@ const {
 const {
   registerPharmacist,
   addPharmacist,
-  filterMedicineByMedicinalUse, 
-  getMedicineDetails,
-  getMedicineQuantitySales,
 } = require("./Routes/pharmacistController");
 
+const { registerPatient } = require("./Routes/patientController");
+
 const {
-  registerPatient,
+  addMedicine,
+  updateMedicine,
   searchForMedicine,
-} = require("./Routes/patientController");
+  filterMedicineByMedicinalUse,
+  getMedicineDetails,
+  getMedicineQuantitySales,
+} = require("./Routes/medicineController");
 
 //----------------------CONFIGURATIONS------------------------
 
@@ -49,9 +52,9 @@ app.get("/", (req, res) => {
 });
 app.use(express.json());
 
-//---------------------------------------ROUTES-----------------------------------------------
+//---------------------------------------ENDPOINTS-----------------------------------------------
 
-//-----------------Admin Routes---------------------
+//-----------------Admin Endpoints---------------------
 app.post("/admin/addAdmin", addAdmin);
 
 app.delete("/admin/removePharmacist", removePharmacist);
@@ -60,21 +63,17 @@ app.delete("/admin/removePatient", removePatient);
 app.get("/admin/registrationRequests", getAllPharmsRegistrationReqs);
 app.get("/admin/registrationRequestDetails", getPharmRegistrationReqDetails);
 
-app.get("/admin/searchForMedicine", searchForMedicine);
-app.get("/admin/filterMedicineByMedicinalUse", filterMedicineByMedicinalUse);
-
-//-------------------Pharmacist Routes--------------------
+//-------------------Pharmacist Endpoints--------------------
 app.post("/pharmacist/addPharmacist", addPharmacist);
 app.post("/pharmacist/register", registerPharmacist);
 
-app.get("/pharmacist/searchForMedicine", searchForMedicine);
-app.get("/pharmacist/filterMedicineByMedicinalUse", filterMedicineByMedicinalUse);
-app.get("/pharmacist/getMedicineDetails", getMedicineDetails);
-app.get("/pharmacist/getMedicineQuantitySales", getMedicineQuantitySales);
-
-//------------------Patient Routes---------------------
+//------------------Patient Endpoints---------------------
 app.post("/patient/register", registerPatient);
 
-app.get("/patient/searchForMedicine", searchForMedicine);
-app.get("/patient/filterMedicineByMedicinalUse", filterMedicineByMedicinalUse);
-
+//------------------Medicine Endpoints------------------
+app.post("/medicine/addMedicine", addMedicine),
+app.put("/medicine/updateMedicine", updateMedicine),
+app.get("/medicine/searchForMedicine", searchForMedicine);
+app.get("/medicine/filterMedicineByMedicinalUse", filterMedicineByMedicinalUse);
+app.get("/medicine/getMedicineDetails", getMedicineDetails);
+app.get("/medicine/getMedicineQuantitySales", getMedicineQuantitySales);

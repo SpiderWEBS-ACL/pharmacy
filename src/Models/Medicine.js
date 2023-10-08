@@ -9,7 +9,7 @@ const medicineSchema = new Schema(
     },
     Description: {
       type: String,
-      required: true,
+      required: false,
     },
     Price: {
       type: Number,
@@ -25,16 +25,16 @@ const medicineSchema = new Schema(
     },
     MedicinalUse: {
       type: String,
-      required: true,
+      required: false,
     },
     imageURL: {
       type: String,
       required: false,
     },
     Sales: {
-        type: Number,
-        required: true,
-    }
+      type: Number,
+      required: false,
+    },
   },
   { timestamps: true }
 );
