@@ -15,11 +15,11 @@ const registerPharmacist = async (req, res) => {
 };
 
 //------------------------------------MEDICINE------------------------------------
-
 const getMedicineDetails = async (req , res) => {
   try {
-    const MedicineDetails = await MedicineModel.find({});
-    res.status(200).json(MedicineDetails);
+    const medicineDetails = await medicineModel.find({}, 'Name Quantity Sales');
+     res.status(200).json(medicineDetails);
+
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -52,5 +52,6 @@ const updateMedicine = async (req, res) => {
 
 module.exports = {
   registerPharmacist,
-  filterMedicineByMedicinalUse
+  filterMedicineByMedicinalUse,
+  getMedicineDetails
 };

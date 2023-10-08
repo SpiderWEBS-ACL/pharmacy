@@ -14,7 +14,7 @@ const {
   getAllPharmsRegistrationReqs,
   getPharmRegistrationReqDetails,
 } = require("./Routes/adminController");
-const { registerPharmacist, filterMedicineByMedicinalUse } = require("./Routes/pharmacistController");
+const { registerPharmacist, filterMedicineByMedicinalUse, getMedicineDetails } = require("./Routes/pharmacistController");
 const { registerPatient} = require("./Routes/patientController");
 const Pharmacist = require("./Models/Pharmacist");
 
@@ -58,6 +58,9 @@ app.get("/admin/filterMedicineByMedicinalUse", filterMedicineByMedicinalUse);
 //-------------------Pharmacist Routes--------------------
 app.post("/pharmacist/register", registerPharmacist);
 app.get("/pharmacist/filterMedicineByMedicinalUse", filterMedicineByMedicinalUse);
+app.get("/pharmacist/getMedicineDetails", getMedicineDetails);
+
+
 
 
 //------------------Patient Routes---------------------
