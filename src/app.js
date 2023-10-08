@@ -14,15 +14,13 @@ const {
   getAllPharmsRegistrationReqs,
   getPharmRegistrationReqDetails,
 } = require("./Routes/adminController");
-const { registerPharmacist } = require("./Routes/pharmacistController");
+const { registerPharmacist, addPharmacist } = require("./Routes/pharmacistController");
 const { registerPatient } = require("./Routes/patientController");
 const Pharmacist = require("./Models/Pharmacist");
 
 //----------------------CONFIGURATIONS------------------------
 
 const app = express();
-
-console.log("started");
 
 // MongoDB Connection
 mongoose
@@ -55,7 +53,11 @@ app.get("/admin/registrationRequests", getAllPharmsRegistrationReqs);
 app.get("/admin/registrationRequestDetails", getPharmRegistrationReqDetails);
 
 //-------------------Pharmacist Routes--------------------
+app.post("/pharmacist/addPharmacist", addPharmacist);
 app.post("/pharmacist/register", registerPharmacist);
 
 //------------------Patient Routes---------------------
 app.post("/patient/register", registerPatient);
+
+
+
