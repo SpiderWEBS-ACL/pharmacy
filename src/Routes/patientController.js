@@ -1,6 +1,5 @@
 const patientModel = require("../Models/Patient");
 const medicineModel = require("../Models/Medicine");
-const medicineModel = require("../Models/Medicine");
 const { default: mongoose } = require("mongoose");
 
 //---------------------------------------REGISTRATION-----------------------------------------------

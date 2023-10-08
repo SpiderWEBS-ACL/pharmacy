@@ -20,6 +20,7 @@ const {
   addPharmacist,
   filterMedicineByMedicinalUse, 
   getMedicineDetails,
+  getMedicineQuantitySales,
 } = require("./Routes/pharmacistController");
 
 const {
@@ -69,9 +70,7 @@ app.post("/pharmacist/register", registerPharmacist);
 app.get("/pharmacist/searchForMedicine", searchForMedicine);
 app.get("/pharmacist/filterMedicineByMedicinalUse", filterMedicineByMedicinalUse);
 app.get("/pharmacist/getMedicineDetails", getMedicineDetails);
-
-
-
+app.get("/pharmacist/getMedicineQuantitySales", getMedicineQuantitySales);
 
 //------------------Patient Routes---------------------
 app.post("/patient/register", registerPatient);
