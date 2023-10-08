@@ -18,17 +18,18 @@ const {
 const {
   registerPharmacist,
   addPharmacist,
+  addMedicine,
+  updateMedicine,
+  getMedicineDetails,
+  getMedicineQuantitySales,
 } = require("./Routes/pharmacistController");
 
 const { registerPatient } = require("./Routes/patientController");
 
 const {
-  addMedicine,
-  updateMedicine,
+  getAllMedicines,
   searchForMedicine,
   filterMedicineByMedicinalUse,
-  getMedicineDetails,
-  getMedicineQuantitySales,
 } = require("./Routes/medicineController");
 
 //----------------------CONFIGURATIONS------------------------
@@ -67,13 +68,17 @@ app.get("/admin/registrationRequestDetails", getPharmRegistrationReqDetails);
 app.post("/pharmacist/addPharmacist", addPharmacist);
 app.post("/pharmacist/register", registerPharmacist);
 
+app.post("/pharmacist/addMedicine", addMedicine),
+app.put("/pharmacist/updateMedicine", updateMedicine),
+app.get("/pharmacist/getMedicineDetails", getMedicineDetails);
+app.get("/pharmacist/getMedicineQuantitySales", getMedicineQuantitySales);
+
 //------------------Patient Endpoints---------------------
 app.post("/patient/register", registerPatient);
 
 //------------------Medicine Endpoints------------------
-app.post("/medicine/addMedicine", addMedicine),
-app.put("/medicine/updateMedicine", updateMedicine),
+app.get("/medicine/viewMedicines", getAllMedicines),
+
 app.get("/medicine/searchForMedicine", searchForMedicine);
 app.get("/medicine/filterMedicineByMedicinalUse", filterMedicineByMedicinalUse);
-app.get("/medicine/getMedicineDetails", getMedicineDetails);
-app.get("/medicine/getMedicineQuantitySales", getMedicineQuantitySales);
+

@@ -1,28 +1,12 @@
 const medicineModel = require("../Models/Medicine");
 const { default: mongoose } = require("mongoose");
 
-const addMedicine = async (req, res) => {
+const getAllMedicines = async (req, res) => {
   try {
-    const newMedicine = await medicineModel.create(req.body);
-    res.status(201).json(newMedicine);
+    const medicines = await medicineModel.find({});
+    res.status(201).json(medicines);
   } catch (error) {
     res.status(400).json({ error: error.message });
-  }
-};
-
-const updateMedicine = async (req, res) => {
-  const id = req.body.id;
-  const updates = req.body.updates;
-  try {
-    const updatedMedicine = await medicineModel.findByIdAndUpdate(id, updates, {
-      new: true,    // returns updated medicine
-    }); 
-    if (!updatedMedicine) {
-      return res.status(404).json({ error: "Medicine not found " });
-    }
-    res.status(200).json(updatedMedicine);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
   }
 };
 
@@ -68,44 +52,10 @@ const filterMedicineByMedicinalUse = async (req, res) => {
   }
 };
 
-const getMedicineDetails = async (req, res) => {      //Display Quantity/Sales of ALL medicines
-  try {
-    const medicineDetails = await medicineModel.find({}, "Name Quantity Sales");
-    res.status(200).json(medicineDetails);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
 
-const getMedicineQuantitySales = async (req, res) => {    //Quantity/Sales of ONE medicine
-
-  try {
-    const medID = req.body.id;
-
-    if (!medID) {
-      res.status(500).json({ error: "ID required" });
-    }
-
-    const medicineDetails = await medicineModel.findById(
-      medID,
-      "Name Quantity Sales"
-    );
-
-    if (!medicineDetails) {
-      res.status(500).json({ error: "Medicine Not Found" });
-    }
-
-    res.status(200).json(medicineDetails);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
 
 module.exports = {
-  addMedicine,
-  updateMedicine,
+  getAllMedicines,
   searchForMedicine,
   filterMedicineByMedicinalUse,
-  getMedicineDetails,
-  getMedicineQuantitySales,
 };
