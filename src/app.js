@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 require("dotenv").config();
 
-const MongoURI = process.env.MONGO_URI;
+const MongoURI = "mongodb+srv://zeinahezzah:el7a2ny%40DB@cluster0.mr96uvv.mongodb.net/Pharmacy";
 const PORT = process.env.PORT || "5000";
 
 //-------------------IMPORT MODELS---------------------------
@@ -13,6 +13,8 @@ const {
   removePatient,
   getAllPharmsRegistrationReqs,
   getPharmRegistrationReqDetails,
+  getPatient,
+  getPharmacist,
 } = require("./Routes/adminController");
 const { registerPharmacist } = require("./Routes/pharmacistController");
 const { registerPatient } = require("./Routes/patientController");
@@ -26,7 +28,7 @@ console.log("started");
 
 // MongoDB Connection
 mongoose
-  .connect(MongoURI,{ useNewUrlParser: true })
+  .connect("mongodb+srv://zeinahezzah:el7a2ny%40DB@cluster0.mr96uvv.mongodb.net/Pharmacy",{ useNewUrlParser: true })
   .then(() => {
     console.log("MongoDB is now connected!");
     // Starting server
@@ -53,6 +55,8 @@ app.delete("/admin/removePatient", removePatient);
 
 app.get("/admin/registrationRequests", getAllPharmsRegistrationReqs);
 app.get("/admin/registrationRequestDetails", getPharmRegistrationReqDetails);
+app.get("/admin/getPatient", getPatient);
+app.get("/admin/getpharmacist", getPharmacist);
 
 //-------------------Pharmacist Routes--------------------
 app.post("/pharmacist/register", registerPharmacist);
