@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 require("dotenv").config();
 
-const MongoURI = process.env.MONGO_URI;
+const MongoURI = "mongodb+srv://zeinahezzah:el7a2ny%40DB@cluster0.mr96uvv.mongodb.net/Pharmacy";
 const PORT = process.env.PORT || "5000";
 
 //-------------------IMPORT MODELS---------------------------
@@ -13,6 +13,8 @@ const {
   removePatient,
   getAllPharmsRegistrationReqs,
   getPharmRegistrationReqDetails,
+  getPatient,
+  getPharmacist,
 } = require("./Routes/adminController");
 
 const {
@@ -63,6 +65,8 @@ app.delete("/admin/removePatient", removePatient);
 
 app.get("/admin/registrationRequests", getAllPharmsRegistrationReqs);
 app.get("/admin/registrationRequestDetails", getPharmRegistrationReqDetails);
+app.get("/admin/getPatient", getPatient);
+app.get("/admin/getpharmacist", getPharmacist);
 
 //-------------------Pharmacist Endpoints--------------------
 app.post("/pharmacist/addPharmacist", addPharmacist);

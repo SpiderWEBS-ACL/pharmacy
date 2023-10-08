@@ -38,6 +38,19 @@ const removePatient = async (req, res) => {
   }
 };
 
+
+const getPatient = async (req, res) => {
+    try{
+      const id = req.body.id
+      const patient = await patientModel.find({
+        id : id
+      })
+    res.send(patient)
+    } catch (error){
+      res.status(500).json({ error: error.message });
+    }
+}
+
 //---------------------------------------PHARMACIST-----------------------------------------------
 
 const removePharmacist = async (req, res) => {
@@ -52,6 +65,19 @@ const removePharmacist = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+const getPharmacist = async (req, res) => {
+    try{
+      const id = req.body.id
+      const pharmacist = await pharmacistModel.find({
+        id :id
+      })
+      res.send(pharmacist)
+    } catch (error) {
+      res.status(500).json({error: error.message});
+    }
+}
+
 
 //---------------------------------------PHARMACIST REGISTRATION REQUESTS-----------------------------------------------
 
@@ -87,4 +113,6 @@ module.exports = {
   removePatient,
   getAllPharmsRegistrationReqs,
   getPharmRegistrationReqDetails,
+  getPatient,
+  getPharmacist,
 };
