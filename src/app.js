@@ -66,7 +66,7 @@ app.delete("/admin/removePatient", removePatient);
 app.get("/admin/registrationRequests", getAllPharmsRegistrationReqs);
 app.get("/admin/registrationRequestDetails", getPharmRegistrationReqDetails);
 app.get("/admin/getPatient", getPatient);
-app.get("/admin/getpharmacist", getPharmacist);
+app.get("/admin/getPharmacist", getPharmacist);
 
 //-------------------Pharmacist Endpoints--------------------
 app.post("/pharmacist/addPharmacist", addPharmacist);

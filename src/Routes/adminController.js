@@ -38,18 +38,24 @@ const removePatient = async (req, res) => {
   }
 };
 
-
 const getPatient = async (req, res) => {
-    try{
-      const id = req.body.id
-      const patient = await patientModel.find({
-        id : id
-      })
-    res.send(patient)
-    } catch (error){
-      res.status(500).json({ error: error.message });
+  try {
+    const id = req.body.id;
+    
+    if(!id){
+      return res.status(404).json({ error: "ID parameter required" });
     }
-}
+    
+    const patient = await patientModel.findById(id);
+
+    if (!patient) {
+      return res.status(404).json({ error: "Patient Not Found" });
+    }
+    res.status(200).json(patient);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
 //---------------------------------------PHARMACIST-----------------------------------------------
 
@@ -67,17 +73,23 @@ const removePharmacist = async (req, res) => {
 };
 
 const getPharmacist = async (req, res) => {
-    try{
-      const id = req.body.id
-      const pharmacist = await pharmacistModel.find({
-        id :id
-      })
-      res.send(pharmacist)
-    } catch (error) {
-      res.status(500).json({error: error.message});
-    }
-}
+  try {
+    const id = req.body.id;
 
+    if(!id){
+      return res.status(404).json({ error: "ID parameter required" });
+    }
+
+    const pharmacist = await pharmacistModel.findById(id);
+
+    if (!pharmacist) {
+      return res.status(404).json({ error: "Pharmacist Not Found" });
+    }
+    res.status(200).json(pharmacist);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
 //---------------------------------------PHARMACIST REGISTRATION REQUESTS-----------------------------------------------
 
