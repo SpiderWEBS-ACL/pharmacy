@@ -14,9 +14,16 @@ const {
   getAllPharmsRegistrationReqs,
   getPharmRegistrationReqDetails,
 } = require("./Routes/adminController");
-const { registerPharmacist, addPharmacist } = require("./Routes/pharmacistController");
-const { registerPatient, searchForMedicine } = require("./Routes/patientController");
 
+const {
+  registerPharmacist,
+  addPharmacist,
+} = require("./Routes/pharmacistController");
+
+const {
+  registerPatient,
+  searchForMedicine,
+} = require("./Routes/patientController");
 
 //----------------------CONFIGURATIONS------------------------
 
@@ -24,7 +31,7 @@ const app = express();
 
 // MongoDB Connection
 mongoose
-  .connect(MongoURI,{ useNewUrlParser: true })
+  .connect(MongoURI, { useNewUrlParser: true })
   .then(() => {
     console.log("MongoDB is now connected!");
     // Starting server
@@ -39,9 +46,7 @@ app.get("/", (req, res) => {
 });
 app.use(express.json());
 
-
 //---------------------------------------ROUTES-----------------------------------------------
-
 
 //-----------------Admin Routes---------------------
 app.post("/admin/addAdmin", addAdmin);
@@ -54,15 +59,13 @@ app.get("/admin/registrationRequestDetails", getPharmRegistrationReqDetails);
 
 app.get("/admin/searchForMedicine", searchForMedicine);
 
-
-
 //-------------------Pharmacist Routes--------------------
 app.post("/pharmacist/addPharmacist", addPharmacist);
 app.post("/pharmacist/register", registerPharmacist);
+
 app.get("/pharmacist/searchForMedicine", searchForMedicine);
 
 //------------------Patient Routes---------------------
 app.post("/patient/register", registerPatient);
+
 app.get("/patient/searchForMedicine", searchForMedicine);
-
-
