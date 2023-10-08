@@ -6,8 +6,13 @@ const { default: mongoose } = require("mongoose");
 // FOR TESTING
 const addPharmacist = async (req, res) => {
   try {
-    const newPharm = await pharmacistModel.create(req.body);
-    res.status(201).json(newPharm);
+    const exists = await pharmacistModel.findOne({ Username: req.body.Username });
+    if (!exists) {
+      const newPharm = await pharmacistModel.create(req.body);
+      res.status(201).json(newPharm);
+    } else {
+      res.status(400).json({ error: "Username Already Taken!" });
+    }
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -17,8 +22,15 @@ const addPharmacist = async (req, res) => {
 
 const registerPharmacist = async (req, res) => {
   try {
-    const newPharm = await PharmacistRegisterRequestModel.create(req.body);
-    res.status(201).json(newPharm);
+    const exists = await pharmacistModel.findOne({ Username: req.body.Username });    //check already registered pharmacists AND requests sent
+    const reqExists = await PharmacistRegisterRequestModel.findOne({ Username: req.body.Username });  
+    
+    if (!exists && !reqExists) {
+      const newPharm = await PharmacistRegisterRequestModel.create(req.body);
+      res.status(201).json(newPharm);
+    } else {
+      res.status(400).json({ error: "Username Already Taken!" });
+    }
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
