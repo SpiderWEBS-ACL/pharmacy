@@ -1,34 +1,102 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import React, { useState } from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  Routes,
+  useNavigate,
+} from "react-router-dom";
+import { Layout, Menu } from "antd";
+import {
+  HomeOutlined,
+  FileOutlined,
+  UserOutlined,
+  PoweroffOutlined,
+} from "@ant-design/icons";
+import AppRouter from "./AppRouter";
 
-function App() {
-  const [count, setCount] = useState(0)
+const { Header, Content, Footer, Sider } = Layout;
+
+const App: React.FC = () => {
+  const [collapsed, setCollapsed] = useState(false);
+  const navigate = useNavigate();
+  const items = [
+    {
+      label: "Home",
+      key: "/admin/",
+      icon: <HomeOutlined />,
+    },
+    {
+      label: "Admin",
+      icon: <UserOutlined />,
+      key: "parent1",
+      children: [
+        { label: "Admins", key: "/admin/Admins" },
+        { label: "Add Admin", key: "/admin/add" },
+      ],
+    },
+    {
+      label: "Patients",
+      key: "/admin/Patients",
+      icon: <UserOutlined />,
+    },
+    {
+      label: "Doctor",
+      icon: <UserOutlined />,
+      key: "parent",
+      children: [
+        {
+          label: "Doctors",
+          key: "/admin/Doctors",
+        },
+        {
+          label: "Registration Reqs",
+          key: "/admin/registrationRequests",
+        },
+      ],
+    },
+    {
+      label: "Health Packages",
+      key: "/admin/Packages",
+      icon: <FileOutlined />,
+    },
+    {
+      label: "Logout",
+      key: "/admin/logout",
+      icon: <PoweroffOutlined />,
+      danger: true,
+    },
+  ];
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
-  )
-}
+    <Layout style={{ minHeight: "100vh" }}>
+      <Sider
+        collapsible
+        collapsed={collapsed}
+        onCollapse={(value) => setCollapsed(value)}
+      >
+        <div className="demo-logo-vertical" />
+        <Menu
+          onClick={({ key }) => {
+            if (key === "signout") {
+              //TODO signout feature here
+            } else {
+              navigate(key);
+            }
+          }}
+          theme="dark"
+          defaultSelectedKeys={["1"]}
+          mode="inline"
+          items={items}
+        ></Menu>
+      </Sider>
+      <Layout>
+        <Content style={{ margin: "0 16px" }}>
+          <AppRouter />
+        </Content>
+      </Layout>
+    </Layout>
+  );
+};
 
-export default App
+export default App;
