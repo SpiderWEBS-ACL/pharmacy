@@ -9,25 +9,54 @@ const { default: mongoose } = require("mongoose");
 
 //-------------------------------ADMIN-----------------------------
 
-const addAdmin = async (req, res) => {
-  try {
-    const exists = await adminModel.findOne({ Username: req.body.Username });
-    if (!exists) {
-      var newAdmin = await adminModel.create(req.body);
-      res.status(201).json(newAdmin);
-    } else {
-      res.status(400).json({ error: "Username Already Taken!" });
-    }
+const getAllAdmins = async (req,res) =>{
+  try{
+      const admin = await adminModel.find({});
+      res.status(200).json(admin);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
-};
+}
+
+const addAdmin = async (req,res) => {
+  try {
+
+    if(!req.body.Username || !req.body.Password){
+      return res.status(400).json({ error: "Missing Parameters" });
+    }
+
+      const exists = await adminModel.findOne({"Username" : req.body.Username});
+      if(!exists){
+          var newAdmin = await adminModel.create(req.body);
+          res.status(201).json(newAdmin);
+      }
+      else {
+          res.status(400).json({error:  "Username already taken!" });
+      }
+  }catch(error){
+      res.status(400).json({ error: error.message });
+  }
+}
 
 //---------------------------------------PATIENT-----------------------------------------------
 
+const getAllPatients = async (req,res) =>{
+  try{
+      const patient = await patientModel.find({});
+      res.status(200).json(patient);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
 const removePatient = async (req, res) => {
   try {
-    const id = req.body.id;
+    const { id } = req.params;
+
+    if(!id){
+      return res.status(404).json({ error: "ID parameter required" });
+    }
+
     const removedPatient = await patientModel.findByIdAndDelete(id);
     if (!removedPatient) {
       return res.status(404).json({ error: "Patient not found" });
@@ -40,12 +69,12 @@ const removePatient = async (req, res) => {
 
 const getPatient = async (req, res) => {
   try {
-    const id = req.body.id;
+    const { id } = req.params;
     
     if(!id){
       return res.status(404).json({ error: "ID parameter required" });
     }
-    
+
     const patient = await patientModel.findById(id);
 
     if (!patient) {
@@ -59,9 +88,23 @@ const getPatient = async (req, res) => {
 
 //---------------------------------------PHARMACIST-----------------------------------------------
 
+const getAllPharmacists = async (req,res) =>{
+  try{
+      const pharmacists = await pharmacistModel.find({});
+      res.status(200).json(pharmacists);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 const removePharmacist = async (req, res) => {
   try {
-    const id = req.body.id;
+    const { id } = req.params;
+
+    if(!id){
+      return res.status(404).json({ error: "ID parameter required" });
+    }
+
     const removedPharmacist = await pharmacistModel.findByIdAndDelete(id);
     if (!removedPharmacist) {
       return res.status(404).json({ error: "Pharmacist not found" });
@@ -74,7 +117,7 @@ const removePharmacist = async (req, res) => {
 
 const getPharmacist = async (req, res) => {
   try {
-    const id = req.body.id;
+    const { id } = req.params;
 
     if(!id){
       return res.status(404).json({ error: "ID parameter required" });
@@ -104,8 +147,14 @@ const getAllPharmsRegistrationReqs = async (req, res) => {
 
 const getPharmRegistrationReqDetails = async (req, res) => {
   try {
-    const id = req.body.id;
+    const { id } = req.params;
+    
+    if(!id){
+      return res.status(404).json({ error: "ID parameter required" });
+    }
+
     const RegistrationReq = await pharmacistRegisterRequestModel.findById(id);
+
     if (!RegistrationReq) {
       return res
         .status(404)
@@ -120,7 +169,10 @@ const getPharmRegistrationReqDetails = async (req, res) => {
 //---------------------------------------EXPORTS-----------------------------------------------
 
 module.exports = {
+  getAllAdmins,
   addAdmin,
+  getAllPatients,
+  getAllPharmacists,
   removePharmacist,
   removePatient,
   getAllPharmsRegistrationReqs,
