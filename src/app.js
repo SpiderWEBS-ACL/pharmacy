@@ -1,10 +1,12 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require('cors');
+mongoose.set('strictQuery', false);
 require("dotenv").config();
 
-//mongouri is in .env file
+
 //const MongoURI = "mongodb+srv://zeinahezzah:el7a2ny%40DB@cluster0.mr96uvv.mongodb.net/Pharmacy";
+const MongoURI = process.env.MongoURI
 const PORT = process.env.PORT || "5000";
 
 //-------------------IMPORT MODELS---------------------------
@@ -43,6 +45,7 @@ const {
 
 const app = express();
 app.use(cors());
+
 
 // MongoDB Connection
 mongoose
