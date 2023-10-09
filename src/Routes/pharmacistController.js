@@ -6,12 +6,16 @@ const { default: mongoose } = require("mongoose");
 // FOR TESTING
 const addPharmacist = async (req, res) => {
   try {
-    const exists = await pharmacistModel.findOne({ Username: req.body.Username });
-    if (!exists) {
+    const exists = await pharmacistModel.findOne({ "Username": req.body.Username });
+    const exists2 = await pharmacistModel.findOne({"Email" : req.body.Email});
+    if (!exists && !exists2) {
       const newPharm = await pharmacistModel.create(req.body);
       res.status(201).json(newPharm);
-    } else {
-      res.status(400).json({ error: "Username Already Taken!" });
+    }  
+    else if(exists){
+      res.status(400).json({error:  "Username already taken!" });
+    } else{
+        res.status(400).json({error:  "Email already registered!" });
     }
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -22,14 +26,18 @@ const addPharmacist = async (req, res) => {
 
 const registerPharmacist = async (req, res) => {
   try {
-    const exists = await pharmacistModel.findOne({ Username: req.body.Username });    //check already registered pharmacists AND requests sent
-    const reqExists = await PharmacistRegisterRequestModel.findOne({ Username: req.body.Username });  
-    
-    if (!exists && !reqExists) {
-      const newPharm = await PharmacistRegisterRequestModel.create(req.body);
-      res.status(201).json(newPharm);
-    } else {
-      res.status(400).json({ error: "Username Already Taken!" });
+    const exists = await pharmacistModel.findOne({"Username" : req.body.Username});
+    const exists2 = await PharmacistRegisterRequestModel.findOne({"Username" : req.body.Username});
+    const exists3 = await pharmacistModel.findOne({"Email" : req.body.Email});
+    const exists4 = await PharmacistRegisterRequestModel.findOne({"Email" : req.body.Email});
+    if(!exists && !exists2 && !exists3 && !exists4){
+        var newPharm = await PharmacistRegisterRequestModel.create(req.body);
+        res.status(201).json(newPharm);
+    }
+    else if(exists || exists2){
+        res.status(400).json({error:  "Username already taken!" });
+    }else{
+        res.status(400).json({error:  "Email already registered!" });
     }
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -40,7 +48,6 @@ const registerPharmacist = async (req, res) => {
 
 const addMedicine = async (req, res) => {
   try {
-
     const exists = await medicineModel.findOne({ Name: req.body.Name });
     if (!exists) {
       const newMedicine = await medicineModel.create(req.body);
@@ -54,7 +61,7 @@ const addMedicine = async (req, res) => {
 };
 
 const updateMedicine = async (req, res) => {
-  const id = req.body.id;
+  const { id } = req.params;
   const updates = req.body.updates;
   try {
     const updatedMedicine = await medicineModel.findByIdAndUpdate(id, updates, {
@@ -79,9 +86,8 @@ const getMedicineDetails = async (req, res) => {    //Display Quantity/Sales of 
 };
 
 const getMedicineQuantitySales = async (req, res) => {    //Quantity/Sales of ONE medicine
+  const medID = req.params.id;
   try {
-    const medID = req.body.id;
-
     if (!medID) {
       res.status(500).json({ error: "ID required" });
     }

@@ -15,6 +15,9 @@ const {
   getPharmRegistrationReqDetails,
   getPatient,
   getPharmacist,
+  getAllAdmins,
+  getAllPatients,
+  getAllPharmacists,
 } = require("./Routes/adminController");
 
 const {
@@ -60,22 +63,26 @@ app.use(express.json());
 //-----------------Admin Endpoints---------------------
 app.post("/admin/addAdmin", addAdmin);
 
-app.delete("/admin/removePharmacist", removePharmacist);
-app.delete("/admin/removePatient", removePatient);
+app.get("/admin/allAdmins",getAllAdmins);
+app.get("/admin/allPatients",getAllPatients);
+app.get("/admin/allPharmacists",getAllPharmacists); 
+
+app.delete("/admin/removePharmacist/:id", removePharmacist);
+app.delete("/admin/removePatient/:id", removePatient);
 
 app.get("/admin/registrationRequests", getAllPharmsRegistrationReqs);
-app.get("/admin/registrationRequestDetails", getPharmRegistrationReqDetails);
-app.get("/admin/getPatient", getPatient);
-app.get("/admin/getPharmacist", getPharmacist);
+app.get("/admin/registrationRequestDetails/:id", getPharmRegistrationReqDetails);
+app.get("/admin/getPatient/:id", getPatient);
+app.get("/admin/getPharmacist/:id", getPharmacist);
 
 //-------------------Pharmacist Endpoints--------------------
 app.post("/pharmacist/addPharmacist", addPharmacist);
 app.post("/pharmacist/register", registerPharmacist);
 
 app.post("/pharmacist/addMedicine", addMedicine),
-app.put("/pharmacist/updateMedicine", updateMedicine),
+app.put("/pharmacist/updateMedicine/:id", updateMedicine),
 app.get("/pharmacist/getMedicineDetails", getMedicineDetails);
-app.get("/pharmacist/getMedicineQuantitySales", getMedicineQuantitySales);
+app.get("/pharmacist/getMedicineQuantitySales/:id", getMedicineQuantitySales);
 
 //------------------Patient Endpoints---------------------
 app.post("/patient/register", registerPatient);
