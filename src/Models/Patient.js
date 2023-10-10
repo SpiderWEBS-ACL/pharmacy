@@ -34,18 +34,18 @@ const patientSchema = new Schema(
     EmergencyContact: {
       Name: {
         type: String,
-        required: true,
+        required: false,
       },
 
       Mobile: {
         type: Number,
-        required: true,
+        required: false,
       },
 
       relationToPatient: {
         //no limitations mentioned so no ENUM
         type: String,
-        required: true,
+        required: false,
       },
     },
   },

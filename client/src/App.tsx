@@ -41,24 +41,19 @@ const App: React.FC = () => {
       icon: <UserOutlined />,
     },
     {
-      label: "Doctor",
+      label: "Pharmacist",
       icon: <UserOutlined />,
       key: "parent",
       children: [
         {
-          label: "Doctors",
-          key: "/admin/Doctors",
+          label: "Pharmacists",
+          key: "/admin/allPharmacists",
         },
         {
           label: "Registration Reqs",
           key: "/admin/registrationRequests",
         },
       ],
-    },
-    {
-      label: "Health Packages",
-      key: "/admin/Packages",
-      icon: <FileOutlined />,
     },
     {
       label: "Logout",
