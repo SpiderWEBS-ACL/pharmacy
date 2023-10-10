@@ -41,7 +41,7 @@ const App: React.FC = () => {
       icon: <UserOutlined />,
     },
     {
-      label: "Pharmacist",
+      label: "Pharmacists",
       icon: <UserOutlined />,
       key: "parent",
       children: [
@@ -52,6 +52,17 @@ const App: React.FC = () => {
         {
           label: "Registration Reqs",
           key: "/admin/registrationRequests",
+        },
+      ],
+    },
+    {
+      label: "Medicines",
+      icon: <UserOutlined />,
+      key: "parentMeds",
+      children: [
+        {
+          label: "Browse All",
+          key: "/admin/viewMedicines",
         },
       ],
     },
@@ -88,7 +99,7 @@ const App: React.FC = () => {
       <Layout>
         <Content style={{ margin: "0 16px" }}>
           <AppRouter />
-        </Content>
+        </Content>  
       </Layout>
     </Layout>
   );

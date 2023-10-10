@@ -26,7 +26,7 @@ const AllPharmaRequests = () => {
   const navigate = useNavigate();
 
   const handleViewDetails = async (id: string) => {
-    navigate("/admin/registrationRequests/" + id);
+    navigate("/admin/registrationRequestDetails/" + id);
   };
 
   if (loading) {

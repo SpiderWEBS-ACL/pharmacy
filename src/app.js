@@ -5,8 +5,7 @@ mongoose.set('strictQuery', false);
 require("dotenv").config();
 
 
-//const MongoURI = "mongodb+srv://zeinahezzah:el7a2ny%40DB@cluster0.mr96uvv.mongodb.net/Pharmacy";
-const MongoURI = process.env.MongoURI
+const MongoURI = process.env.MONGO_URI;
 const PORT = process.env.PORT || "5000";
 
 //-------------------IMPORT MODELS---------------------------
@@ -39,6 +38,7 @@ const {
   getAllMedicines,
   searchForMedicine,
   filterMedicineByMedicinalUse,
+  viewMedicineDetails,
 } = require("./Routes/medicineController");
 
 //----------------------CONFIGURATIONS------------------------
@@ -87,14 +87,15 @@ app.post("/pharmacist/register", registerPharmacist);
 
 app.post("/pharmacist/addMedicine", addMedicine),
 app.put("/pharmacist/updateMedicine/:id", updateMedicine),
-app.get("/pharmacist/getMedicineDetails", getMedicineDetails);
+// app.get("/pharmacist/getMedicineDetails", getMedicineDetails);
 app.get("/pharmacist/getMedicineQuantitySales/:id", getMedicineQuantitySales);
 
 //------------------Patient Endpoints---------------------
 app.post("/patient/register", registerPatient);
 
 //------------------Medicine Endpoints------------------
-app.get("/medicine/viewMedicines", getAllMedicines),
+app.get("/medicine/viewMedicines", getAllMedicines);
+app.get("/medicine/viewMedicineDetails/:id", viewMedicineDetails);
 
 app.get("/medicine/searchForMedicine", searchForMedicine);
 app.get("/medicine/filterMedicineByMedicinalUse", filterMedicineByMedicinalUse);
