@@ -7,6 +7,7 @@ import RegistrationRequestDetails from "./pages/Admin/PharmaRegReqDetails";
 import Patients from "./pages/Admin/Patients";
 import AllPharmaRequests from "./pages/Admin/ViewAllPharmaRegReqs";
 import RegLog from "./pages/RegLog";
+import Register from "./pages/Pharmacist/Register";
 
 const AppRouter: React.FC = () => {
   return (
@@ -18,6 +19,7 @@ const AppRouter: React.FC = () => {
       <Route path="/admin/allPatients" element={<Patients />} />
       <Route path="/admin/registrationRequests" element={<AllPharmaRequests />} />
       <Route path="/patient/register" element={<RegLog />} />
+      <Route path="/pharmacist/register" element={<Register />} />
     </Routes>
   );
 };

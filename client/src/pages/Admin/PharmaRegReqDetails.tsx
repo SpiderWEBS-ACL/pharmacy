@@ -14,7 +14,7 @@ const RegistrationRequestDetails: React.FC = () => {
 
   useEffect(() => {
     api
-      .get(`/admin/registrationRequestDetails${id}`)
+      .get(`/admin/registrationRequestDetails/${id}`)
       .then((response) => {
         setRegistrationDetails(response.data);
         setLoading(false);
