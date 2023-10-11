@@ -57,7 +57,7 @@ const AdminLayout: React.FC = () => {
     },
     {
       label: "Medicines",
-      icon: <UserOutlined />,
+      icon: <FileOutlined />,
       key: "parentMeds",
       children: [
         {
