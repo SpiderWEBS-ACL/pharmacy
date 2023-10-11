@@ -21,7 +21,7 @@ const EditMedicine = () => {
   const [Message, setMessage] = useState("");
   const [Alert, setAlert] = useState(false);
   const api = axios.create({
-    baseURL: "http://localhost:5000/",
+    baseURL: "http://localhost:5000",
   });
 
   useEffect(() => {
@@ -152,7 +152,7 @@ const EditMedicine = () => {
             <button
               className="btn btn-danger"
               style={{ marginRight: "10px", marginTop: "10px" }}
-              type="submit"
+              type="button"
               onClick={backToMedicine}
             >
               Back
