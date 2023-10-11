@@ -152,7 +152,6 @@ const getPharmRegistrationReqDetails = async (req, res) => {
     if(!id){
       return res.status(404).json({ error: "ID parameter required" });
     }
-
     const RegistrationReq = await pharmacistRegisterRequestModel.findById(id);
 
     if (!RegistrationReq) {
