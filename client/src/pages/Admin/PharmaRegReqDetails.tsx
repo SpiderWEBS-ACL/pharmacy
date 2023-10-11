@@ -9,12 +9,13 @@ const RegistrationRequestDetails: React.FC = () => {
   const [registrationDetails, setRegistrationDetails] = useState<any>("");
   const [loading, setLoading] = useState(true);
   const api = axios.create({
-    baseURL: "http://localhost:5000/",
+    baseURL: "http://localhost:5000/admin",
   });
 
   useEffect(() => {
     api
-      .get(`/admin/registrationRequestDetails/${id}`)
+
+      .get(`/registrationRequestDetails/${id}`)
       .then((response) => {
         setRegistrationDetails(response.data);
         setLoading(false);

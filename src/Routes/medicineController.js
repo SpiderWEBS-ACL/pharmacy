@@ -52,10 +52,31 @@ const filterMedicineByMedicinalUse = async (req, res) => {
   }
 };
 
+const viewMedicineDetails = async(req, res) => {
+    try {
+        const { id } = req.params;
+    
+        if(!id){
+        return res.status(404).json({ error: "ID parameter required" });
+        }
+    
+        const medicine = await medicineModel.findById(id);
+    
+        if (!medicine) {
+        return res.status(404).json({ error: "Medicine Not Found" });
+        }
+
+        res.status(200).json(medicine);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
 
 
 module.exports = {
   getAllMedicines,
   searchForMedicine,
   filterMedicineByMedicinalUse,
+  viewMedicineDetails,
 };

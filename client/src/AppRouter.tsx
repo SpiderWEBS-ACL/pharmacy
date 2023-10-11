@@ -6,6 +6,8 @@ import Admins from "./pages/Admin/Admins";
 import RegistrationRequestDetails from "./pages/Admin/PharmaRegReqDetails";
 import Patients from "./pages/Admin/Patients";
 import AllPharmaRequests from "./pages/Admin/ViewAllPharmaRegReqs";
+import AllMedicines from "./pages/Admin/ViewAllMeds";
+import MedicineDetails from "./pages/Admin/ViewMedicineDetails";
 import RegLog from "./pages/RegLog";
 import Register from "./pages/Pharmacist/Register";
 
@@ -18,6 +20,8 @@ const AppRouter: React.FC = () => {
       <Route path="/admin/registrationRequestDetails/:id" element={<RegistrationRequestDetails />} />
       <Route path="/admin/allPatients" element={<Patients />} />
       <Route path="/admin/registrationRequests" element={<AllPharmaRequests />} />
+      <Route path="/admin/viewMedicines" element={<AllMedicines />} />
+      <Route path="/admin/medicineDetails/:id" element={<MedicineDetails />} />
       <Route path="/patient/register" element={<RegLog />} />
       <Route path="/pharmacist/register" element={<Register />} />
     </Routes>
