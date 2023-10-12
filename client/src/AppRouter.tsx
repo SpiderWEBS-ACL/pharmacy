@@ -15,6 +15,7 @@ import MedicineDetailsPatient from "./pages/Patient/ViewMedicineDetails";
 import RegLog from "./pages/RegLog";
 import Register from "./pages/Pharmacist/Register";
 import EditMedicine from "./pages/Pharmacist/EditMedicine";
+import AddMedicine from "./pages/Pharmacist/addMedicine";
 // import AvailableMedicine from "./pages/Pharmacist/ViewListofAvailableMedecines";
 
 const AppRouter: React.FC = () => {
@@ -33,11 +34,12 @@ const AppRouter: React.FC = () => {
       <Route path="/pharmacist/viewMedicines" element={<AllMedicinesPharm />} />
       <Route path="/pharmacist/medicineDetails/:id" element={<MedicineDetailsPharm />} />
       <Route path="/pharmacist/editMedicine/:id" element={<EditMedicine />} />
+      <Route path="/pharmacist/addMedicine"  element={<AddMedicine/>}/>
 
       <Route path="/patient/register" element={<RegLog />} />
       <Route path="/patient/viewMedicines" element={<AllMedicinesPatient />} />
       <Route path="/patient/medicineDetails/:id" element={<MedicineDetailsPatient />} />
-      {/* <Route path="/pharmacist/viewMedicines" element={<AvailableMedicine />} /> */}
+
     </Routes>
   );
 };

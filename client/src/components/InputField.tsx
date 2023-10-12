@@ -12,6 +12,7 @@ interface InputFieldProps {
   touched?: boolean;
   disabled?: boolean;
   options?: string[];
+  required?: boolean;
 }
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -26,6 +27,7 @@ const InputField: React.FC<InputFieldProps> = ({
   touched,
   disabled,
   options,
+  required
 }) => {
   const renderInput = () => {
     if (type === "select" && options) {
@@ -42,7 +44,7 @@ const InputField: React.FC<InputFieldProps> = ({
             onChange={(e) => onChange(e.target.value)}
             onBlur={onBlur}
             disabled={disabled}
-            required
+            required={required}
           >
             {options.map((option) => (
               <option key={option} value={option}>
@@ -62,7 +64,7 @@ const InputField: React.FC<InputFieldProps> = ({
           onChange={(e) => onChange(e.target.value)}
           onBlur={onBlur}
           disabled={disabled}
-          required
+          required={required}
         />
       );
     }
