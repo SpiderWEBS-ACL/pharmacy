@@ -119,6 +119,14 @@ const EditMedicine = () => {
             ></InputField>
 
             <InputField
+              id="ActiveIngredients"
+              label="Active Ingredients"
+              type="text"
+              value={ActiveIngredients}
+              onChange={setActiveIngredients}
+            ></InputField>
+
+            <InputField
               id="Quantity"
               label="Quantity"
               type="number"
@@ -140,6 +148,14 @@ const EditMedicine = () => {
               type="number"
               value={Sales || 0}
               onChange={setSales}
+            ></InputField>
+
+            <InputField
+              id="imageURL"
+              label="imageURL"
+              type="text"
+              value={imageURL}
+              onChange={setImage}
             ></InputField>
 
             <button

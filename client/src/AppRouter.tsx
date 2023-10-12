@@ -16,7 +16,6 @@ import RegLog from "./pages/RegLog";
 import Register from "./pages/Pharmacist/Register";
 import EditMedicine from "./pages/Pharmacist/EditMedicine";
 import AddMedicine from "./pages/Pharmacist/addMedicine";
-// import AvailableMedicine from "./pages/Pharmacist/ViewListofAvailableMedecines";
 
 const AppRouter: React.FC = () => {
   return (
