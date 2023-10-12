@@ -1,42 +1,42 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import InputField from "../../components/InputField";
 import Button from "../../components/Button";
 import { Spin } from "antd";
 import { message } from "antd";
 
-const EditMedicine = () => { // schema medicine 
+const EditMedicine = () => {
   const { id } = useParams<{ id: string }>();
   const [loading, setLoading] = useState(true);
-  const [Name, setName] = useState<string>(""); //start from here 
+  const [Name, setName] = useState<string>("");
   const [Description, setDescription] = useState<string>("");
   const [Price, setPrice] = useState<number>(0);
-  const [ActiveIngredients, setActiveIngredients] = useState<string>("");
-  const [Quantity, setQuantity] = useState<number>(0);// till here 
+  const [ActiveIngredients, setActiveIngredients] = useState<[string]>([""]);
+  const [Quantity, setQuantity] = useState<number>(0);
   const [MedicinalUse, setMedicinalUse] = useState<string>("");
-  const [imageURL, setimageURL] = useState<string>(""); 
+  const [imageURL, setImage] = useState<string>("");
   const [Sales, setSales] = useState<number>(0);
-  
+
   const [Message, setMessage] = useState("");
   const [Alert, setAlert] = useState(false);
-
+  
   const api = axios.create({
-    baseURL: "http://localhost:5000/",
+    baseURL: "http://localhost:5000",
   });
 
   useEffect(() => {
     api
       .get(`/medicine/viewMedicineDetails/${id}`)
       .then((response) => {
-        setName(response.data.Name); // same as schema 
-        setDescription(response.data.Description);
+        setName(response.data.Name);
         setPrice(response.data.Price);
-        setActiveIngredients(response.data.ActiveIngredients);
+        setDescription(response.data.Description);
         setQuantity(response.data.Quantity);
+        setActiveIngredients(response.data.ActiveIngredients);
         setMedicinalUse(response.data.MedicinalUse);
-        setimageURL(response.data.imageURL);
-        setSales(response.data.Sales);       
+        setImage(response.data.imageURL);
+        setSales(response.data.Sales);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -47,7 +47,7 @@ const EditMedicine = () => { // schema medicine
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      const data = { // medicine schema 
+      const data = {
         Name,
         Description,
         Price,
@@ -63,28 +63,15 @@ const EditMedicine = () => { // schema medicine
       setAlert(true);
     } catch (error) {
       console.error("Error:", error);
-      message.error("Failed to update Medicine");
+      message.error("Failed to update medicine");
     }
   };
 
-//   const handleDelete = async () => {
-//     try {
-//       const response = await api.delete(`/admin/deletePackage/${id}`);
-//       console.log("Response:", response.data);
-//       message.success("Package deleted successfully");
-//       setName("");
-//       setDescription(0);
-//       setPrice(undefined);
-//       setActiveIngredients(undefined);
-//       setQuantity(undefined);
-//       setMedicinalUse(0);
-//       setimageURL("");
-//       setSales(undefined);
-//     } catch (error) {
-//       console.error("Error:", error);
-//       message.error("Failed to delete package");
-//     }
-//   };
+  const navigate = useNavigate();
+
+  const backToMedicine = async () => {
+    navigate("/pharmacist/medicineDetails/" + id);
+  };
 
   if (loading) {
     return (
@@ -105,7 +92,7 @@ const EditMedicine = () => { // schema medicine
     <div className="container mt-5">
       <div className="row justify-content-center">
         <div className="col-md-6">
-          <h1 className="mb-4">Edit Medicine</h1> 
+          <h1 className="mb-4">Edit Medicine</h1>
           <form onSubmit={handleSubmit}>
             <InputField
               id="Name"
@@ -119,15 +106,15 @@ const EditMedicine = () => { // schema medicine
               id="Description"
               label="Description"
               type="text"
-              value={Description} // medicine scheme  
-              onChange={setDescription} //set methods in edit medicine 
+              value={Description}
+              onChange={setDescription}
             ></InputField>
 
             <InputField
               id="Price"
               label="Price"
               type="number"
-              value={Price ||0}
+              value={Price || 0}
               onChange={setPrice}
             ></InputField>
 
@@ -147,20 +134,12 @@ const EditMedicine = () => { // schema medicine
               onChange={setQuantity}
             ></InputField>
 
-             <InputField
-              id="MedicinalUse"
-              label="MedicinalUse"
-              type="text"
-              value={MedicinalUse}
-              onChange={setMedicinalUse}
-            ></InputField>
-
             <InputField
-              id="imageURL"
-              label="imageURL"
+              id="MedicinalUse"
+              label="Medicinal Use"
               type="text"
-              value={imageURL}
-              onChange={setimageURL}
+              value={MedicinalUse || 0}
+              onChange={setMedicinalUse}
             ></InputField>
 
             <InputField
@@ -171,6 +150,14 @@ const EditMedicine = () => { // schema medicine
               onChange={setSales}
             ></InputField>
 
+            <InputField
+              id="imageURL"
+              label="imageURL"
+              type="text"
+              value={imageURL}
+              onChange={setImage}
+            ></InputField>
+
             <button
               className="btn btn-primary"
               style={{ marginRight: "10px", marginTop: "10px" }}
@@ -178,14 +165,16 @@ const EditMedicine = () => { // schema medicine
             >
               Submit
             </button>
+
+            <button
+              className="btn btn-danger"
+              style={{ marginRight: "10px", marginTop: "10px" }}
+              type="button"
+              onClick={backToMedicine}
+            >
+              Back
+            </button>
           </form>
-          {/* <Button
-            style={{ marginRight: "10px", marginTop: "10px" }}
-            color="danger"
-            onClick={handleDelete}
-          >
-            Delete
-          </Button> */}
         </div>
       </div>
     </div>
