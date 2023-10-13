@@ -30,8 +30,10 @@ const searchForMedicine = async (req, res) => {
   }
 };
 
+
 const filterMedicineByMedicinalUse = async (req, res) => {
   const medicinalUse = req.query.MedicinalUse;
+  const medicinesJSON = req.body;
 
   if (medicinalUse == null) {
     return res
@@ -39,16 +41,18 @@ const filterMedicineByMedicinalUse = async (req, res) => {
       .json({ error: "MedicinalUse parameter is required" });
   }
   try {
+    var medicines = [];
 
-    const medicine = await medicineModel.find({
-      MedicinalUse: { $regex: medicinalUse, $options: "i" },
-    });
+    for (var i = 0; i < medicinesJSON.length; i++) {
+      const medicine = JSON.parse(medicinesJSON[i]);
 
-    // if (medicine.length == 0) {
-    //   return res.status(400).json({ error: "No Medicine Found" });
-    // }
+      if (
+        medicine.MedicinalUse.toLowerCase().includes(medicinalUse.toLowerCase())
+      )
+        medicines.push(medicine);
+    }
 
-    res.status(200).json(medicine);
+    res.status(200).json(medicines);
   } catch (error) {
     res.status(500).json({ error: "An error occurred while searching" });
   }

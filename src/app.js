@@ -98,5 +98,5 @@ app.get("/medicine/viewMedicines", getAllMedicines);
 app.get("/medicine/viewMedicineDetails/:id", viewMedicineDetails);
 
 app.get("/medicine/searchForMedicine", searchForMedicine);
-app.get("/medicine/filterMedicineByMedicinalUse", filterMedicineByMedicinalUse);
+app.post("/medicine/filterMedicineByMedicinalUse", filterMedicineByMedicinalUse);
 
