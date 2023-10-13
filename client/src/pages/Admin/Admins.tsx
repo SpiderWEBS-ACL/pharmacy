@@ -3,7 +3,7 @@ import axios from "axios";
 import { Spin } from "antd";
 
 const AllAdmins = () => {
-  const [doctors, setDoctors] = useState([]);
+  const [admins, setAdmins] = useState([]);
   const [deleted, setDeleted] = useState(false);
   const [loading, setLoading] = useState(true);
   const api = axios.create({
@@ -14,7 +14,7 @@ const AllAdmins = () => {
     api
       .get("/allAdmins")
       .then((response) => {
-        setDoctors(response.data);
+        setAdmins(response.data);
         setLoading(false);
         console.log(response.data);
       })
@@ -63,7 +63,7 @@ const AllAdmins = () => {
           </tr>
         </thead>
         <tbody>
-          {doctors.map((request: any, index) => (
+          {admins.map((request: any, index) => (
             <tr key={request._id}>
               <td>{request.Username}</td>
               <td>
