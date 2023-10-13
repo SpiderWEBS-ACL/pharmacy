@@ -31,13 +31,15 @@ const searchForMedicine = async (req, res) => {
 };
 
 const filterMedicineByMedicinalUse = async (req, res) => {
-  const medicinalUse = req.body.MedicinalUse;
+  const medicinalUse = req.query.MedicinalUse;
+
   if (medicinalUse == null) {
     return res
       .status(400)
       .json({ error: "MedicinalUse parameter is required" });
   }
   try {
+
     const medicine = await medicineModel.find({
       MedicinalUse: { $regex: medicinalUse, $options: "i" },
     });

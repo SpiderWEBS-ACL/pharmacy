@@ -1,29 +1,32 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Button, Row, Spin } from "antd";
+import { DatePicker, DatePickerProps, Input, Select } from "antd";
 import { useNavigate } from "react-router-dom";
-import { alignPropType } from "react-bootstrap/esm/types";
-// import SearchBar from "react-native-search-bar";
-// import SearchBarComponent from "../../components/SearchBar";
-// import SearchBar from "react-native-elements/dist/searchbar/SearchBar-ios";
-import { te } from "date-fns/locale";
 
 const AllMedicines = () => {
   const [medicines, setMedicines] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchValue, setSearchValue] = useState<string>("");
   const [error, setError] = useState<string>("");
+  const [medicinalUse, setMedicinalUse] = useState<string>("");
+  const [filterValue, setFilterValue] = useState<string>("");
+  const [filtering, setFiltering] = useState<boolean>(false);
+  const [searching, setSearching] = useState<boolean>(false);
 
   const api = axios.create({
     baseURL: "http://localhost:5000",
   });
 
-  useEffect(() => {         //send http request to backend 
+  useEffect(() => {
+    //send http request to backend
     api
-      .get(`medicine/viewMedicines`)        //get request 
+      .get(`medicine/viewMedicines`) //get request
       .then((response) => {
-        setMedicines(response.data);        //store response (medicines) in variable
-        setLoading(false);                  //loading screen --> off
+        setMedicines(response.data); //store response (medicines) in variable
+        setLoading(false); //loading screen --> off
+        setSearching(false);
+        setFiltering(false);
         console.log(response.data);
       })
       .catch((error) => {
@@ -41,23 +44,57 @@ const AllMedicines = () => {
   };
 
   const handleSearch = async () => {
+    setSearching(true);
     setLoading(true);
     console.log("searching...");
     api
-      .get(`medicine/searchForMedicine`, {params: {Name: searchValue}})        //get request 
+      .get(`medicine/searchForMedicine`, { params: { Name: searchValue } }) //get request
       .then((response) => {
-        setMedicines(response.data);        //store response (medicines) in variable
-        setLoading(false);                  //loading screen --> off
+        setMedicines(response.data); //store response (medicines) in variable
+        setLoading(false); //loading screen --> off
         console.log(response.data);
+        setFiltering(false);
       })
-      .catch((error) => {        
+      .catch((error) => {
         console.error("Error:", error);
       });
-   };
-    
-  
+  };
 
-  if (loading) {        //loading screen
+  const handleFilter = () => {
+    setMedicinalUse(filterValue);
+    setSearching(false);
+    setLoading(true);
+    api
+      .get(`medicine/filterMedicineByMedicinalUse`, {
+        params: { MedicinalUse: filterValue },
+      }) //get request
+      .then((response) => {
+        setMedicines(response.data); //store response (medicines) in variable
+        setLoading(false); //loading screen --> off
+        setFiltering(true);
+        setFilterValue("");
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
+  const clearFilter = async () => {
+    try {
+      const response = await api.get(`/medicine/viewMedicines`);
+      setMedicinalUse("");
+      setMedicines(response.data);
+      setFilterValue("");
+      setFiltering(false);
+      setSearching(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  if (loading) {
+    //loading screen
     return (
       <div
         style={{
@@ -72,37 +109,89 @@ const AllMedicines = () => {
     );
   }
 
-  return (              //html of page design
+  return (
+    //html of page design
     <div className="container">
-      
-      <h2 className="text-center mt-4 mb-4"> <strong>Available Medicines</strong> </h2>
-      
-      <div style={{position: "relative", float: "right", marginBottom:20}}>
-          
-          <input
-            placeholder="Search Medicines..."
-            style={{paddingLeft: 10, height: 30, borderRadius: 15, alignSelf: "center"}}
-            onChange={(e) => {setSearchValue(e.target.value)}}
-            >
-          </input>
+      <h2 className="text-center mt-4 mb-4">
+        {" "}
+        <strong>Available Medicines</strong>{" "}
+      </h2>
 
-          <button
-              className="btn btn-danger"
-              style={{ marginLeft: "10px" }}
-              type="button"
-              onClick={handleSearch}
-            >
-              Search
-            </button>
+      <span>
+        <label style={{ marginRight: 4, marginBottom: 20 }}>
+          <strong>Filter By Medicinal Use:</strong>
+        </label>
+        <Input
+          type="text"
+          value={filterValue}
+          onChange={(e) => setFilterValue(e.target.value)}
+          style={{ width: 150, marginRight: 10, borderRadius: 15 }}
+        />
+        <button
+          onClick={handleFilter}
+          style={{ marginRight: 10 }}
+          className="btn btn-sm btn-primary"
+        >
+          Apply Filters
+        </button>
+        <button
+          onClick={clearFilter}
+          style={{}}
+          className="btn btn-sm btn-danger"
+        >
+          Clear Filters
+        </button>
+                
+      </span>
 
-         <br></br>
+      <div style={{ position: "relative", float: "right", marginBottom: 20 }}>
+        <Input
+          placeholder="Search Medicines..."
+          style={{
+            paddingLeft: 10,
+            height: 30,
+            borderRadius: 15,
+            width: 200,
+            borderColor: "darkgray",
+          }}
+          onChange={(e) => {
+            setSearchValue(e.target.value);
+          }}
+        />
+
+        <button
+          className="btn btn-danger"
+          style={{ marginLeft: "10px" }}
+          type="button"
+          onClick={handleSearch}
+        >
+          Search
+        </button>
+
+        <br></br>
       </div>
-      
-        
+
+      {searching && (
+        <div className="popup">
+          <br></br>
+          <h4>
+            <b>Showing Search Results for:</b> {searchValue}
+          </h4>
+        </div>
+      )}
+
+      {filtering && medicinalUse != "" && (
+        <div className="popup">
+          <br></br>
+          <h4>
+            <b>Showing medicines used for:</b> {medicinalUse}
+          </h4>
+        </div>
+      )}
 
       <table className="table" id="medicineResults">
         <thead>
-          <tr style={{fontSize: 22}}>
+          <tr style={{ fontSize: 22 }}>
             <th></th>
             <th>Medicine Name</th>
             <th>Price</th>
@@ -112,29 +201,34 @@ const AllMedicines = () => {
 
         <tbody>
           {medicines.map((request: any, index) => (
-            <tr key={request._id} style={{verticalAlign: "middle"}}>
+            <tr key={request._id} style={{ verticalAlign: "middle" }}>
               <td>
-                <img src={request.imageURL} width={200} height={200} ></img>
+                <img src={request.imageURL} width={200} height={200}></img>
               </td>
               <td width={500}>
-                <strong style={{fontSize: 20}}>{request.Name}</strong><br></br><br></br>
+                <strong style={{ fontSize: 20 }}>{request.Name}</strong>
+                <br></br>
+                <br></br>
                 {request.Description}
               </td>
-              <td style={{fontSize: 18, fontWeight: "bold"} }>{request.Price} LE</td>
+              <td style={{ fontSize: 18, fontWeight: "bold" }}>
+                {request.Price} LE
+              </td>
               <td>
                 <button
                   className="btn btn-primary"
                   onClick={() => handleViewDetails(request._id)}
                 >
                   View Details
-                </button><br>
-                </br><br></br>
+                </button>
+                <br></br>
+                <br></br>
                 <button
                   className="btn btn-danger"
                   onClick={() => handleEditDetails(request._id)}
-                  style={{width: 107}}
+                  style={{ width: 107 }}
                 >
-                   Edit Details
+                  Edit Details
                 </button>
               </td>
             </tr>
