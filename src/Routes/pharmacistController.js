@@ -62,7 +62,7 @@ const addMedicine = async (req, res) => {
 
 const updateMedicine = async (req, res) => {
   const { id } = req.params;
-  const updates = req.body.updates;
+  const updates = req.body;
   try {
     const updatedMedicine = await medicineModel.findByIdAndUpdate(id, updates, {
       new: true, // returns updated medicine

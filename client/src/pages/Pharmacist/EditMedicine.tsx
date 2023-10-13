@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import InputField from "../../components/InputField";
-import Button from "../../components/Button";
-import { Spin } from "antd";
+import TextArea from "../../components/TextArea";
+import { Spin , Button , Input} from "antd";
+import { List, Row } from "antd";
 import { message } from "antd";
 
 const EditMedicine = () => {
@@ -11,12 +12,13 @@ const EditMedicine = () => {
   const [loading, setLoading] = useState(true);
   const [Name, setName] = useState<string>("");
   const [Description, setDescription] = useState<string>("");
-  const [Price, setPrice] = useState<number>(0);
-  const [ActiveIngredients, setActiveIngredients] = useState<[string]>([""]);
-  const [Quantity, setQuantity] = useState<number>(0);
+  const [Price, setPrice] = useState<number>();
+  const [ActiveIngredients, setActiveIngredients] = useState([""]);
+  const [Ingredient, setIngredient] = useState<string>("");
+  const [Quantity, setQuantity] = useState<number>();``
   const [MedicinalUse, setMedicinalUse] = useState<string>("");
   const [imageURL, setImage] = useState<string>("");
-  const [Sales, setSales] = useState<number>(0);
+  const [Sales, setSales] = useState<number>();
 
   const [Message, setMessage] = useState("");
   const [Alert, setAlert] = useState(false);
@@ -51,16 +53,14 @@ const EditMedicine = () => {
         Name,
         Description,
         Price,
-        ActiveIngredients,
-        Quantity,
         MedicinalUse,
-        imageURL,
-        Sales,
+        ActiveIngredients
       };
       const response = await api.put(`/pharmacist/updateMedicine/${id}`, data);
       console.log("Response:", response.data);
       message.success("Medicine updated successfully");
       setAlert(true);
+      navigate("/pharmacist/medicineDetails/" + id);
     } catch (error) {
       console.error("Error:", error);
       message.error("Failed to update medicine");
@@ -72,6 +72,29 @@ const EditMedicine = () => {
   const backToMedicine = async () => {
     navigate("/pharmacist/medicineDetails/" + id);
   };
+
+  const addIngredient = async(ingredient: string) => {
+    if(ActiveIngredients[0] == ""){
+        setActiveIngredients([Ingredient]);
+    }
+    else{
+        setActiveIngredients([...ActiveIngredients, Ingredient]);
+    }
+    setIngredient("");
+    return ActiveIngredients
+}
+
+  const removeIngredient = async(index: number) => {
+    if(ActiveIngredients.length == 1){
+        message.error("Medicine must have at least 1 active ingredient")
+    }
+    else{
+        const ingredients = ActiveIngredients.filter((_, i) => i !== index);  
+        setActiveIngredients(ingredients);
+    }
+    // setIngredient("");
+    // return ActiveIngredients
+  }
 
   if (loading) {
     return (
@@ -102,37 +125,14 @@ const EditMedicine = () => {
               onChange={setName}
             ></InputField>
 
-            <InputField
+            <TextArea
               id="Description"
               label="Description"
-              type="text"
               value={Description}
-              onChange={setDescription}
-            ></InputField>
-
-            <InputField
-              id="Price"
-              label="Price"
-              type="number"
-              value={Price || 0}
-              onChange={setPrice}
-            ></InputField>
-
-            <InputField
-              id="ActiveIngredients"
-              label="Active Ingredients"
-              type="text"
-              value={ActiveIngredients}
-              onChange={setActiveIngredients}
-            ></InputField>
-
-            <InputField
-              id="Quantity"
-              label="Quantity"
-              type="number"
-              value={Quantity || 0}
-              onChange={setQuantity}
-            ></InputField>
+              onChange={setDescription} 
+              type="text" 
+              isValid={false}
+               />
 
             <InputField
               id="MedicinalUse"
@@ -143,20 +143,83 @@ const EditMedicine = () => {
             ></InputField>
 
             <InputField
+              id="Price"
+              label="Price"
+              type="number"
+              value={Price}
+              onChange={setPrice}
+            ></InputField>
+
+            <Row >
+            <InputField
+              id="activeIngredients"
+              label="Active Ingredients"
+              type="text"
+              value={Ingredient}
+              onChange={setIngredient}
+            ></InputField>
+            <br></br>
+            
+
+            <button
+              className="btn btn-danger"
+              style={{ marginLeft: "10px", marginTop: "20px", width: 50, height:35}}
+              type="button"
+              onClick={(e:any) => addIngredient(Ingredient)}
+            >
+              Add
+            </button>
+
+            </Row>
+
+           
+            <body style={{backgroundColor: "transparent"}}> 
+                {ActiveIngredients.map((ingredient: any, index) =>
+                  <Row>
+                    <li>{ingredient}</li> 
+                  
+                    <Button
+                      className="btn btn-sm btn-danger"
+                      // id = {ingredient.name}
+                      style={{
+                        borderRadius: "5px",
+                        height: 20,
+                        paddingTop: 0,
+                        marginLeft: 10,
+                      }}
+
+                      onClick={(e) => removeIngredient(index)}
+                  >
+                    <span aria-hidden="true">&times;</span>
+                  </Button>
+                </Row>
+             )} </body>  <br></br>
+
+            <InputField
+              id="Quantity"
+              label="Quantity"
+              type="number"
+              value={Quantity || 0}
+              onChange={setQuantity}
+              disabled={true}
+            ></InputField>
+
+            <InputField
               id="Sales"
               label="Sales"
               type="number"
               value={Sales || 0}
               onChange={setSales}
+              disabled={true}
             ></InputField>
 
-            <InputField
+            {/* <InputField
               id="imageURL"
               label="imageURL"
               type="text"
               value={imageURL}
               onChange={setImage}
-            ></InputField>
+            ></InputField> */}
 
             <button
               className="btn btn-primary"
