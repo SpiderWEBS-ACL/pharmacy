@@ -8,17 +8,18 @@ import SearchBar from "react-native-search-bar";
 const AllMedicines = () => {
   const [medicines, setMedicines] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState<string>("");
+  const [searchValue, setSearchValue] = useState<string>("");
+  const [error, setError] = useState<string>("");
 
   const api = axios.create({
-    baseURL: "http://localhost:5000/medicine",
+    baseURL: "http://localhost:5000",
   });
 
   useEffect(() => {
     //send http request to backend
     api
-      .get(`/viewMedicines`) //get request
-      .then((response) => {
+      .get(`/medicine/viewMedicines`)        //get request 
+       .then((response) => {
         setMedicines(response.data); //store response (medicines) in variable
         setLoading(false); //loading screen --> off
         console.log(response.data);
@@ -34,8 +35,22 @@ const AllMedicines = () => {
     navigate("/admin/medicineDetails/" + id);
   };
 
-  if (loading) {
-    //loading screen
+  const handleSearch = async () => {
+    setLoading(true);
+    console.log("searching...");
+    api
+      .get(`medicine/searchForMedicine`, {params: {Name: searchValue}})        //get request 
+      .then((response) => {
+        setMedicines(response.data);        //store response (medicines) in variable
+        setLoading(false);                  //loading screen --> off
+        console.log(response.data);
+      })
+      .catch((error) => {        
+        console.error("Error:", error);
+      });
+   };
+
+  if (loading) {        //loading screen
     return (
       <div
         style={{
@@ -57,6 +72,27 @@ const AllMedicines = () => {
         {" "}
         <strong>Available Medicines</strong>{" "}
       </h2>
+
+        <div style={{position: "relative", float: "right", marginBottom:20}}>
+          
+          <input
+            placeholder="Search Medicines..."
+            style={{paddingLeft: 10, height: 30, borderRadius: 15, alignSelf: "center"}}
+            onChange={(e) => {setSearchValue(e.target.value)}}
+            >
+          </input>
+
+          <button
+              className="btn btn-danger"
+              style={{ marginLeft: "10px" }}
+              type="button"
+              onClick={handleSearch}
+            >
+              Search
+            </button>
+
+         <br></br>
+      </div>
 
       <table className="table">
         <thead>

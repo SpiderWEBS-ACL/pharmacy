@@ -6,7 +6,6 @@ import Button from "../../components/Button";
 import { List, Row, Spin } from "antd";
 import { message } from "antd";
 import { IonProgressBar } from "@ionic/react";
-import { Center } from "drei";
 import { alignPropType } from "react-bootstrap/esm/types";
 
 const addMedicine = () => {
