@@ -30,7 +30,6 @@ const AddAdminForm: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setAlertVisibility(true);
 
     const isUsernameValid = validateUsername(Username);
     const isPasswordValid = validatePassword(Password);
@@ -60,6 +59,8 @@ const AddAdminForm: React.FC = () => {
         setError("An error occurred");
       }
     }
+
+    setAlertVisibility(true);
   };
 
   return (
