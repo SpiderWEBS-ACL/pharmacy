@@ -99,7 +99,7 @@ const AdminLayout: React.FC = () => {
       <Layout>
         <Content style={{ margin: "0 16px" }}>
           <AppRouter />
-        </Content>  
+        </Content>
       </Layout>
     </Layout>
   );

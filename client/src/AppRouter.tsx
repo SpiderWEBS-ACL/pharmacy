@@ -23,22 +23,36 @@ const AppRouter: React.FC = () => {
       <Route path="/admin/add" element={<AddAdminForm />} />
       <Route path="/admin/allPharmacists" element={<Pharmacists />} />
       <Route path="/admin/Admins" element={<Admins />} />
-      <Route path="/admin/registrationRequestDetails/:id" element={<RegistrationRequestDetails />} />
-      <Route path="/admin/allPatients" element={<Patients />} />
-      <Route path="/admin/registrationRequests" element={<AllPharmaRequests />} />
+      <Route
+        path="/admin/registrationRequestDetails/:id"
+        element={<RegistrationRequestDetails />}
+      />
+      <Route path="/admin/Patients" element={<Patients />} />
+      <Route
+        path="/admin/registrationRequests"
+        element={<AllPharmaRequests />}
+      />
       <Route path="/admin/viewMedicines" element={<AllMedicinesAdmin />} />
-      <Route path="/admin/medicineDetails/:id" element={<MedicineDetailsAdmin />} />
+      <Route
+        path="/admin/medicineDetails/:id"
+        element={<MedicineDetailsAdmin />}
+      />
 
       <Route path="/pharmacist/register" element={<Register />} />
       <Route path="/pharmacist/viewMedicines" element={<AllMedicinesPharm />} />
-      <Route path="/pharmacist/medicineDetails/:id" element={<MedicineDetailsPharm />} />
+      <Route
+        path="/pharmacist/medicineDetails/:id"
+        element={<MedicineDetailsPharm />}
+      />
       <Route path="/pharmacist/editMedicine/:id" element={<EditMedicine />} />
-      <Route path="/pharmacist/addMedicine"  element={<AddMedicine/>}/>
+      <Route path="/pharmacist/addMedicine" element={<AddMedicine />} />
 
       <Route path="/patient/register" element={<RegLog />} />
       <Route path="/patient/viewMedicines" element={<AllMedicinesPatient />} />
-      <Route path="/patient/medicineDetails/:id" element={<MedicineDetailsPatient />} />
-
+      <Route
+        path="/patient/medicineDetails/:id"
+        element={<MedicineDetailsPatient />}
+      />
     </Routes>
   );
 };

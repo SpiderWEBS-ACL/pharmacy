@@ -31,7 +31,7 @@ const Patients = () => {
       console.log("Response:", response.data);
     } catch (error) {
       console.error("Error:", error);
-    } 
+    }
     setLoading(false);
   };
 
@@ -66,6 +66,7 @@ const Patients = () => {
             <th>Mobile</th>
             <th>Emergency Contact</th>
             <th>Emergency Mobile No.</th>
+            <th>Relation To Patient</th>
             <th>Remove</th>
           </tr>
         </thead>
@@ -76,11 +77,12 @@ const Patients = () => {
               <td>{request.Username}</td>
               <td>{request.Name}</td>
               <td>{request.Email}</td>
-              <td>{request.Dob}</td>
+              <td>{request.Dob.split("T")[0]}</td>
               <td>{request.Gender}</td>
               <td>{request.Mobile}</td>
-              <td>{request.EmergencyContactName}</td>
-              <td>{request.EmergencyContactMobile}</td>
+              <td>{request.EmergencyContact.Name}</td>
+              <td>{request.EmergencyContact.Mobile}</td>
+              <td>{request.EmergencyContact.relationToPatient}</td>
               <td>
                 <button
                   className="btn btn-sm btn-danger"

@@ -14,12 +14,13 @@ const AllMedicines = () => {
     baseURL: "http://localhost:5000/medicine",
   });
 
-  useEffect(() => {         //send http request to backend 
+  useEffect(() => {
+    //send http request to backend
     api
-      .get(`/viewMedicines`)        //get request 
+      .get(`/viewMedicines`) //get request
       .then((response) => {
-        setMedicines(response.data);        //store response (medicines) in variable
-        setLoading(false);                  //loading screen --> off
+        setMedicines(response.data); //store response (medicines) in variable
+        setLoading(false); //loading screen --> off
         console.log(response.data);
       })
       .catch((error) => {
@@ -33,7 +34,8 @@ const AllMedicines = () => {
     navigate("/admin/medicineDetails/" + id);
   };
 
-  if (loading) {        //loading screen
+  if (loading) {
+    //loading screen
     return (
       <div
         style={{
@@ -48,14 +50,17 @@ const AllMedicines = () => {
     );
   }
 
-  return (              //html of page design
+  return (
+    //html of page design
     <div className="container">
-      
-        <h2 className="text-center mt-4 mb-4"> <strong>Available Medicines</strong> </h2>
+      <h2 className="text-center mt-4 mb-4">
+        {" "}
+        <strong>Available Medicines</strong>{" "}
+      </h2>
 
       <table className="table">
         <thead>
-          <tr style={{fontSize: 22}}>
+          <tr style={{ fontSize: 22 }}>
             <th></th>
             <th>Medicine Name</th>
             <th>Price</th>
@@ -65,15 +70,24 @@ const AllMedicines = () => {
 
         <tbody>
           {medicines.map((request: any, index) => (
-            <tr key={request._id} style={{verticalAlign: "middle"}}>
+            <tr key={request._id} style={{ verticalAlign: "middle" }}>
               <td>
-                <img src={request.imageURL} width={200} height={200} ></img>
+                <img
+                  alt={request.Name + " Picture"}
+                  src={request.imageURL}
+                  width={200}
+                  height={200}
+                ></img>
               </td>
               <td width={500}>
-                <strong style={{fontSize: 20}}>{request.Name}</strong><br></br><br></br>
+                <strong style={{ fontSize: 20 }}>{request.Name}</strong>
+                <br></br>
+                <br></br>
                 {request.Description}
               </td>
-              <td style={{fontSize: 18, fontWeight: "bold"} }>{request.Price} LE</td>
+              <td style={{ fontSize: 18, fontWeight: "bold" }}>
+                {request.Price} LE
+              </td>
               <td>
                 <button
                   className="btn btn-primary"
