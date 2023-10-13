@@ -75,7 +75,7 @@ const allPharmacists = () => {
               <td>{request.Username}</td>
               <td>{request.Name}</td>
               <td>{request.Email}</td>
-              <td>{request.Dob}</td>
+              <td>{request.Dob.split("T")[0]}</td>
               <td>{request.HourlyRate}</td>
               <td>{request.Affiliation}</td>
               <td>{request.EducationalBackground}</td>
