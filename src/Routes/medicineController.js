@@ -11,7 +11,7 @@ const getAllMedicines = async (req, res) => {
 };
 
 const searchForMedicine = async (req, res) => {
-  const Name = req.body.Name;
+  const Name = req.query.Name;
   if (Name == null) {
     return res.status(400).json({ error: "Name parameter is required" });
   }
@@ -20,9 +20,9 @@ const searchForMedicine = async (req, res) => {
       Name: { $regex: Name, $options: "i" },
     });
 
-    if (medicine.length == 0) {
-      return res.status(400).json({ error: "Medicine Not Found" });
-    }
+    // if (medicine.length == 0) {
+    //   return res.status(404).json({ error: "Medicine Not Found" });
+    // }
 
     res.status(200).json(medicine);
   } catch (error) {
@@ -42,9 +42,9 @@ const filterMedicineByMedicinalUse = async (req, res) => {
       MedicinalUse: { $regex: medicinalUse, $options: "i" },
     });
 
-    if (medicine.length == 0) {
-      return res.status(400).json({ error: "No Medicine Found" });
-    }
+    // if (medicine.length == 0) {
+    //   return res.status(400).json({ error: "No Medicine Found" });
+    // }
 
     res.status(200).json(medicine);
   } catch (error) {
