@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { Button, Row, Spin } from "antd";
+import axios, { AxiosRequestConfig } from "axios";
+import { Spin } from "antd";
+import { Button, Col, Row } from "react-bootstrap";
 import { DatePicker, DatePickerProps, Input, Select } from "antd";
 import { useNavigate } from "react-router-dom";
+
 
 const AllMedicines = () => {
   const [medicines, setMedicines] = useState([]);
@@ -13,6 +15,8 @@ const AllMedicines = () => {
   const [filterValue, setFilterValue] = useState<string>("");
   const [filtering, setFiltering] = useState<boolean>(false);
   const [searching, setSearching] = useState<boolean>(false);
+  const [searchResults, setSearchResults] = useState([]);
+  const [filteredResults, setfilteredResults] = useState([]);
 
   const api = axios.create({
     baseURL: "http://localhost:5000",
@@ -46,11 +50,10 @@ const AllMedicines = () => {
   const handleSearch = async () => {
     setSearching(true);
     setLoading(true);
-    console.log("searching...");
     api
       .get(`medicine/searchForMedicine`, { params: { Name: searchValue } }) //get request
       .then((response) => {
-        setMedicines(response.data); //store response (medicines) in variable
+        setSearchResults(response.data);
         setLoading(false); //loading screen --> off
         console.log(response.data);
         setFiltering(false);
@@ -60,16 +63,36 @@ const AllMedicines = () => {
       });
   };
 
-  const handleFilter = () => {
-    setMedicinalUse(filterValue);
-    setSearching(false);
-    setLoading(true);
+  const clearSearch = async () => {
+    // setLoading(true);
     api
-      .get(`medicine/filterMedicineByMedicinalUse`, {
-        params: { MedicinalUse: filterValue },
-      }) //get request
+      .get(`medicine/viewMedicines`) //get request
       .then((response) => {
         setMedicines(response.data); //store response (medicines) in variable
+        setLoading(false); //loading screen --> off
+        setSearching(false);
+        setFiltering(false);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
+  const handleFilter = () => {
+    setMedicinalUse(filterValue);
+    // setSearching(false);
+    // setLoading(true);
+
+    const data = JSON.parse(JSON.stringify((searching? searchResults:medicines).map(item => JSON.stringify(item))));
+
+    api
+      .post(`medicine/filterMedicineByMedicinalUse`, data, {
+        params: { MedicinalUse: filterValue }
+      }) //get request
+      .then((response) => {
+        // setMedicines(response.data); //store response (medicines) in variable
+        setfilteredResults(response.data);
         setLoading(false); //loading screen --> off
         setFiltering(true);
         setFilterValue("");
@@ -81,15 +104,35 @@ const AllMedicines = () => {
   };
 
   const clearFilter = async () => {
-    try {
-      const response = await api.get(`/medicine/viewMedicines`);
-      setMedicinalUse("");
-      setMedicines(response.data);
-      setFilterValue("");
-      setFiltering(false);
-      setSearching(false);
-    } catch (error) {
-      console.error(error);
+
+    if(searching){
+      api
+      .get(`medicine/searchForMedicine`, { params: { Name: searchValue } }) //get request
+      .then((response) => {
+        setMedicines(response.data); //store response (medicines) in variable
+        setLoading(false); //loading screen --> off
+        console.log(response.data);
+        setMedicinalUse("");
+        setFilterValue("");
+        setFiltering(false);
+      })
+      .catch((error) => {
+        console.error("Error:", error) ;
+      });
+      
+    }
+
+    else{
+      try {
+        const response = await api.get(`/medicine/viewMedicines`);
+        setMedicinalUse("");
+        setMedicines(response.data);
+        setFilterValue("");
+        setFiltering(false);
+        setSearching(false);
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
@@ -169,25 +212,41 @@ const AllMedicines = () => {
         </button>
 
         <br></br>
+      </div>  
+
+      <div className="popup">
+          <br></br>
+        <Row>
+        <Col md="auto">
+          {searching && !filtering && (
+              <h4>
+              <b>Showing Search Results for:</b> {searchValue}
+            </h4> 
+          )}
+
+          {searching && filtering && (
+            <h4>
+              <b>Showing Search Results for:</b> {searchValue} <b> used for: </b> {medicinalUse}
+            </h4>    
+          )}
+
+          {filtering && !searching && medicinalUse != "" && (
+              <h4>
+                <b>Showing medicines used for:</b> {medicinalUse}
+              </h4>
+          )}
+          </Col>
+
+          {(filtering || searching) && (
+            <Col style={{}}>
+              <a href="" onClick={clearSearch} style={{fontSize: 16, float: "right"}}>   Show All Medicine</a>
+
+            </Col>
+            )}
+        </Row>
+          
+
       </div>
-
-      {searching && (
-        <div className="popup">
-          <br></br>
-          <h4>
-            <b>Showing Search Results for:</b> {searchValue}
-          </h4>
-        </div>
-      )}
-
-      {filtering && medicinalUse != "" && (
-        <div className="popup">
-          <br></br>
-          <h4>
-            <b>Showing medicines used for:</b> {medicinalUse}
-          </h4>
-        </div>
-      )}
 
       <table className="table" id="medicineResults">
         <thead>
@@ -200,7 +259,7 @@ const AllMedicines = () => {
         </thead>
 
         <tbody>
-          {medicines.map((request: any, index) => (
+          {(searching? (filtering? filteredResults:searchResults): (filtering? filteredResults:medicines)).map((request: any, index) => (
             <tr key={request._id} style={{ verticalAlign: "middle" }}>
               <td>
                 <img src={request.imageURL} width={200} height={200}></img>
