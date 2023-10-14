@@ -5,8 +5,11 @@ import { useParams } from "react-router-dom";
 
 const PatientHome = () => {
 
-  // const { id } = useParams<{ id: string }>();
-  const id  = "6523f1431108fe576c79d5b3";
+  var { id } = useParams<{ id: string }>();
+
+  if(id == "00"){
+    id  = "6523f1431108fe576c79d5b3";
+  }
 
   const [patientInfo, setPatientInfo] = useState<any>({});
   const [patientEmergencyContact, setEmergencyContact] = useState<any>({});
@@ -28,7 +31,7 @@ const PatientHome = () => {
       });
   }, [id]);
   var Dob = patientInfo.Dob + "";
-  console.log(Dob);
+
   const dateTimeParts: string[] = Dob.split("T");
   const datePart: string = dateTimeParts[0];
   return (

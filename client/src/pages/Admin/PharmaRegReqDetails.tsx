@@ -61,8 +61,8 @@ const RegistrationRequestDetails: React.FC = () => {
 
         <tbody>
           <tr key={registrationDetails._id}>
+            <td>{registrationDetails.Username}</td>
             <td>{registrationDetails.Name}</td>
-            <td>{registrationDetails.Affiliation}</td>
             <td>{registrationDetails.Email}</td>
             <td>{registrationDetails.Dob}</td>
             <td>{registrationDetails.HourlyRate}</td>

@@ -5,8 +5,11 @@ import { useParams } from "react-router-dom";
 
 const PharmaHome = () => {
 
-  const id =  "6523f1ce1108fe576c79d5be";
-  // const { id } =  useParams<{ id: string }>() 
+  var { id } = useParams<{ id: string }>();
+
+  if(id == "00"){     //default id for testing
+    id  = "6523f1ce1108fe576c79d5be";
+  }
 
   const [pharmacistInfo, setPharmacistInfo] = useState<any>({});
 

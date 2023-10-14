@@ -23,13 +23,19 @@ const PatientLayout: React.FC = () => {
   const items = [
     {
       label: "Home",
-      key: "/patient/PatientHome",
+      key: "/patient/PatientHome/00",
       icon: <HomeOutlined />,
     },
     {
-      label: "View all Meds",
-      key: "/patient/viewMedicines",
-      icon: <UserOutlined />,
+      label: "Medicines",
+      icon: <FileOutlined />,
+      key: "parentMeds",
+      children: [
+        {
+          label: "Browse All",
+          key: "/patient/viewMedicines",
+        },
+      ],
     },
     {
       label: "Logout",
