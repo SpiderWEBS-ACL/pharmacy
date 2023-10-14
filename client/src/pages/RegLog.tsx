@@ -5,6 +5,7 @@ import Alert from "../components/Alert";
 import { useParams,useNavigate } from "react-router-dom";
 
 
+
 const RegLog: React.FC = () => {
 const [alertVisible, setAlertVisibility] = useState(false);
 const [isSignUp, setIsSignUp] = useState<boolean>(false);
@@ -21,6 +22,7 @@ const [EmergencyContactMobile, setEmergencyContactMobile] = useState<Number>();
 const api = axios.create({
     baseURL: "http://localhost:5000/",
 });
+
 const handleSignUp = async () => {
     try {
       const data = {
@@ -55,7 +57,7 @@ const handleSignUp = async () => {
    const response =await api.post(`/patient/login`,data)
         console.log(response.data)
         handleRedirection(response.data.id);
-     
+        window.location.reload()
       ;
 }
    catch (error) {
