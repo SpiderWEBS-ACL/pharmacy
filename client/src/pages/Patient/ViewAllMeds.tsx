@@ -37,6 +37,7 @@ const AllMedicines = () => {
       });
   }, []);
 
+  const { Option } = Select;
   const navigate = useNavigate();
 
   const handleViewDetails = async (id: string) => {
@@ -77,27 +78,29 @@ const AllMedicines = () => {
   };
 
   const handleFilter = () => {
-    setMedicinalUse(filterValue);
-    // setSearching(false);
-    // setLoading(true);
+    if(filterValue != ""){
+      setMedicinalUse(filterValue);
+      // setSearching(false);
+      // setLoading(true);
 
-    const data = JSON.parse(JSON.stringify((searching? searchResults:medicines).map(item => JSON.stringify(item))));
+      const data = JSON.parse(JSON.stringify((searching? searchResults:medicines).map(item => JSON.stringify(item))));
 
-    api
-      .post(`medicine/filterMedicineByMedicinalUse`, data, {
-        params: { MedicinalUse: filterValue }
-      }) //get request
-      .then((response) => {
-        // setMedicines(response.data); //store response (medicines) in variable
-        setfilteredResults(response.data);
-        setLoading(false); //loading screen --> off
-        setFiltering(true);
-        setFilterValue("");
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+      api
+        .post(`medicine/filterMedicineByMedicinalUse`, data, {
+          params: { MedicinalUse: filterValue }
+        }) //get request
+        .then((response) => {
+          // setMedicines(response.data); //store response (medicines) in variable
+          setfilteredResults(response.data);
+          setLoading(false); //loading screen --> off
+          setFiltering(true);
+          // setFilterValue("");
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    }
   };
 
   const clearFilter = async () => {
@@ -158,7 +161,24 @@ const AllMedicines = () => {
       </h2>
 
       <span>
-        <label style={{ marginRight: 4, marginBottom: 20 }}>
+
+        <label style={{ marginRight: 8 }}>
+          <strong>Filter by Medicinal Use:</strong>
+        </label>
+        <Select
+          style={{ width: 150, marginRight: "20px" }}
+          onChange={setFilterValue}
+          value={filterValue}
+        >
+          <Option value="Cold">Cold</Option>
+          <Option value="Allergies">Allergies</Option>
+          <Option value="Nasal Congestion">Nasal Congestion</Option>
+          <Option value="Pain Relief">Pain Relief</Option>
+          <Option value="Headaches">Headaches</Option>
+          <Option value="Irritation">Irritation</Option>
+        </Select>
+
+        {/* <label style={{ marginRight: 4, marginBottom: 20 }}>
           <strong>Filter By Medicinal Use:</strong>
         </label>
         <Input
@@ -166,7 +186,8 @@ const AllMedicines = () => {
           value={filterValue}
           onChange={(e) => setFilterValue(e.target.value)}
           style={{ width: 150, marginRight: 10, borderRadius: 15 }}
-        />
+        /> */}
+        
         <button
           onClick={handleFilter}
           style={{ marginRight: 10 }}
