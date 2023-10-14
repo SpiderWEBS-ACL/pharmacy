@@ -32,7 +32,7 @@ const {
   getMedicineQuantitySales,
 } = require("./Routes/pharmacistController");
 
-const { registerPatient } = require("./Routes/patientController");
+const { registerPatient, login } = require("./Routes/patientController");
 
 const {
   getAllMedicines,
@@ -92,7 +92,7 @@ app.get("/pharmacist/getMedicineQuantitySales/:id", getMedicineQuantitySales);
 
 //------------------Patient Endpoints---------------------
 app.post("/patient/register", registerPatient);
-
+app.post("/patient/login",login)
 //------------------Medicine Endpoints------------------
 app.get("/medicine/viewMedicines", getAllMedicines);
 app.get("/medicine/viewMedicineDetails/:id", viewMedicineDetails);

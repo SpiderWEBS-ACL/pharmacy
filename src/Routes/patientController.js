@@ -1,5 +1,7 @@
 const patientModel = require("../Models/Patient");
 const medicineModel = require("../Models/Medicine");
+const pharmacistModel = require("../Models/Pharmacist");
+const adminModel = require("../Models/Admin");
 const { default: mongoose } = require("mongoose");
 
 //---------------------------------------REGISTRATION-----------------------------------------------
@@ -22,9 +24,45 @@ const registerPatient = async (req, res) => {
   }
 };
 
+const login = async(req, res) => {
+  try{
+    const usernamePat = await patientModel.findOne({ "Username": req.body.Username });
+    const usernamePharma = await pharmacistModel.findOne({ "Username": req.body.Username });
+    const usernameAdm = await adminModel.findOne({ "Username": req.body.Username });
 
+    
+    if (!usernamePharma&& !usernamePat && !usernameAdm) {
+      return res.status(400).json({ error: "Username not found!" });
+    }
+    else if(usernamePat){
+      if (usernamePat.Password === req.body.Password) {
+        res.json({ id: usernamePat._id,type:"Patient" });
+      } else {
+        res.status(400).json({ error: "Password doesn't match!" });
+      }
+    }
+    else if(usernamePharma){
+      if (usernamePharma.Password === req.body.Password) {
+        res.json({ id: usernamePharma._id,type:"Pharmacist" });
+      } else {
+        res.status(400).json({ error: "Password doesn't match!" });
+      }
+    }
+    else if(usernameAdm){
+      if (usernameAdm.Password === req.body.Password) {
+        res.json({ id: usernameAdm._id,type:"Admin" });
+      } else {
+        res.status(400).json({ error: "Password doesn't match!" });
+      }
+    }
+
+   
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
 //---------------------------------------EXPORTS-----------------------------------------------
 
 module.exports = {
-  registerPatient,
+  registerPatient,login
 };
