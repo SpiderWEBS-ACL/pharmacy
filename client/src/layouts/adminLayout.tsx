@@ -68,7 +68,7 @@ const AdminLayout: React.FC = () => {
     },
     {
       label: "Logout",
-      key: "/admin/logout",
+      key: "/",
       icon: <PoweroffOutlined />,
       danger: true,
     },
@@ -84,8 +84,11 @@ const AdminLayout: React.FC = () => {
         <div className="demo-logo-vertical" />
         <Menu
           onClick={({ key }) => {
-            if (key === "signout") {
+            if (key === "/") {
               //TODO signout feature here
+              localStorage.clear();
+              navigate(key);
+              window.location.reload();
             } else {
               navigate(key);
             }

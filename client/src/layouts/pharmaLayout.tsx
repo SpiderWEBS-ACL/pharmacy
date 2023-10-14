@@ -43,7 +43,7 @@ const PharmacistLayout: React.FC = () => {
     },
     {
       label: "Logout",
-      key: "/pharmacist/logout",
+      key: "/",
       icon: <PoweroffOutlined />,
       danger: true,
     },
@@ -59,8 +59,11 @@ const PharmacistLayout: React.FC = () => {
         <div className="demo-logo-vertical" />
         <Menu
           onClick={({ key }) => {
-            if (key === "signout") {
+            if (key === "/") {
               //TODO signout feature here
+              localStorage.clear();
+              navigate(key);
+              window.location.reload();
             } else {
               navigate(key);
             }
