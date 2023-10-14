@@ -6,7 +6,6 @@ import RegLog from "./pages/RegLog";
 
 const App: React.FC = () => {
     const currentPath = window.location.pathname;
-   console.log(currentPath)
     if(currentPath.includes('/patient/register')){
         return <RegLog />
     }else
