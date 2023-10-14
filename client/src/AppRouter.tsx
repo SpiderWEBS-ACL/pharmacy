@@ -13,7 +13,7 @@ import MedicineDetailsPharm from "./pages/Pharmacist/ViewMedicineDetails";
 import AllMedicinesPatient from "./pages/Patient/ViewAllMeds";
 import MedicineDetailsPatient from "./pages/Patient/ViewMedicineDetails";
 import RegLog from "./pages/RegLog";
-import Register from "./pages/Pharmacist/Register";
+import RegisterPharmacist from "./pages/Pharmacist/Register";
 import EditMedicine from "./pages/Pharmacist/EditMedicine";
 import AddMedicine from "./pages/Pharmacist/addMedicine";
 import PatientHome from "./pages/Patient/PatientHome";
@@ -39,7 +39,7 @@ const AppRouter: React.FC = () => {
         element={<MedicineDetailsAdmin />}
       />
 
-      <Route path="/pharmacist/register" element={<Register />} />
+      <Route path="/pharmacist/register" element={<RegisterPharmacist />} />
       <Route path="/pharmacist/viewMedicines" element={<AllMedicinesPharm />} />
       <Route
         path="/pharmacist/medicineDetails/:id"

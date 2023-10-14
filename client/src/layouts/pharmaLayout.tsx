@@ -27,6 +27,21 @@ const PharmacistLayout: React.FC = () => {
       icon: <HomeOutlined />,
     },
     {
+      label: "Medicines",
+      icon: <FileOutlined />,
+      key: "parentMeds",
+      children: [
+        {
+          label: "Browse All",
+          key: "/pharmacist/viewMedicines",
+        },
+        {
+          label: "Add Medicine",
+          key: "/pharmacist/addMedicine",
+        },
+      ],
+    },
+    {
       label: "Logout",
       key: "/pharmacist/logout",
       icon: <PoweroffOutlined />,

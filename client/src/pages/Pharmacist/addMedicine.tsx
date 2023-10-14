@@ -2,27 +2,29 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import InputField from "../../components/InputField";
-import Button from "../../components/Button";
-import { List, Row, Spin } from "antd";
+// import Button from "../../components/Button";
+import { List, Row, Spin, Button } from "antd";
 import { message } from "antd";
 import { IonProgressBar } from "@ionic/react";
 import { alignPropType } from "react-bootstrap/esm/types";
+import TextArea from "../../components/TextArea";
 
 const addMedicine = () => {
 //   const { id } = useParams<{ id: string }>();
     const [Name, setName] = useState<string>("");
     const [Description, setDescription] = useState<string>("");
-    const [Price, setPrice] = useState<number>(0);
+    const [Price, setPrice] = useState<number>();
     const [ActiveIngredients, setActiveIngredients] = useState([""]);
     const [ActiveIngredientsReq, setActiveIngredientsReq] = useState<boolean>(true);
     const [Ingredient, setIngredient] = useState<string>("");
-    const [Quantity, setQuantity] = useState<number>(0);
+    const [Quantity, setQuantity] = useState<number>();
     const [MedicinalUse, setMedicinalUse] = useState<string>("");
     const [imageURL, setImage] = useState<string>("");
     const [Sales, setSales] = useState<number>(0);
     const [addedMedicine, setAddedMedicine] = useState<any | null>(null);
     const [Message, setMessage] = useState("");
     const [Alert, setAlert] = useState(false);
+    const [error, setError] = useState("");
     const [viewMedsHidden, setViewMedsHidden] = useState<boolean>(true)
 
   const api = axios.create({
@@ -49,16 +51,26 @@ const addMedicine = () => {
       setAddedMedicine(response.data);
       message.success("Medicine added successfully");
       setAlert(true);
-      setViewMedsHidden(false);
-    } catch (error) {
-      console.error("Error:", error);
-    //   setMessage(error+"");
-      message.error("Failed to add medicine: " + error);
+      navigate("/pharmacist/medicineDetails/" + response.data._id);
+    //   setViewMedsHidden(false);
+    } catch (err) {
+      console.error("Error:", err);
+      if (axios.isAxiosError(err) && err.response) {
+        const apiError = err.response.data.error;
+        setError(apiError);
+        message.error("Failed to add Medcicine: " + apiError);
+      } else {
+        setError("An error occurred");  
+      }
     }
 }
 
 const addIngredient = async(ingredient: string) => {
-    if(ActiveIngredients[0] == ""){
+    if(ingredient == ""){
+        message.error("Please Specify Active Ingredient");
+        return;
+    }
+    else if(ActiveIngredients[0] == ""){
         setActiveIngredients([Ingredient]);
     }
     else{
@@ -68,6 +80,16 @@ const addIngredient = async(ingredient: string) => {
     setActiveIngredientsReq(false);
     return ActiveIngredients
 }
+
+const removeIngredient = async(index: number) => {
+    if(ActiveIngredients.length == 1){
+        message.error("Medicine must have at least 1 active ingredient")
+    }
+    else{
+        const ingredients = ActiveIngredients.filter((_, i) => i !== index);  
+        setActiveIngredients(ingredients);
+    }
+  }
 
 const navigate = useNavigate();
 
@@ -87,15 +109,18 @@ const viewMedicine = async () => {
               type="text"
               value={Name}
               onChange={setName}
+              required={true}
             ></InputField>
 
-            <InputField
+
+            <TextArea
               id="Description"
               label="Description"
-              type="text"
               value={Description}
-              onChange={setDescription}
-            ></InputField>
+              onChange={setDescription} 
+              type="text" 
+              required={true}
+            />
 
             <InputField
               id="Price"
@@ -103,6 +128,7 @@ const viewMedicine = async () => {
               type="number"
               value={Price}
               onChange={setPrice}
+              required={true}
             ></InputField>
 
             <InputField
@@ -111,6 +137,7 @@ const viewMedicine = async () => {
               type="number"
               value={Quantity}
               onChange={setQuantity}
+              required={true}
             ></InputField>
 
             <InputField
@@ -119,6 +146,7 @@ const viewMedicine = async () => {
               type="text"
               value={MedicinalUse}
               onChange={setMedicinalUse}
+              required={true}
             ></InputField>
 
             <Row >
@@ -145,17 +173,40 @@ const viewMedicine = async () => {
             </Row>
 
             <body style={{backgroundColor: "transparent"}}> 
-                {ActiveIngredients.map((ingredient: any) =>
-                <li>{ingredient}</li>
+                {ActiveIngredients.map((ingredient: any, index) => 
+                
+                    (ingredient!= "" ?
+                    <Row>
+                    <li>{ingredient}</li> 
+                
+                    <Button
+                      className="btn btn-sm btn-danger"
+                      // id = {ingredient.name}
+                      style={{
+                        borderRadius: "5px",
+                        height: 20,
+                        paddingTop: 0,
+                        marginLeft: 10,
+                      }}
+
+                      onClick={(e) => removeIngredient(index)}
+                  >
+                    <span aria-hidden="true">&times;</span>
+                  </Button>
+                </Row>
+                :null
+                )
+                  
              )} </body>  <br></br>
          
-            <InputField
+            {/* <InputField
               id="Sales"
               label="Sales"
               type="number"
               value={Sales}
               onChange={setSales}
-            ></InputField>
+        
+            ></InputField> */}
 
             <InputField
               id="image"
