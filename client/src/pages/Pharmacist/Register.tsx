@@ -63,6 +63,7 @@ function RegisterPharmacist() {
 
       const response = await api.post(`/pharmacist/register`, data);
       console.log("Response:", response.data);
+      setError(null);
       setModalActive(true);
       setTimeout(closeModal, 1500);
     } catch (error) {

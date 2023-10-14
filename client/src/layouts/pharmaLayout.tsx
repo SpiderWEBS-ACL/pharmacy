@@ -23,7 +23,7 @@ const PharmacistLayout: React.FC = () => {
   const items = [
     {
       label: "Home",
-      key: "/pharmacists/",
+      key: "/pharmacist/PharmacistHome",
       icon: <HomeOutlined />,
     },
     {

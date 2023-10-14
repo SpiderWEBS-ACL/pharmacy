@@ -8,8 +8,8 @@ const { default: mongoose } = require("mongoose");
 
 const registerPatient = async (req, res) => {
   try {
-    const exists = await patientModel.findOne({"Username" : req.body.Username});
-    const exists2 = await patientModel.findOne({"Email" : req.body.Email});
+    const exists = await patientModel.findOne({"Username" : { $regex: req.body.Username, $options: "i" } });
+    const exists2 = await patientModel.findOne({"Email" : { $regex: req.body.Email, $options: "i" } });
     if(!exists && !exists2){
         var newPatient = await patientModel.create(req.body);
         res.status(201).json(newPatient);
@@ -26,9 +26,9 @@ const registerPatient = async (req, res) => {
 
 const login = async(req, res) => {
   try{
-    const usernamePat = await patientModel.findOne({ "Username": req.body.Username });
-    const usernamePharma = await pharmacistModel.findOne({ "Username": req.body.Username });
-    const usernameAdm = await adminModel.findOne({ "Username": req.body.Username });
+    const usernamePat = await patientModel.findOne({ "Username": { $regex: req.body.Username, $options: "i" } });
+    const usernamePharma = await pharmacistModel.findOne({ "Username": { $regex: req.body.Username, $options: "i" }  });
+    const usernameAdm = await adminModel.findOne({ "Username": { $regex: req.body.Username, $options: "i" }  });
 
     
     if (!usernamePharma&& !usernamePat && !usernameAdm) {
