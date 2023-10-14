@@ -68,7 +68,7 @@ const TextArea: React.FC<TextAreaProps> = ({
           onBlur={onBlur}
           disabled={disabled}
           required={required}
-          style={{width: `${value.length}ch`, marginBottom: 7}}
+          style={{ marginBottom: 7}}
         />
       );
     }

@@ -6,8 +6,8 @@ const { default: mongoose } = require("mongoose");
 // FOR TESTING
 const addPharmacist = async (req, res) => {
   try {
-    const exists = await pharmacistModel.findOne({ "Username": req.body.Username });
-    const exists2 = await pharmacistModel.findOne({"Email" : req.body.Email});
+    const exists = await pharmacistModel.findOne({ "Username": { $regex: req.body.Username, $options: "i" }  });
+    const exists2 = await pharmacistModel.findOne({"Email" :{ $regex: req.body.Email, $options: "i" } });
     if (!exists && !exists2) {
       const newPharm = await pharmacistModel.create(req.body);
       res.status(201).json(newPharm);
@@ -26,10 +26,10 @@ const addPharmacist = async (req, res) => {
 
 const registerPharmacist = async (req, res) => {
   try {
-    const exists = await pharmacistModel.findOne({"Username" : req.body.Username});
-    const exists2 = await PharmacistRegisterRequestModel.findOne({"Username" : req.body.Username});
-    const exists3 = await pharmacistModel.findOne({"Email" : req.body.Email});
-    const exists4 = await PharmacistRegisterRequestModel.findOne({"Email" : req.body.Email});
+    const exists = await pharmacistModel.findOne({"Username" : { $regex: req.body.Username, $options: "i" } });
+    const exists2 = await PharmacistRegisterRequestModel.findOne({"Username" : { $regex: req.body.Username, $options: "i" } });
+    const exists3 = await pharmacistModel.findOne({"Email" : { $regex: req.body.Email, $options: "i" } });
+    const exists4 = await PharmacistRegisterRequestModel.findOne({"Email" : { $regex: req.body.Email, $options: "i" } });
     if(!exists && !exists2 && !exists3 && !exists4){
         var newPharm = await PharmacistRegisterRequestModel.create(req.body);
         res.status(201).json(newPharm);
@@ -48,7 +48,7 @@ const registerPharmacist = async (req, res) => {
 
 const addMedicine = async (req, res) => {
   try {
-    const exists = await medicineModel.findOne({ Name: req.body.Name });
+    const exists = await medicineModel.findOne({ Name: { $regex: req.body.Name, $options: "i" } });
     if (!exists) {
       const newMedicine = await medicineModel.create(req.body);
       res.status(201).json(newMedicine);

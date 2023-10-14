@@ -2,6 +2,7 @@ import AdminLayout from "./layouts/adminLayout";
 import PharmacistLayout from "./layouts/pharmaLayout";
 import PatientLayout from "./layouts/patientLayout";
 import RegLog from "./pages/RegLog";
+import RegisterPharmacist from "./pages/Pharmacist/Register";
 
 
 const App: React.FC = () => {
@@ -9,6 +10,9 @@ const App: React.FC = () => {
     if(currentPath.includes('/patient/register')){
         return <RegLog />
     }else
+    if (currentPath.includes('/pharmacist/register')) {
+            return <RegisterPharmacist />
+    } else
     if (currentPath.includes('/admin')) {
             return <AdminLayout />
     }else  

@@ -13,10 +13,12 @@ import MedicineDetailsPharm from "./pages/Pharmacist/ViewMedicineDetails";
 import AllMedicinesPatient from "./pages/Patient/ViewAllMeds";
 import MedicineDetailsPatient from "./pages/Patient/ViewMedicineDetails";
 import RegLog from "./pages/RegLog";
-import Register from "./pages/Pharmacist/Register";
+import RegisterPharmacist from "./pages/Pharmacist/Register";
 import EditMedicine from "./pages/Pharmacist/EditMedicine";
 import AddMedicine from "./pages/Pharmacist/addMedicine";
 import PatientHome from "./pages/Patient/PatientHome";
+import AdminHome from "./pages/Admin/AdminHome";
+import PharmaHome from "./pages/Pharmacist/PharmaHome";
 
 const AppRouter: React.FC = () => {
   return (
@@ -38,8 +40,12 @@ const AppRouter: React.FC = () => {
         path="/admin/medicineDetails/:id"
         element={<MedicineDetailsAdmin />}
       />
+      <Route
+        path="/admin/AdminHome/"
+        element={<AdminHome />}
+      />
 
-      <Route path="/pharmacist/register" element={<Register />} />
+      <Route path="/pharmacist/register" element={<RegisterPharmacist />} />
       <Route path="/pharmacist/viewMedicines" element={<AllMedicinesPharm />} />
       <Route
         path="/pharmacist/medicineDetails/:id"
@@ -47,6 +53,7 @@ const AppRouter: React.FC = () => {
       />
       <Route path="/pharmacist/editMedicine/:id" element={<EditMedicine />} />
       <Route path="/pharmacist/addMedicine" element={<AddMedicine />} />
+      <Route path="/pharmacist/PharmacistHome" element={<PharmaHome />} />      
 
       <Route path="/patient/register" element={<RegLog />} />
       <Route path="/patient/viewMedicines" element={<AllMedicinesPatient />} />

@@ -23,8 +23,23 @@ const PharmacistLayout: React.FC = () => {
   const items = [
     {
       label: "Home",
-      key: "/pharmacists/",
+      key: "/pharmacist/PharmacistHome",
       icon: <HomeOutlined />,
+    },
+    {
+      label: "Medicines",
+      icon: <FileOutlined />,
+      key: "parentMeds",
+      children: [
+        {
+          label: "Browse All",
+          key: "/pharmacist/viewMedicines",
+        },
+        {
+          label: "Add Medicine",
+          key: "/pharmacist/addMedicine",
+        },
+      ],
     },
     {
       label: "Logout",
