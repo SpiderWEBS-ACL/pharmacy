@@ -16,6 +16,7 @@ import RegLog from "./pages/RegLog";
 import Register from "./pages/Pharmacist/Register";
 import EditMedicine from "./pages/Pharmacist/EditMedicine";
 import AddMedicine from "./pages/Pharmacist/addMedicine";
+import PatientHome from "./pages/Patient/PatientHome";
 
 const AppRouter: React.FC = () => {
   return (
@@ -53,7 +54,11 @@ const AppRouter: React.FC = () => {
         path="/patient/medicineDetails/:id"
         element={<MedicineDetailsPatient />}
       />
-    </Routes>
+    <Route
+    path="/patient/PatientHome"
+    element={<PatientHome />}
+  />
+</Routes>
   );
 };
 

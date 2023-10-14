@@ -23,7 +23,7 @@ const PatientLayout: React.FC = () => {
   const items = [
     {
       label: "Home",
-      key: "/patient/",
+      key: "/patient/PatientHome",
       icon: <HomeOutlined />,
     },
     {
