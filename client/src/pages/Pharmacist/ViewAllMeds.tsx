@@ -95,7 +95,7 @@ const AllMedicines = () => {
 
     api
       .post(`medicine/filterMedicineByMedicinalUse`, data, {
-        params: { MedicinalUse: filterValue }
+        params: { MedicinalUse: filterValue },
       }) //get request
       .then((response) => {
         // setMedicines(response.data); //store response (medicines) in variable
@@ -260,8 +260,14 @@ const AllMedicines = () => {
           
           {(filtering || searching) && (
             <Col style={{}}>
-              <a href="" onClick={clearSearch} style={{fontSize: 16, float: "right"}}>   Show All Medicine</a>
-
+              <a
+                href=""
+                onClick={clearSearch}
+                style={{ fontSize: 16, float: "right" }}
+              >
+                {" "}
+                Show All Medicine
+              </a>
             </Col>
           )}
         </Row>

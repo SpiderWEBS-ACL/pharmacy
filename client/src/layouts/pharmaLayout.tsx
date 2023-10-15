@@ -60,6 +60,7 @@ const PharmacistLayout: React.FC = () => {
         <Menu
           onClick={({ key }) => {
             if (key === "/") {
+              //TODO signout feature here
               localStorage.clear();
               navigate(key);
               window.location.reload();

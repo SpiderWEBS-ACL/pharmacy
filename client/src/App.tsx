@@ -6,22 +6,8 @@ import RegisterPharmacist from "./pages/Pharmacist/Register";
 import Handler from "./Handler";
 
 const App: React.FC = () => {
-    return <Handler />;
-    // const currentPath = window.location.pathname;
-    // if(currentPath.includes('/patient/register')){
-    //     return <RegLog />
-    // }else
-    // if (currentPath.includes('/pharmacist/register')) {
-    //         return <RegisterPharmacist />
-    // } else
-    // if (currentPath.includes('/admin')) {
-    //         return <AdminLayout />
-    // }else  
-    // if (currentPath.includes('/pharmacist')) {
-    //     return <PharmacistLayout />}
-    // else if(currentPath.includes('/patient')){
-    //     return <PatientLayout />}
-    
-}
+  return <Handler />;
+};
+
 
 export default App;

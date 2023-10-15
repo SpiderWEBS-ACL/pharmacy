@@ -76,18 +76,13 @@ const RegLog: React.FC = () => {
 
       const response = await api.post(`/patient/register`, data);
       console.log("Response:", response.data);
-      setError(null);
-      setModalActive(true);
-      setTimeout(toggleSignUp, 1500);
-    } catch (error) {
+      localStorage.setItem("id", response.data.id);
+      localStorage.setItem("type", response.data.type);
+      handleRedirection(response.data);
+      window.location.reload();
+    } catch (error: any) {
       console.error("Error:", error);
-      if (axios.isAxiosError(error) && error.response) {
-        const apiError = error.response.data.error;
-        setError(apiError);
-      } else {
-        setError("An error occurred");
-      }
-      setModalActive(true);
+      message.error(`${error.response.data.error}`);
     }
   };
 
@@ -104,21 +99,13 @@ const RegLog: React.FC = () => {
       };
       const response = await api.post(`/patient/login`, data);
       console.log(response.data);
-      setError(null);
       localStorage.setItem("id", response.data.id);
       localStorage.setItem("type", response.data.type);
       handleRedirection(response.data);
       window.location.reload();
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error:", error);
-      if (axios.isAxiosError(error) && error.response) {
-        const apiError = error.response.data.error;
-        setError(apiError);
-        message.error(`${error.response.data.error}`);
-      } else {
-        setError("An error occurred");
-      }
-      // setModalActive(true);
+      message.error(`${error.response.data.error}`);
     }
   };
 
