@@ -3,8 +3,8 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 
 const PharmaHome = () => {
+  
   const id = localStorage.getItem("id");
-  // const { id } =  useParams<{ id: string }>()
 
   const [pharmacistInfo, setPharmacistInfo] = useState<any>({});
 

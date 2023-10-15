@@ -16,14 +16,14 @@ import {
 import AppRouter from "../AppRouter";
 
 const { Header, Content, Footer, Sider } = Layout;
-
+const id = localStorage.getItem("id");
 const PharmacistLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const items = [
     {
       label: "Home",
-      key: "/pharmacist/PharmacistHome",
+      key: "/pharmacist/PharmacistHome/" + id,
       icon: <HomeOutlined />,
     },
     {

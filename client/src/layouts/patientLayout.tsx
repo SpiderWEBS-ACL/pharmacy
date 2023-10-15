@@ -16,20 +16,26 @@ import {
 import AppRouter from "../AppRouter";
 
 const { Header, Content, Footer, Sider } = Layout;
-
+const id = localStorage.getItem("id");
 const PatientLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const items = [
     {
       label: "Home",
-      key: "/patient/PatientHome",
+      key: "/patient/PatientHome/" + id,
       icon: <HomeOutlined />,
     },
     {
-      label: "View all Meds",
-      key: "/patient/viewMedicines",
-      icon: <UserOutlined />,
+      label: "Medicines",
+      icon: <FileOutlined />,
+      key: "parentMeds",
+      children: [
+        {
+          label: "Browse All",
+          key: "/patient/viewMedicines",
+        },
+      ],
     },
     {
       label: "Logout",

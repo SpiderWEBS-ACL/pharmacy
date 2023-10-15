@@ -23,6 +23,7 @@ import PharmaHome from "./pages/Pharmacist/PharmaHome";
 const AppRouter: React.FC = () => {
   return (
     <Routes>
+      <Route path="/" element={<RegLog />} />
       <Route path="/admin/add" element={<AddAdminForm />} />
       <Route path="/admin/allPharmacists" element={<Pharmacists />} />
       <Route path="/admin/Admins" element={<Admins />} />
@@ -53,7 +54,7 @@ const AppRouter: React.FC = () => {
       />
       <Route path="/pharmacist/editMedicine/:id" element={<EditMedicine />} />
       <Route path="/pharmacist/addMedicine" element={<AddMedicine />} />
-      <Route path="/pharmacist/PharmacistHome" element={<PharmaHome />} />      
+      <Route path="/pharmacist/PharmacistHome/:id" element={<PharmaHome />} />      
 
       <Route path="/" element={<RegLog />} />
       <Route path="/patient/viewMedicines" element={<AllMedicinesPatient />} />
@@ -62,7 +63,7 @@ const AppRouter: React.FC = () => {
         element={<MedicineDetailsPatient />}
       />
     <Route
-    path="/patient/PatientHome"
+    path="/patient/PatientHome/:id"
     element={<PatientHome />}
   />
 </Routes>

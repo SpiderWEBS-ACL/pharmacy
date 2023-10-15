@@ -23,17 +23,17 @@ const AllAdmins = () => {
       });
   }, [deleted]);
 
-  const handleDelete = async (id: string) => {
-    try {
-      setLoading(true);
-      const response = await api.delete(`/removeAdmin/${id}`);
-      setDeleted(!deleted);
-      console.log("Response:", response.data);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-    setLoading(false);
-  };
+  // const handleDelete = async (id: string) => {
+  //   try {
+  //     setLoading(true);
+  //     const response = await api.delete(`/removeAdmin/${id}`);
+  //     setDeleted(!deleted);
+  //     console.log("Response:", response.data);
+  //   } catch (error) {
+  //     console.error("Error:", error);
+  //   }
+  //   setLoading(false);
+  // };
 
   if (loading) {
     return (
@@ -59,14 +59,14 @@ const AllAdmins = () => {
         <thead>
           <tr>
             <th>Username</th>
-            <th>Remove</th>
+            {/* <th>Remove</th> */}
           </tr>
         </thead>
         <tbody>
           {admins.map((request: any, index) => (
             <tr key={request._id}>
               <td>{request.Username}</td>
-              <td>
+              {/* <td>
                 <button
                   className="btn btn-sm btn-danger"
                   style={{
@@ -78,7 +78,7 @@ const AllAdmins = () => {
                 >
                   <span aria-hidden="true">&times;</span>
                 </button>
-              </td>
+              </td> */}
             </tr>
           ))}
         </tbody>

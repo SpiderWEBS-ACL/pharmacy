@@ -72,35 +72,72 @@ const Patients = () => {
         </thead>
 
         <tbody>
-          {patients.map((request: any, index) => (
-            <tr key={request._id}>
-              <td>{request.Username}</td>
-              <td>{request.Name}</td>
-              <td>{request.Email}</td>
-              <td>{request.Dob.split("T")[0]}</td>
-              <td>{request.Gender}</td>
-              <td>{request.Mobile}</td>
-              <td>{request.EmergencyContact.Name}</td>
-              <td>{request.EmergencyContact.Mobile}</td>
-              <td>{request.EmergencyContact.relationToPatient}</td>
-              <td>
-                <button
-                  className="btn btn-sm btn-danger"
-                  style={{
-                    padding: "4px 8px",
-                    fontSize: "12px",
-                    borderRadius: "5px",
-                  }}
-                  onClick={() => handleDelete(request._id)}
-                >
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </td>
-            </tr>
-          ))}
+          {patients.map((request: any, index) => {
+            if (request.EmergencyContact ){
+              const emergencyContact = request.EmergencyContact
+              return (
+                <tr key={request._id}>
+                  <td>{request.Username}</td>
+                  <td>{request.Name}</td>
+                  <td>{request.Email}</td>
+                  <td>{request.Dob.split("T")[0]}</td>
+                  <td>{request.Gender}</td>
+                  <td>{request.Mobile}</td>
+              
+                  <td>{emergencyContact.Name}</td>
+                  <td>{emergencyContact.Mobile}</td>
+                  <td>{emergencyContact.relationToPatient}</td>
+                 
+                  <td>
+                    <button
+                      className="btn btn-sm btn-danger"
+                      style={{
+                        padding: "4px 8px",
+                        fontSize: "12px",
+                        borderRadius: "5px",
+                      }}
+                      onClick={() => handleDelete(request._id)}
+                    >
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </td>
+                </tr>
+            )}
+
+            return (
+              <tr key={request._id}>
+                <td>{request.Username}</td>
+                <td>{request.Name}</td>
+                <td>{request.Email}</td>
+                <td>{request.Dob.split("T")[0]}</td>
+                <td>{request.Gender}</td>
+                <td>{request.Mobile}</td>
+
+                <td></td>
+                <td></td>
+                <td></td>
+               
+                <td>
+                  <button
+                    className="btn btn-sm btn-danger"
+                    style={{
+                      padding: "4px 8px",
+                      fontSize: "12px",
+                      borderRadius: "5px",
+                    }}
+                    onClick={() => handleDelete(request._id)}
+                  >
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </td>
+              </tr>
+           
+          )})}
+            
         </tbody>
       </table>
     </div>
+  
   );
 };
 

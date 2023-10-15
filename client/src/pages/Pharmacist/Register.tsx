@@ -141,11 +141,12 @@ function RegisterPharmacist() {
   };
 
   return (
-    <div className="wrapper">
-      <div className="header" style={{ marginBottom: -30 }}>
-        <h1>
-          <strong>Apply to become a pharmacist</strong>
-        </h1>
+    <div className="wrapper"  style={{
+      boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)", // Add shadow
+      border: "1px solid #ccc", // Add border
+    }}>
+      <div className="header" style={{marginBottom: -30}}>
+        <h1><strong>Apply to become a pharmacist</strong></h1>
       </div>
 
       <div className="wrapper">
