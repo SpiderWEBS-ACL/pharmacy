@@ -141,6 +141,7 @@ const RegLog: React.FC = () => {
   };
   const handleRegAsPharmacist = () => {
     navigate("pharmacist/register");
+    window.location.reload();
   };
 
   const toggleSignUp = () => {

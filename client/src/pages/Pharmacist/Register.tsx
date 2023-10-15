@@ -1,10 +1,19 @@
 import React, { useState, ChangeEvent } from "react";
-import {useNavigate} from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import {IoChevronBackCircle, IoChevronForwardCircle, IoCheckmarkDoneCircleSharp, IoAlertCircle, IoClose} from 'react-icons/io5'
+import {
+  IoChevronBackCircle,
+  IoChevronForwardCircle,
+  IoCheckmarkDoneCircleSharp,
+  IoAlertCircle,
+  IoClose,
+} from "react-icons/io5";
 import { DatePicker, DatePickerProps, message, Button } from "antd";
 import InputField from "../../components/InputField";
-import { validatePassword, validateUsername } from "../../utils/ValidationUtils";
+import {
+  validatePassword,
+  validateUsername,
+} from "../../utils/ValidationUtils";
 
 const steps = [
   { id: 1, title: "Account Info", fields: ["Username", "Password", "Email"] },
@@ -42,8 +51,8 @@ function RegisterPharmacist() {
   const handleSignUp = async (event: React.FormEvent) => {
     event.preventDefault;
 
-    if(activeForm == 3){
-      if(!HourlyRate || !Affiliation || !EducationalBackground){
+    if (activeForm == 3) {
+      if (!HourlyRate || !Affiliation || !EducationalBackground) {
         message.error("Please Fill In All Requirements");
         return;
       }
@@ -72,7 +81,7 @@ function RegisterPharmacist() {
         const apiError = error.response.data.error;
         setError(apiError);
       } else {
-        setError("An error occurred");  
+        setError("An error occurred");
       }
       setModalActive(true);
     }
@@ -90,10 +99,8 @@ function RegisterPharmacist() {
   };
 
   const handleNext = () => {
-
-    if(activeForm == 1){
-
-      if(!Username || !Password || !Email){
+    if (activeForm == 1) {
+      if (!Username || !Password || !Email) {
         message.error("Please Fill In All Requirements");
         return;
       }
@@ -102,13 +109,15 @@ function RegisterPharmacist() {
       const isPasswordValid = validatePassword(Password);
 
       if (!isUsernameValid || !isPasswordValid) {
-        message.error("Username and Password must meet the minimum requirements.");
+        message.error(
+          "Username and Password must meet the minimum requirements."
+        );
         return;
       }
     }
 
-    if(activeForm == 2){
-      if(!Name || !Dob){
+    if (activeForm == 2) {
+      if (!Name || !Dob) {
         message.error("Please Fill In All Requirements");
         return;
       }
@@ -127,12 +136,16 @@ function RegisterPharmacist() {
 
   const closeModal = () => {
     setModalActive(false);
+    navigate("/");
+    window.location.reload();
   };
 
   return (
     <div className="wrapper">
-      <div className="header" style={{marginBottom: -30}}>
-        <h1><strong>Apply to become a pharmacist</strong></h1>
+      <div className="header" style={{ marginBottom: -30 }}>
+        <h1>
+          <strong>Apply to become a pharmacist</strong>
+        </h1>
       </div>
 
       <div className="wrapper">
@@ -252,14 +265,16 @@ function RegisterPharmacist() {
                 </div>
 
                 <div key="2" className="input_wrap">
-                  <label htmlFor="Dob"><strong>Date of Birth:</strong></label>
+                  <label htmlFor="Dob">
+                    <strong>Date of Birth:</strong>
+                  </label>
                   <DatePicker
                     onChange={onDateChange}
                     style={{
                       width: 350,
                       height: 35,
                       marginRight: 30,
-                      marginBottom: 10
+                      marginBottom: 10,
                     }}
                   />
                 </div>
@@ -279,34 +294,34 @@ function RegisterPharmacist() {
               <div className="form_container">
                 <div key="1" className="input_wrap">
                   <InputField
-                      id="HourRate"
-                      label="Hourly Rate"
-                      type="number"
-                      value={HourlyRate}
-                      onChange={setHourlyRate}
-                      required={true}
+                    id="HourRate"
+                    label="Hourly Rate"
+                    type="number"
+                    value={HourlyRate}
+                    onChange={setHourlyRate}
+                    required={true}
                   />
                 </div>
 
                 <div key="2" className="input_wrap">
                   <InputField
-                      id="Affiliation"
-                      label="Affilliation"
-                      type="text"
-                      value={Affiliation}
-                      onChange={setAffiliation}
-                      required={true}
+                    id="Affiliation"
+                    label="Affilliation"
+                    type="text"
+                    value={Affiliation}
+                    onChange={setAffiliation}
+                    required={true}
                   />
                 </div>
 
                 <div key="3 " className="input_wrap">
-                <InputField
-                      id="Education"
-                      label="Educational Background"
-                      type="text"
-                      value={EducationalBackground}
-                      onChange={setEducation}
-                      required={true}
+                  <InputField
+                    id="Education"
+                    label="Educational Background"
+                    type="text"
+                    value={EducationalBackground}
+                    onChange={setEducation}
+                    required={true}
                   />
                 </div>
               </div>
@@ -314,10 +329,19 @@ function RegisterPharmacist() {
           </div>
         </div>
 
-        <div className="btns_wrap" style={{marginTop: 20}}>
+        <div className="btns_wrap" style={{ marginTop: 20 }}>
           <div className={`common_btns form_${activeForm}_btns`}>
             {activeForm !== 1 && (
-              <Button className="btn_back" onClick={handleBack} style={{width: 90, height: 35, textAlign: "left", backgroundColor: "crimson"}}>
+              <Button
+                className="btn_back"
+                onClick={handleBack}
+                style={{
+                  width: 90,
+                  height: 35,
+                  textAlign: "left",
+                  backgroundColor: "crimson",
+                }}
+              >
                 <span className="icon">
                   <IoChevronBackCircle />
                 </span>
@@ -325,35 +349,61 @@ function RegisterPharmacist() {
               </Button>
             )}
             {activeForm !== steps.length ? (
-             <Button className="btn_next" onClick={handleNext} style={{width: 90, height: 35, textAlign: "right"}}>
-             Next
-             <span className="icon">
-               <IoChevronForwardCircle />
-             </span>
-           </Button>
+              <Button
+                className="btn_next"
+                onClick={handleNext}
+                style={{ width: 90, height: 35, textAlign: "right" }}
+              >
+                Next
+                <span className="icon">
+                  <IoChevronForwardCircle />
+                </span>
+              </Button>
             ) : (
-              <Button className="btn_next" onClick={handleSignUp} style={{width: 90, height: 35, textAlign: "right", backgroundColor: "green"}}>
-              Submit
-              <span className="icon">
-                <IoCheckmarkDoneCircleSharp />
-              </span>
-            </Button>
+              <Button
+                className="btn_next"
+                onClick={handleSignUp}
+                style={{
+                  width: 90,
+                  height: 35,
+                  textAlign: "right",
+                  backgroundColor: "green",
+                }}
+              >
+                Submit
+                <span className="icon">
+                  <IoCheckmarkDoneCircleSharp />
+                </span>
+              </Button>
             )}
           </div>
         </div>
-        <div className={`modal_wrapper ${modalActive ? "active" : ""}`} style={{color: (error? "red" : "green")}}>
+        <div
+          className={`modal_wrapper ${modalActive ? "active" : ""}`}
+          style={{ color: error ? "red" : "green" }}
+        >
           <div className="shadow"></div>
-          <div className="success_wrap" style={{position: "absolute"}}>
-          
-          <div style={{position: "absolute", top: 10, right: 20}}>  
-            <IoClose name="close-outline" style={{fontSize: 20, color: "black"}} onClick={closeModal}></IoClose>
-          </div>
-              
-            <span className="modal_icon" style={{backgroundColor: "transparent", marginBottom: 10}}>
-              {!error && (<IoCheckmarkDoneCircleSharp style={{color: "green"}}/>)}
-              {error && (<IoAlertCircle style={{color: "red"}}/>)}
+          <div className="success_wrap" style={{ position: "absolute" }}>
+            <div style={{ position: "absolute", top: 10, right: 20 }}>
+              <IoClose
+                name="close-outline"
+                style={{ fontSize: 20, color: "black" }}
+                onClick={closeModal}
+              ></IoClose>
+            </div>
+
+            <span
+              className="modal_icon"
+              style={{ backgroundColor: "transparent", marginBottom: 10 }}
+            >
+              {!error && (
+                <IoCheckmarkDoneCircleSharp style={{ color: "green" }} />
+              )}
+              {error && <IoAlertCircle style={{ color: "red" }} />}
             </span>
-            <h6>{error? error: "Registration Request Submitted Successfully."}</h6>
+            <h6>
+              {error ? error : "Registration Request Submitted Successfully."}
+            </h6>
           </div>
         </div>
       </div>
