@@ -7,9 +7,9 @@ const PatientHome = () => {
 
   var { id } = useParams<{ id: string }>();
 
-  if(id == "00"){
-    id  = "6523f1431108fe576c79d5b3";
-  }
+  // if(id == "00"){
+  //   id  = "6523f1431108fe576c79d5b3";
+  // }
 
   const [patientInfo, setPatientInfo] = useState<any>({});
   const [patientEmergencyContact, setEmergencyContact] = useState<any>({});

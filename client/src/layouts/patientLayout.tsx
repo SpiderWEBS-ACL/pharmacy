@@ -16,14 +16,14 @@ import {
 import AppRouter from "../AppRouter";
 
 const { Header, Content, Footer, Sider } = Layout;
-
+const id = localStorage.getItem("id");
 const PatientLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const items = [
     {
       label: "Home",
-      key: "/patient/PatientHome/00",
+      key: "/patient/PatientHome/" + id,
       icon: <HomeOutlined />,
     },
     {
@@ -39,7 +39,7 @@ const PatientLayout: React.FC = () => {
     },
     {
       label: "Logout",
-      key: "/patient/logout",
+      key: "/",
       icon: <PoweroffOutlined />,
       danger: true,
     },
@@ -55,8 +55,11 @@ const PatientLayout: React.FC = () => {
         <div className="demo-logo-vertical" />
         <Menu
           onClick={({ key }) => {
-            if (key === "signout") {
+            if (key === "/") {
               //TODO signout feature here
+              localStorage.clear();
+              navigate(key);
+              window.location.reload();
             } else {
               navigate(key);
             }

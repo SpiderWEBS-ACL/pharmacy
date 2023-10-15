@@ -7,9 +7,9 @@ const PharmaHome = () => {
 
   var { id } = useParams<{ id: string }>();
 
-  if(id == "00"){     //default id for testing
-    id  = "6523f1ce1108fe576c79d5be";
-  }
+  // if(id == "00"){     //default id for testing
+  //   id  = "6523f1ce1108fe576c79d5be";
+  // }
 
   const [pharmacistInfo, setPharmacistInfo] = useState<any>({});
 

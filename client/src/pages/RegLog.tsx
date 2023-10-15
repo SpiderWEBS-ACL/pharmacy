@@ -106,24 +106,38 @@ const RegLog: React.FC = () => {
       const response = await api.post(`/patient/login`, data);
       console.log(response.data);
       setError(null);
-      handleRedirection(response.data.id);
+      localStorage.setItem("id", response.data.id);
+      localStorage.setItem("type", response.data.type);
+      handleRedirection(response.data);
       window.location.reload();
     } catch (error) {
       console.error("Error:", error);
       if (axios.isAxiosError(error) && error.response) {
         const apiError = error.response.data.error;
         setError(apiError);
+        message.error(`${error.response.data.error}`);
       } else {
         setError("An error occurred");
       }
-      setModalActive(true);
+      // setModalActive(true);
     }
+  };
+
+  const handleRegAsDoctor = () => {
+    navigate("/doctor/register");
+    window.location.reload();
   };
 
   const navigate = useNavigate();
 
-  const handleRedirection = (id: any) => {
-    navigate(`/patient/PatientHome/${id}`);
+  const handleRedirection = (item: any) => {
+    if (item.type == "Patient") {
+      navigate(`/patient/PatientHome/${item.id}`);
+    } else if (item.type == "Pharmacist") {
+      navigate(`/pharmacist/PharmacistHome/${item.id}`);
+    } else if (item.type == "Admin") {
+      navigate(`/admin/AdminHome`);
+    }
   };
 
   const handleBlur = (fieldName: string) => {
@@ -154,7 +168,13 @@ const RegLog: React.FC = () => {
   };
 
   return (
-    <div className={`cont ${isSignUp ? "s--signup" : ""}`}>
+    <div
+      style={{
+        boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)", // Add shadow
+        border: "1px solid #ccc", // Add border
+      }}
+      className={`cont ${isSignUp ? "s--signup" : ""}`}
+    >
       <div className="form sign-in ">
         <h2 className="h2">Welcome Back</h2>
 
@@ -180,6 +200,18 @@ const RegLog: React.FC = () => {
         <p className="forgot-pass">Forgot password?</p>
         <button onClick={handleSignIn} type="button" className="submit button">
           Sign In
+        </button>
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <button
+          onClick={handleRegAsDoctor}
+          type="button"
+          className="submit button"
+        >
+          Register As Doctor
         </button>
       </div>
 

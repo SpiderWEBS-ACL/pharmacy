@@ -253,7 +253,7 @@ const AllMedicines = () => {
 
           {(filtering || searching) && (
             <Col style={{}}>
-              <a href="" onClick={clearSearch} style={{fontSize: 16, float: "right"}}>   Show All Medicine</a>
+              <a href="" onClick={clearSearch} style={{fontSize: 16, float: "right", position: "absolute", marginTop: 3}}>   Show All Medicine</a>
 
             </Col>
             )}

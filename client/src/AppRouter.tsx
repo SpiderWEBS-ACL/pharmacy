@@ -23,6 +23,7 @@ import PharmaHome from "./pages/Pharmacist/PharmaHome";
 const AppRouter: React.FC = () => {
   return (
     <Routes>
+      <Route path="/" element={<RegLog />} />
       <Route path="/admin/add" element={<AddAdminForm />} />
       <Route path="/admin/allPharmacists" element={<Pharmacists />} />
       <Route path="/admin/Admins" element={<Admins />} />
