@@ -2,11 +2,10 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
-
 const PatientHome = () => {
-
   // const { id } = useParams<{ id: string }>();
-  const id  = "6523f1431108fe576c79d5b3";
+  // const id  = "6523f1431108fe576c79d5b3";
+  const id = localStorage.getItem("id");
 
   const [patientInfo, setPatientInfo] = useState<any>({});
   const [patientEmergencyContact, setEmergencyContact] = useState<any>({});
@@ -47,7 +46,8 @@ const PatientHome = () => {
             Emergency Contact Number: {patientEmergencyContact.Mobile}
           </p>
           <p className="card-text">
-            Emergency Contact Relation: {patientEmergencyContact.relationToPatient}
+            Emergency Contact Relation:{" "}
+            {patientEmergencyContact.relationToPatient}
           </p>
         </div>
       </div>
@@ -56,4 +56,3 @@ const PatientHome = () => {
 };
 
 export default PatientHome;
-  

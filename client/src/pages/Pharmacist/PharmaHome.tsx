@@ -2,11 +2,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
-
 const PharmaHome = () => {
-
-  const id =  "6523f1ce1108fe576c79d5be";
-  // const { id } =  useParams<{ id: string }>() 
+  const id = localStorage.getItem("id");
+  // const { id } =  useParams<{ id: string }>()
 
   const [pharmacistInfo, setPharmacistInfo] = useState<any>({});
 
@@ -38,7 +36,9 @@ const PharmaHome = () => {
           <p className="card-text">DOB: {datePart}</p>
           <p className="card-text">HourlyRate: {pharmacistInfo.HourlyRate}</p>
           <p className="card-text">Affiliation: {pharmacistInfo.Affiliation}</p>
-          <p className="card-text">Educational Background: {pharmacistInfo.EducationalBackground}</p>
+          <p className="card-text">
+            Educational Background: {pharmacistInfo.EducationalBackground}
+          </p>
         </div>
       </div>
     </div>
@@ -46,4 +46,3 @@ const PharmaHome = () => {
 };
 
 export default PharmaHome;
-  
