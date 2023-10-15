@@ -2,6 +2,7 @@ import AdminLayout from "./layouts/adminLayout";
 import PharmacistLayout from "./layouts/pharmaLayout";
 import PatientLayout from "./layouts/patientLayout";
 import RegLog from "./pages/RegLog";
+
 import RegisterPharmacist from "./pages/Pharmacist/Register";
 import { useNavigate } from "react-router-dom";
 const Handler: React.FC = () => {

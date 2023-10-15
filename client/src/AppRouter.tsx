@@ -55,7 +55,7 @@ const AppRouter: React.FC = () => {
       <Route path="/pharmacist/addMedicine" element={<AddMedicine />} />
       <Route path="/pharmacist/PharmacistHome" element={<PharmaHome />} />      
 
-      <Route path="/patient/register" element={<RegLog />} />
+      <Route path="/" element={<RegLog />} />
       <Route path="/patient/viewMedicines" element={<AllMedicinesPatient />} />
       <Route
         path="/patient/medicineDetails/:id"
