@@ -263,7 +263,7 @@ const AllMedicines = () => {
               <a
                 href=""
                 onClick={clearSearch}
-                style={{ fontSize: 16, float: "right" }}
+                style={{ fontSize: 16, float: "right", position: "absolute", marginTop: 3 }}
               >
                 {" "}
                 Show All Medicine

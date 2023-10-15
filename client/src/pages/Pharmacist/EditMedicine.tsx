@@ -74,7 +74,11 @@ const EditMedicine = () => {
   };
 
   const addIngredient = async(ingredient: string) => {
-    if(ActiveIngredients[0] == ""){
+    if(ingredient == ""){
+      message.error("Please Specify Active Ingredient");
+      return;
+   }
+    else if(ActiveIngredients[0] == ""){
         setActiveIngredients([Ingredient]);
     }
     else{
@@ -174,10 +178,12 @@ const EditMedicine = () => {
 
            
             <body style={{backgroundColor: "transparent"}}> 
-                {ActiveIngredients.map((ingredient: any, index) =>
-                  <Row>
+                {ActiveIngredients.map((ingredient: any, index) => 
+                
+                    (ingredient!= "" ?
+                    <Row>
                     <li>{ingredient}</li> 
-                  
+                
                     <Button
                       className="btn btn-sm btn-danger"
                       // id = {ingredient.name}
@@ -193,6 +199,9 @@ const EditMedicine = () => {
                     <span aria-hidden="true">&times;</span>
                   </Button>
                 </Row>
+                :null
+                )
+                  
              )} </body>  <br></br>
 
             <InputField

@@ -14,7 +14,6 @@ import {
   IoCheckmarkDoneCircleSharp,
   IoClose,
 } from "react-icons/io5";
-// import Handler from "../Handler";
 
 const RegLog: React.FC = () => {
   const [modalActive, setModalActive] = useState(false);
@@ -76,10 +75,8 @@ const RegLog: React.FC = () => {
 
       const response = await api.post(`/patient/register`, data);
       console.log("Response:", response.data);
-      localStorage.setItem("id", response.data.id);
-      localStorage.setItem("type", response.data.type);
-      handleRedirection(response.data);
-      window.location.reload();
+      message.success("Congrats, you are in!");
+      setTimeout(toggleSignUp, 1500);
     } catch (error: any) {
       console.error("Error:", error);
       message.error(`${error.response.data.error}`);
@@ -106,7 +103,7 @@ const RegLog: React.FC = () => {
     } catch (error: any) {
       console.error("Error:", error);
       message.error(`${error.response.data.error}`);
-    }
+    }
   };
 
   const handleRegAsPharm = () => {
