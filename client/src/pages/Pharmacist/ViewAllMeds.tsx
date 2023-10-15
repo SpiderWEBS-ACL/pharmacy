@@ -5,7 +5,6 @@ import { Button, Col, Row } from "react-bootstrap";
 import { DatePicker, DatePickerProps, Input, Select } from "antd";
 import { useNavigate } from "react-router-dom";
 
-
 const AllMedicines = () => {
   const [medicines, setMedicines] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -86,46 +85,48 @@ const AllMedicines = () => {
       // setSearching(false);
       // setLoading(true);
 
-      const data = JSON.parse(JSON.stringify((searching? searchResults:medicines).map(item => JSON.stringify(item))));
+    const data = JSON.parse(
+      JSON.stringify(
+        (searching ? searchResults : medicines).map((item) =>
+          JSON.stringify(item)
+        )
+      )
+    );
 
-      api
-        .post(`medicine/filterMedicineByMedicinalUse`, data, {
-          params: { MedicinalUse: filterValue }
-        }) //get request
-        .then((response) => {
-          // setMedicines(response.data); //store response (medicines) in variable
-          setfilteredResults(response.data);
-          setLoading(false); //loading screen --> off
-          setFiltering(true);
-          // setFilterValue("");
-          console.log(response.data);
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-        });
+    api
+      .post(`medicine/filterMedicineByMedicinalUse`, data, {
+        params: { MedicinalUse: filterValue }
+      }) //get request
+      .then((response) => {
+        // setMedicines(response.data); //store response (medicines) in variable
+        setfilteredResults(response.data);
+        setLoading(false); //loading screen --> off
+        setFiltering(true);
+        setFilterValue("");
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
     }
   };
 
   const clearFilter = async () => {
-
-    if(searching){
+    if (searching) {
       api
-      .get(`medicine/searchForMedicine`, { params: { Name: searchValue } }) //get request
-      .then((response) => {
-        setMedicines(response.data); //store response (medicines) in variable
-        setLoading(false); //loading screen --> off
-        console.log(response.data);
-        setMedicinalUse("");
-        setFilterValue("");
-        setFiltering(false);
-      })
-      .catch((error) => {
-        console.error("Error:", error) ;
-      });
-      
-    }
-
-    else{
+        .get(`medicine/searchForMedicine`, { params: { Name: searchValue } }) //get request
+        .then((response) => {
+          setMedicines(response.data); //store response (medicines) in variable
+          setLoading(false); //loading screen --> off
+          console.log(response.data);
+          setMedicinalUse("");
+          setFilterValue("");
+          setFiltering(false);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    } else {
       try {
         const response = await api.get(`/medicine/viewMedicines`);
         setMedicinalUse("");
@@ -231,40 +232,39 @@ const AllMedicines = () => {
         </button>
 
         <br></br>
-      </div>  
+      </div>
 
       <div className="popup">
-          <br></br>
+        <br></br>
         <Row>
-        <Col md="auto">
-          {searching && !filtering && (
+          <Col md="auto">
+            {searching && !filtering && (
               <h4>
-              <b>Showing Search Results for:</b> {searchValue}
-            </h4> 
-          )}
+                <b>Showing Search Results for:</b> {searchValue}
+              </h4>
+            )}
 
-          {searching && filtering && (
-            <h4>
-              <b>Showing Search Results for:</b> {searchValue} <b> used for: </b> {medicinalUse}
-            </h4>    
-          )}
+            {searching && filtering && (
+              <h4>
+                <b>Showing Search Results for:</b> {searchValue}{" "}
+                <b> used for: </b> {medicinalUse}
+              </h4>
+            )}
 
-          {filtering && !searching && medicinalUse != "" && (
+            {filtering && !searching && medicinalUse != "" && (
               <h4>
                 <b>Showing medicines used for:</b> {medicinalUse}
               </h4>
-          )}
+            )}
           </Col>
           
           {(filtering || searching) && (
             <Col style={{}}>
-              <a href="" onClick={clearSearch} style={{fontSize: 16, float: "right", position: "absolute", marginTop: 3}}>   Show All Medicine</a>
+              <a href="" onClick={clearSearch} style={{fontSize: 16, float: "right"}}>   Show All Medicine</a>
 
             </Col>
-            )}
+          )}
         </Row>
-          
-
       </div>
 
       <table className="table" id="medicineResults">
@@ -278,7 +278,14 @@ const AllMedicines = () => {
         </thead>
 
         <tbody>
-          {(searching? (filtering? filteredResults:searchResults): (filtering? filteredResults:medicines)).map((request: any, index) => (
+          {(searching
+            ? filtering
+              ? filteredResults
+              : searchResults
+            : filtering
+            ? filteredResults
+            : medicines
+          ).map((request: any, index) => (
             <tr key={request._id} style={{ verticalAlign: "middle" }}>
               <td>
                 <img src={request.imageURL} width={200} height={200}></img>

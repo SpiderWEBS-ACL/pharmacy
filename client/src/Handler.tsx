@@ -10,7 +10,7 @@ const Handler: React.FC = () => {
   if (userType === "Patient") return <PatientLayout />;
   else if (userType === "Admin") return <AdminLayout />;
   else if (userType === "Pharmacist") return <PharmaLayout />;
-  else if (currentPath.includes("/doctor/register")) return <Register />;
+  else if (currentPath.includes("/pharmacist/register")) return <Register />;
   else return <RegLog />;
 };
   export default Handler;

@@ -123,7 +123,7 @@ const RegLog: React.FC = () => {
   };
 
   const handleRegAsPharm = () => {
-    navigate("/Pharmacist/register");
+    navigate("/pharmacist/register");
     window.location.reload();
   };
 
