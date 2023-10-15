@@ -148,6 +148,9 @@ const RegLog: React.FC = () => {
     setModalActive(false);
     setIsSignUp(!isSignUp);
   };
+  const handleRegAsPharmacist = () => {
+    navigate("pharmacist/register");
+  };
 
   const closeModal = () => {
     setModalActive(false);
@@ -180,6 +183,25 @@ const RegLog: React.FC = () => {
         <p className="forgot-pass">Forgot password?</p>
         <button onClick={handleSignIn} type="button" className="submit button">
           Sign In
+        </button>
+        <br></br>
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <button
+          onClick={handleRegAsPharmacist}
+          type="button"
+          className="submit button"
+        >
+          Register As Pharmacist
         </button>
       </div>
 
