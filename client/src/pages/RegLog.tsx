@@ -3,7 +3,6 @@ import axios from "axios";
 import "./style.css";
 import { useNavigate } from "react-router-dom";
 import { message } from "antd";
-
 import {
   validateMobile,
   validatePassword,
@@ -94,7 +93,7 @@ const RegLog: React.FC = () => {
 
   const handleSignIn = async () => {
     if (!Username || !Password) {
-      message.error("Please Fill In All Fields");
+      message.warning("Please Fill In All Fields");
       return;
     }
 
@@ -123,8 +122,8 @@ const RegLog: React.FC = () => {
     }
   };
 
-  const handleRegAsDoctor = () => {
-    navigate("/doctor/register");
+  const handleRegAsPharm = () => {
+    navigate("/Pharmacist/register");
     window.location.reload();
   };
 
@@ -207,11 +206,11 @@ const RegLog: React.FC = () => {
         <br />
         <br />
         <button
-          onClick={handleRegAsDoctor}
+          onClick={handleRegAsPharm}
           type="button"
           className="submit button"
         >
-          Register As Doctor
+          Register As Pharmacist
         </button>
       </div>
 
