@@ -164,6 +164,55 @@ const getPharmRegistrationReqDetails = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+const acceptPharmacistRequest = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ error: "ID parameter required" });
+    }
+
+    const registrationRequest = await pharmacistRegisterRequestModel.findById(id);
+
+    if (!registrationRequest) {
+      return res.status(404).json({ error: "Pharmacist registration request not found" });
+    }
+    const newPharmacist = new pharmacistModel({
+      Username: registrationRequest.Username,
+      Name: registrationRequest.Name,
+      Email: registrationRequest.Email,
+      Password: registrationRequest.Password,
+      Dob: registrationRequest.Dob,
+      HourlyRate: registrationRequest.HourlyRate,
+      Affiliation: registrationRequest.Affiliation,
+      EducationalBackground: registrationRequest.EducationalBackground,
+    });
+    await newPharmacist.save();
+    await pharmacistRegisterRequestModel.findByIdAndDelete(id);
+
+    res.status(200).json({ message: "Pharmacist request accepted" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+const rejectPharmacistRequest = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ error: "ID parameter required" });
+    }
+    const registrationRequest = await pharmacistRegisterRequestModel.findById(id);
+    if (!registrationRequest) {
+      return res.status(404).json({ error: "Pharmacist registration request not found" });
+    }
+    await pharmacistRegisterRequestModel.findByIdAndDelete(id);
+    res.status(200).json({ message: "Pharmacist request rejected" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 
 //---------------------------------------EXPORTS-----------------------------------------------
 
@@ -178,4 +227,6 @@ module.exports = {
   getPharmRegistrationReqDetails,
   getPatient,
   getPharmacist,
+  acceptPharmacistRequest,
+  rejectPharmacistRequest
 };
