@@ -48,6 +48,11 @@ const patientSchema = new Schema(
         required: false,
       },
     },
+    Cart: {
+      type: Schema.Types.ObjectId,
+      ref: "Cart",
+      required: false
+    },
   },
   { timestamps: true }
 );

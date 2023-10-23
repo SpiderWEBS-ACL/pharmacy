@@ -43,7 +43,9 @@ const {
   viewMedicineDetails,
 } = require("./Routes/medicineController");
 
-const {addMedicineToCart,
+const {
+  createCart,
+  addMedicineToCart,
   removeMedicine,
   viewCart,
   viewMedicineDetailsInCart,
@@ -111,8 +113,9 @@ app.get("/medicine/searchForMedicine", searchForMedicine);
 app.post("/medicine/filterMedicineByMedicinalUse", filterMedicineByMedicinalUse);
 //-----------------Cart Endpoints---------------------
 
-app.post("/carts/:cartId/medicines/:medicineId", addMedicineToCart);
-app.put("/carts/:cartId/medicines/:medicineId", updateMedicineQuantity);
-app.delete("/carts/:cartId/medicines/:medicineId", removeMedicine);
-app.get("/carts/:cartId", viewCart);
-app.get("cart/medicines/:medicineId", viewMedicineDetailsInCart);
+app.post("/cart/createCart",createCart)
+app.post("/cart/:cartId/medicines/:medicineId", addMedicineToCart);
+app.put("/cart/:cartId/medicines/:medicineId", updateMedicineQuantity);
+app.delete("/cart/:cartId/medicines/:medicineId", removeMedicine);
+app.get("/cart/:cartId", viewCart);
+app.get("/cart/medicines/:medicineId", viewMedicineDetailsInCart);

@@ -2,17 +2,24 @@ const Cart = require("../Models/Cart");
 const Medicine = require("../Models/Medicine");
 const mongoose = require("mongoose");
 
+const createCart = async (req, res) => {
+    try {
+      // Create a new cart
+      const cart = new Cart();
+      await cart.save();
+  
+      return res.status(201).json(cart);
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  };
+
 // Add a medicine to the cart
 // Add a medicine to the cart with a specified quantity
 const addMedicineToCart = async (req, res) => {
     try {
       const cartId = req.params.cartId;
       const medicineId = req.params.medicineId;
-      const quantity = req.body.quantity; // Include this in the request body
-  
-      if (!quantity || quantity <= 0) {
-        return res.status(400).json({ error: "Quantity must be greater than 0" });
-      }
   
       const cart = await Cart.findById(cartId);
       if (!cart) {
@@ -29,10 +36,10 @@ const addMedicineToCart = async (req, res) => {
   
       if (existingMedicine) {
         // Update the quantity of the existing medicine
-        existingMedicine.quantity += quantity;
+        existingMedicine.quantity -= 1;
       } else {
         // Add the medicine to the cart
-        cart.medicines.push({ medicine: medicineId, quantity: quantity });
+        cart.medicines.push({ medicine: medicineId });
       }
   
       await cart.save();
@@ -97,8 +104,13 @@ const removeMedicine = async (req, res) => {
     }
 
     // Find the index of the medicine to remove
-    const index = cart.medicines.findIndex((m) => m.toString() === medicineId);
-
+    let index = -1;
+    for (let i = 0; i < cart.medicines.length; i++) {
+      if (cart.medicines[i].medicine.toString() === medicineId) {
+        index = i;
+        break;
+      }
+    }
     if (index === -1) {
       return res.status(404).json({ error: "Medicine not found in the cart" });
     }
@@ -146,6 +158,7 @@ const viewMedicineDetailsInCart = async (req, res) => {
 };
 
 module.exports = {
+    createCart,
   addMedicineToCart,
   removeMedicine,
   viewCart,

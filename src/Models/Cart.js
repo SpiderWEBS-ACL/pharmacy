@@ -9,8 +9,8 @@ const cartSchema = new Schema({
         ref: "Medicine",
       },
       quantity: {
-        type: Number, // Use "Number" to define quantity as an integer
-        default: 1, // Optional: You can set a default value, such as 1
+        type: Number,
+        default: 1, 
       },
     },
   ],
