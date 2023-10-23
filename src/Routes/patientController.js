@@ -6,23 +6,37 @@ const { default: mongoose } = require("mongoose");
 
 //---------------------------------------REGISTRATION-----------------------------------------------
 
+const Cart = require("../Models/Cart");
+const Patient = require("../Models/Patient");
+
 const registerPatient = async (req, res) => {
   try {
-    const exists = await patientModel.findOne({"Username" : { $regex: '^' + req.body.Username + '$', $options:'i'} });
-    const exists2 = await patientModel.findOne({"Email" : { $regex: '^' + req.body.Email + '$', $options:'i'} });
-    if(!exists && !exists2){
-        var newPatient = await patientModel.create(req.body);
-        res.status(201).json(newPatient);
+    const exists = await Patient.findOne({ "Username": { $regex: '^' + req.body.Username + '$', $options: 'i' } });
+    const exists2 = await Patient.findOne({ "Email": { $regex: '^' + req.body.Email + '$', $options: 'i' } });
+
+    if (!exists && !exists2) {
+      // Create a new patient
+      const newPatient = await Patient.create(req.body);
+
+      // Create a new cart for the patient
+      const cart = new Cart();
+      await cart.save();
+
+      // Associate the cart with the patient
+      newPatient.Cart = cart._id;
+      await newPatient.save();
+
+      res.status(201).json(newPatient);
+    } else if (exists) {
+      res.status(400).json({ error: "Username already taken!" });
+    } else {
+      res.status(400).json({ error: "Email already registered!" });
     }
-    else if(exists){
-        res.status(400).json({error:  "Username already taken!" });
-    }else{
-        res.status(400).json({error:  "Email already registered!" });
-    }
-  }catch(error){
-      res.status(400).json({ error: error.message });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
 };
+
 
 const login = async(req, res) => {
   try{

@@ -21,6 +21,8 @@ const {
   getAllAdmins,
   getAllPatients,
   getAllPharmacists,
+  acceptPharmacistRequest,
+  rejectPharmacistRequest
 } = require("./Routes/adminController");
 
 const {
@@ -40,6 +42,14 @@ const {
   filterMedicineByMedicinalUse,
   viewMedicineDetails,
 } = require("./Routes/medicineController");
+
+const {
+  createCart,
+  addMedicineToCart,
+  removeMedicine,
+  viewCart,
+  viewMedicineDetailsInCart,
+  updateMedicineQuantity} = require("./Routes/cartController");
 
 //----------------------CONFIGURATIONS------------------------
 
@@ -80,6 +90,8 @@ app.get("/admin/registrationRequests", getAllPharmsRegistrationReqs);
 app.get("/admin/registrationRequestDetails/:id", getPharmRegistrationReqDetails);
 app.get("/admin/getPatient/:id", getPatient);
 app.get("/admin/getPharmacist/:id", getPharmacist);
+app.post("/admin/acceptPharmacist/:id",acceptPharmacistRequest);
+app.delete("/admin/rejectPharmacist/:id", rejectPharmacistRequest);
 
 //-------------------Pharmacist Endpoints--------------------
 app.post("/pharmacist/addPharmacist", addPharmacist);
@@ -99,4 +111,11 @@ app.get("/medicine/viewMedicineDetails/:id", viewMedicineDetails);
 
 app.get("/medicine/searchForMedicine", searchForMedicine);
 app.post("/medicine/filterMedicineByMedicinalUse", filterMedicineByMedicinalUse);
+//-----------------Cart Endpoints---------------------
 
+app.post("/cart/createCart",createCart)
+app.post("/cart/:cartId/medicines/:medicineId", addMedicineToCart);
+app.put("/cart/:cartId/medicines/:medicineId", updateMedicineQuantity);
+app.delete("/cart/:cartId/medicines/:medicineId", removeMedicine);
+app.get("/cart/:cartId", viewCart);
+app.get("/cart/medicines/:medicineId", viewMedicineDetailsInCart);
