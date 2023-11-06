@@ -1,6 +1,7 @@
 const pharmacistModel = require("../Models/Pharmacist");
 const PharmacistRegisterRequestModel = require("../Models/PharmacistRegisterRequest");
 const medicineModel = require("../Models/Medicine");
+const bcrypt = require("bcrypt");
 const { default: mongoose } = require("mongoose");
 
 // FOR TESTING
@@ -31,6 +32,7 @@ const registerPharmacist = async (req, res) => {
     const exists3 = await pharmacistModel.findOne({"Email" : { $regex: '^' + req.body.Email + '$', $options:'i'} });
     const exists4 = await PharmacistRegisterRequestModel.findOne({"Email" : { $regex: '^' + req.body.Email + '$', $options:'i'} });
     if(!exists && !exists2 && !exists3 && !exists4){
+        req.body.Password = await bcrypt.hash(req.body.Password,10);
         var newPharm = await PharmacistRegisterRequestModel.create(req.body);
         res.status(201).json(newPharm);
     }

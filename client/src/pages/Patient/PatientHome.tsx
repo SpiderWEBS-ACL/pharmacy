@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { config } from "../../middleware/tokenMiddleware";
 
 const PatientHome = () => {
-
   const id = localStorage.getItem("id");
 
   const [patientInfo, setPatientInfo] = useState<any>({});
@@ -15,7 +15,7 @@ const PatientHome = () => {
 
   useEffect(() => {
     api
-      .get(`/admin/getPatient/${id}`)
+      .get(`/patient/me`, config)
       .then((response) => {
         setPatientInfo(response.data);
         setEmergencyContact(response.data.EmergencyContact);

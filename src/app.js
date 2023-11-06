@@ -34,7 +34,7 @@ const {
   getMedicineQuantitySales,
 } = require("./Routes/pharmacistController");
 
-const { registerPatient, login } = require("./Routes/patientController");
+const { registerPatient, login, PatientInfo } = require("./Routes/patientController");
 
 const {
   getAllMedicines,
@@ -50,6 +50,7 @@ const {
   viewCart,
   viewMedicineDetailsInCart,
   updateMedicineQuantity} = require("./Routes/cartController");
+const { AdminProtect, PharmacistProtect, MedicineProtect, PatientProtect } = require("./middleware/authMiddleware");
 
 //----------------------CONFIGURATIONS------------------------
 
@@ -77,45 +78,46 @@ app.use(express.json());
 //---------------------------------------ENDPOINTS-----------------------------------------------
 
 //-----------------Admin Endpoints---------------------
-app.post("/admin/addAdmin", addAdmin);
+app.post("/admin/addAdmin", AdminProtect, addAdmin);
 
-app.get("/admin/allAdmins",getAllAdmins);
-app.get("/admin/allPatients",getAllPatients);
-app.get("/admin/allPharmacists",getAllPharmacists); 
+app.get("/admin/allAdmins", AdminProtect, getAllAdmins);
+app.get("/admin/allPatients",AdminProtect, getAllPatients);
+app.get("/admin/allPharmacists",AdminProtect, getAllPharmacists); 
 
-app.delete("/admin/removePharmacist/:id", removePharmacist);
-app.delete("/admin/removePatient/:id", removePatient);
+app.delete("/admin/removePharmacist/:id",AdminProtect, removePharmacist);
+app.delete("/admin/removePatient/:id",AdminProtect, removePatient);
 
-app.get("/admin/registrationRequests", getAllPharmsRegistrationReqs);
-app.get("/admin/registrationRequestDetails/:id", getPharmRegistrationReqDetails);
-app.get("/admin/getPatient/:id", getPatient);
-app.get("/admin/getPharmacist/:id", getPharmacist);
-app.post("/admin/acceptPharmacist/:id",acceptPharmacistRequest);
-app.delete("/admin/rejectPharmacist/:id", rejectPharmacistRequest);
+app.get("/admin/registrationRequests",AdminProtect, getAllPharmsRegistrationReqs);
+app.get("/admin/registrationRequestDetails/:id",AdminProtect, getPharmRegistrationReqDetails);
+app.get("/admin/getPatient/:id",AdminProtect, getPatient);
+app.get("/admin/getPharmacist/:id",AdminProtect, getPharmacist);
+app.post("/admin/acceptPharmacist/:id",AdminProtect,acceptPharmacistRequest);
+app.delete("/admin/rejectPharmacist/:id",AdminProtect, rejectPharmacistRequest);
 
 //-------------------Pharmacist Endpoints--------------------
-app.post("/pharmacist/addPharmacist", addPharmacist);
+app.post("/pharmacist/addPharmacist",PharmacistProtect, addPharmacist);
 app.post("/pharmacist/register", registerPharmacist);
 
-app.post("/pharmacist/addMedicine", addMedicine),
-app.put("/pharmacist/updateMedicine/:id", updateMedicine),
+app.post("/pharmacist/addMedicine",PharmacistProtect, addMedicine),
+app.put("/pharmacist/updateMedicine/:id",PharmacistProtect, updateMedicine),
 // app.get("/pharmacist/getMedicineDetails", getMedicineDetails);
-app.get("/pharmacist/getMedicineQuantitySales/:id", getMedicineQuantitySales);
+app.get("/pharmacist/getMedicineQuantitySales/:id",PharmacistProtect, getMedicineQuantitySales);
 
 //------------------Patient Endpoints---------------------
+app.get("/patient/me",PatientProtect, PatientInfo)
 app.post("/patient/register", registerPatient);
 app.post("/patient/login",login)
 //------------------Medicine Endpoints------------------
-app.get("/medicine/viewMedicines", getAllMedicines);
-app.get("/medicine/viewMedicineDetails/:id", viewMedicineDetails);
+app.get("/medicine/viewMedicines",PharmacistProtect || PatientProtect || AdminProtect, getAllMedicines);
+app.get("/medicine/viewMedicineDetails/:id",PharmacistProtect || PatientProtect || AdminProtect, viewMedicineDetails);
 
-app.get("/medicine/searchForMedicine", searchForMedicine);
-app.post("/medicine/filterMedicineByMedicinalUse", filterMedicineByMedicinalUse);
+app.get("/medicine/searchForMedicine",PharmacistProtect || PatientProtect || AdminProtect, searchForMedicine);
+app.post("/medicine/filterMedicineByMedicinalUse",PharmacistProtect || PatientProtect || AdminProtect, filterMedicineByMedicinalUse);
 //-----------------Cart Endpoints---------------------
 
 app.post("/cart/createCart",createCart)
-app.post("/cart/:cartId/medicines/:medicineId", addMedicineToCart);
-app.put("/cart/:cartId/medicines/:medicineId", updateMedicineQuantity);
-app.delete("/cart/:cartId/medicines/:medicineId", removeMedicine);
-app.get("/cart/:cartId", viewCart);
-app.get("/cart/medicines/:medicineId", viewMedicineDetailsInCart);
+app.post("/cart/:cartId/medicines/:medicineId",PatientProtect, addMedicineToCart);
+app.put("/cart/:cartId/medicines/:medicineId",PatientProtect, updateMedicineQuantity);
+app.delete("/cart/:cartId/medicines/:medicineId",PatientProtect, removeMedicine);
+app.get("/cart/:cartId",PatientProtect, viewCart);
+app.get("/cart/medicines/:medicineId",PatientProtect, viewMedicineDetailsInCart);
