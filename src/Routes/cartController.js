@@ -1,10 +1,10 @@
 const Cart = require("../Models/Cart");
 const Medicine = require("../Models/Medicine");
+const Patient = require("../Models/Patient");
 const mongoose = require("mongoose");
 
 const createCart = async (req, res) => {
     try {
-      // Create a new cart
       const cart = new Cart();
       await cart.save();
   
@@ -14,8 +14,7 @@ const createCart = async (req, res) => {
     }
   };
 
-// Add a medicine to the cart
-// Add a medicine to the cart with a specified quantity
+
 const addMedicineToCart = async (req, res) => {
     try {
       const cartId = req.params.cartId;
@@ -31,14 +30,11 @@ const addMedicineToCart = async (req, res) => {
         return res.status(404).json({ error: "Medicine not found" });
       }
   
-      // Check if the medicine already exists in the cart
       const existingMedicine = cart.medicines.find((m) => m.medicine.toString() === medicineId);
   
       if (existingMedicine) {
-        // Update the quantity of the existing medicine
         existingMedicine.quantity -= 1;
       } else {
-        // Add the medicine to the cart
         cart.medicines.push({ medicine: medicineId });
       }
   
@@ -49,7 +45,6 @@ const addMedicineToCart = async (req, res) => {
       return res.status(500).json({ error: error.message });
     }
   };
-  // Update the quantity of a medicine in the cart
   const updateMedicineQuantity = async (req, res) => {
     try {
       const cartId = req.params.cartId;
@@ -74,13 +69,10 @@ const addMedicineToCart = async (req, res) => {
       if (!medicine) {
         return res.status(404).json({ error: "Medicine not found" });
       }
-  
-      // Check if the requested quantity exceeds the available quantity in stock
       if (quantity > medicine.Quantity) {
         return res.status(400).json({ error: "Requested quantity exceeds available stock" });
       }
-  
-      // Update the quantity in the cart
+
       medicineInCart.quantity = quantity;
       await cart.save();
   
@@ -90,9 +82,7 @@ const addMedicineToCart = async (req, res) => {
     }
   };
   
-  
 
-// Remove a medicine from the cart
 const removeMedicine = async (req, res) => {
   try {
     const cartId = req.params.cartId;
@@ -103,7 +93,6 @@ const removeMedicine = async (req, res) => {
       return res.status(404).json({ error: "Cart not found" });
     }
 
-    // Find the index of the medicine to remove
     let index = -1;
     for (let i = 0; i < cart.medicines.length; i++) {
       if (cart.medicines[i].medicine.toString() === medicineId) {
@@ -115,7 +104,6 @@ const removeMedicine = async (req, res) => {
       return res.status(404).json({ error: "Medicine not found in the cart" });
     }
 
-    // Remove the medicine from the cart
     cart.medicines.splice(index, 1);
     await cart.save();
 
@@ -125,7 +113,6 @@ const removeMedicine = async (req, res) => {
   }
 };
 
-// View the contents of the cart
 const viewCart = async (req, res) => {
   try {
     const cartId = req.params.cartId;
@@ -140,8 +127,24 @@ const viewCart = async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 };
+const viewPatientCart = async (req, res) => {
+  try {
+    const patientId = req.params.patientId;
+    const patient = await Patient.findById(patientId)
+    const cartId = patient.Cart;
+    
 
-// View details of a specific medicine in the cart
+    const cart = await Cart.findById(cartId).populate("medicines");
+    if (!cart) {
+      return res.status(404).json({ error: "Cart not found" });
+    }
+
+    return res.status(200).json(cart);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
+
 const viewMedicineDetailsInCart = async (req, res) => {
   try {
     const medicineId = req.params.medicineId;
@@ -163,5 +166,6 @@ module.exports = {
   removeMedicine,
   viewCart,
   viewMedicineDetailsInCart,
-  updateMedicineQuantity
+  updateMedicineQuantity,
+  viewPatientCart
 };
