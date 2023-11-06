@@ -14,6 +14,7 @@ import {
   IoCheckmarkDoneCircleSharp,
   IoClose,
 } from "react-icons/io5";
+import Cookies from "js-cookie";
 
 const RegLog: React.FC = () => {
   const [modalActive, setModalActive] = useState(false);
@@ -98,12 +99,13 @@ const RegLog: React.FC = () => {
       console.log(response.data);
       localStorage.setItem("id", response.data.id);
       localStorage.setItem("type", response.data.type);
+      Cookies.set("accessToken", response.data.accessToken);
       handleRedirection(response.data);
       window.location.reload();
     } catch (error: any) {
       console.error("Error:", error);
       message.error(`${error.response.data.error}`);
-    }
+    }
   };
 
   const handleRegAsPharm = () => {
