@@ -49,7 +49,8 @@ const {
   removeMedicine,
   viewCart,
   viewMedicineDetailsInCart,
-  updateMedicineQuantity} = require("./Routes/cartController");
+  updateMedicineQuantity,
+viewPatientCart} = require("./Routes/cartController");
 
 //----------------------CONFIGURATIONS------------------------
 
@@ -118,4 +119,5 @@ app.post("/cart/:cartId/medicines/:medicineId", addMedicineToCart);
 app.put("/cart/:cartId/medicines/:medicineId", updateMedicineQuantity);
 app.delete("/cart/:cartId/medicines/:medicineId", removeMedicine);
 app.get("/cart/:cartId", viewCart);
+app.get("/cart/viewCart/:patientId", viewPatientCart);
 app.get("/cart/medicines/:medicineId", viewMedicineDetailsInCart);

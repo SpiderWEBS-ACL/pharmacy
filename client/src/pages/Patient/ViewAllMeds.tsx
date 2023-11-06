@@ -43,6 +43,13 @@ const AllMedicines = () => {
   const handleViewDetails = async (id: string) => {
     navigate("/patient/medicineDetails/" + id);
   };
+  const handleAddToCart = async (id: string) => {
+    //ADD MEDICINE ID TO PATIENT'S CART
+    //
+    //
+    //
+    //
+  };
 
   const handleSearch = async () => {
     setSearching(true);
@@ -292,6 +299,14 @@ const AllMedicines = () => {
                   onClick={() => handleViewDetails(request._id)}
                 >
                   View Details
+                </button>
+                <br></br>
+                <br></br>
+                <button
+                  className="btn btn-success"
+                  onClick={() => handleAddToCart(request._id)}
+                >
+                  Add to Cart
                 </button>
               </td>
             </tr>
