@@ -38,6 +38,11 @@ const PatientLayout: React.FC = () => {
       ],
     },
     {
+      label: "Cart",
+      key: "/patient/viewCart/" + id,
+      icon: <FileOutlined />,
+    },
+    {
       label: "Logout",
       key: "/",
       icon: <PoweroffOutlined />,

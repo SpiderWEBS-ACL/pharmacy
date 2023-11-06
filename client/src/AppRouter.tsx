@@ -19,6 +19,7 @@ import AddMedicine from "./pages/Pharmacist/addMedicine";
 import PatientHome from "./pages/Patient/PatientHome";
 import AdminHome from "./pages/Admin/AdminHome";
 import PharmaHome from "./pages/Pharmacist/PharmaHome";
+import Cart from "./pages/Patient/Cart";
 
 const AppRouter: React.FC = () => {
   return (
@@ -56,7 +57,6 @@ const AppRouter: React.FC = () => {
       <Route path="/pharmacist/addMedicine" element={<AddMedicine />} />
       <Route path="/pharmacist/PharmacistHome/:id" element={<PharmaHome />} />      
 
-      <Route path="/" element={<RegLog />} />
       <Route path="/patient/viewMedicines" element={<AllMedicinesPatient />} />
       <Route
         path="/patient/medicineDetails/:id"
@@ -65,6 +65,10 @@ const AppRouter: React.FC = () => {
     <Route
     path="/patient/PatientHome/:id"
     element={<PatientHome />}
+  />
+  <Route
+    path="/patient/viewCart/:id"
+    element={<Cart />}
   />
 </Routes>
   );
