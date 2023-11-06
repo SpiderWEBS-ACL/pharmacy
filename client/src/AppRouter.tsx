@@ -42,10 +42,7 @@ const AppRouter: React.FC = () => {
         path="/admin/medicineDetails/:id"
         element={<MedicineDetailsAdmin />}
       />
-      <Route
-        path="/admin/AdminHome/"
-        element={<AdminHome />}
-      />
+      <Route path="/admin/Home" element={<AdminHome />} />
 
       <Route path="/pharmacist/register" element={<RegisterPharmacist />} />
       <Route path="/pharmacist/viewMedicines" element={<AllMedicinesPharm />} />
@@ -55,22 +52,16 @@ const AppRouter: React.FC = () => {
       />
       <Route path="/pharmacist/editMedicine/:id" element={<EditMedicine />} />
       <Route path="/pharmacist/addMedicine" element={<AddMedicine />} />
-      <Route path="/pharmacist/PharmacistHome/:id" element={<PharmaHome />} />      
+      <Route path="/pharmacist/Home" element={<PharmaHome />} />
 
       <Route path="/patient/viewMedicines" element={<AllMedicinesPatient />} />
       <Route
         path="/patient/medicineDetails/:id"
         element={<MedicineDetailsPatient />}
       />
-    <Route
-    path="/patient/PatientHome/:id"
-    element={<PatientHome />}
-  />
-  <Route
-    path="/patient/viewCart/:id"
-    element={<Cart />}
-  />
-</Routes>
+      <Route path="/patient/Home" element={<PatientHome />} />
+      <Route path="/patient/viewCart" element={<Cart />} />
+    </Routes>
   );
 };
 

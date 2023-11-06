@@ -1,7 +1,8 @@
-import { Spin } from 'antd';
-import axios from 'axios';
-import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom';
+import { Spin } from "antd";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { config } from "../../middleware/tokenMiddleware";
 
 type CartItem = {
   medicine: string;
@@ -24,19 +25,18 @@ const viewCart: React.FC = () => {
   const api = axios.create({
     baseURL: "http://localhost:5000/cart",
   });
-  
-  useEffect (() => {
 
+  useEffect(() => {
     api
-    .get(`/viewCart/${id}`)
-    .then((response) => {
-      setCart(response.data); 
-      setLoading(false); 
-      console.log(response.data);
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
+      .get(`/viewCart/${id}`, config)
+      .then((response) => {
+        setCart(response.data);
+        setLoading(false);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   }, [id]);
 
   useEffect(() => {
@@ -47,7 +47,7 @@ const viewCart: React.FC = () => {
       }));
 
       const fetchMedicineDetails = async () => {
-        const medicineDetails =[];
+        const medicineDetails = [];
         for (const entry of medicineEntries) {
           try {
             const response = await api.get(`/medicines/${entry.medicineId}`);
@@ -64,7 +64,6 @@ const viewCart: React.FC = () => {
       fetchMedicineDetails();
     }
   }, [cart]);
-
 
   //const navigate = useNavigate();
 
@@ -85,16 +84,16 @@ const viewCart: React.FC = () => {
     );
   }
 
-  return(
-    <div className = "container" >
+  return (
+    <div className="container">
       <h2 className="text-center mt-4 mb-4">
         {" "}
         <strong>Your cart</strong>{" "}
       </h2>
 
-      <table className = "table">
+      <table className="table">
         <thead>
-          <tr style = {{fontSize: 22}}>
+          <tr style={{ fontSize: 22 }}>
             <th></th>
             <th>Medicine Name</th>
             <th>Price</th>
@@ -103,16 +102,13 @@ const viewCart: React.FC = () => {
         </thead>
 
         <tbody>
-       {
-       //what do i put here
-       }
+          {
+            //what do i put here
+          }
         </tbody>
       </table>
-
     </div>
   );
-
-}
+};
 
 export default viewCart;
-

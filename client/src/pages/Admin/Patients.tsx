@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Spin } from "antd";
+import { config } from "../../middleware/tokenMiddleware";
 
 const Patients = () => {
   const [patients, setPatients] = useState([]);
@@ -12,7 +13,7 @@ const Patients = () => {
 
   useEffect(() => {
     api
-      .get("/allPatients")
+      .get("/allPatients", config)
       .then((response) => {
         setPatients(response.data);
         setLoading(false);
@@ -26,7 +27,7 @@ const Patients = () => {
   const handleDelete = async (id: string) => {
     try {
       setLoading(true);
-      const response = await api.delete(`/removePatient/${id}`);
+      const response = await api.delete(`/removePatient/${id}`,config);
       setDeleted(!deleted);
       console.log("Response:", response.data);
     } catch (error) {
@@ -73,8 +74,8 @@ const Patients = () => {
 
         <tbody>
           {patients.map((request: any, index) => {
-            if (request.EmergencyContact ){
-              const emergencyContact = request.EmergencyContact
+            if (request.EmergencyContact) {
+              const emergencyContact = request.EmergencyContact;
               return (
                 <tr key={request._id}>
                   <td>{request.Username}</td>
@@ -83,11 +84,11 @@ const Patients = () => {
                   <td>{request.Dob.split("T")[0]}</td>
                   <td>{request.Gender}</td>
                   <td>{request.Mobile}</td>
-              
+
                   <td>{emergencyContact.Name}</td>
                   <td>{emergencyContact.Mobile}</td>
                   <td>{emergencyContact.relationToPatient}</td>
-                 
+
                   <td>
                     <button
                       className="btn btn-sm btn-danger"
@@ -102,7 +103,8 @@ const Patients = () => {
                     </button>
                   </td>
                 </tr>
-            )}
+              );
+            }
 
             return (
               <tr key={request._id}>
@@ -116,7 +118,7 @@ const Patients = () => {
                 <td></td>
                 <td></td>
                 <td></td>
-               
+
                 <td>
                   <button
                     className="btn btn-sm btn-danger"
@@ -131,13 +133,11 @@ const Patients = () => {
                   </button>
                 </td>
               </tr>
-           
-          )})}
-            
+            );
+          })}
         </tbody>
       </table>
     </div>
-  
   );
 };
 

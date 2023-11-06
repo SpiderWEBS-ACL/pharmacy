@@ -6,6 +6,7 @@ import TextArea from "../../components/TextArea";
 import { Spin , Button , Input} from "antd";
 import { List, Row } from "antd";
 import { message } from "antd";
+import { config, headers } from "../../middleware/tokenMiddleware";
 
 const EditMedicine = () => {
   const { id } = useParams<{ id: string }>();
@@ -29,7 +30,7 @@ const EditMedicine = () => {
 
   useEffect(() => {
     api
-      .get(`/medicine/viewMedicineDetails/${id}`)
+      .get(`/medicine/viewMedicineDetails/${id}`,config)
       .then((response) => {
         setName(response.data.Name);
         setPrice(response.data.Price);
@@ -56,7 +57,7 @@ const EditMedicine = () => {
         MedicinalUse,
         ActiveIngredients
       };
-      const response = await api.put(`/pharmacist/updateMedicine/${id}`, data);
+      const response = await api.put(`/pharmacist/updateMedicine/${id}`, data, {headers: headers});
       console.log("Response:", response.data);
       message.success("Medicine updated successfully");
       setAlert(true);
