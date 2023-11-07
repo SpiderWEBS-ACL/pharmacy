@@ -1,6 +1,8 @@
 const pharmacistModel = require("../Models/Pharmacist");
 const PharmacistRegisterRequestModel = require("../Models/PharmacistRegisterRequest");
 const medicineModel = require("../Models/Medicine");
+const fileModel = require("../Models/File");
+const multer = require("multer") 
 const bcrypt = require("bcrypt");
 const { default: mongoose } = require("mongoose");
 
@@ -125,6 +127,55 @@ const getMedicineQuantitySales = async (req, res) => {    //Quantity/Sales of ON
   }
 };
 
+//-----------------------UPLOAD FILES-------------------------------------------------
+
+const storage = multer.diskStorage({ 
+  destination: function (req, file, cb) { 
+
+      // Uploads is the Upload_folder_name 
+      cb(null, "./client/public/uploads"); 
+  }, 
+  filename: function (req, file, cb) { 
+    cb(null, file.originalname); 
+  } 
+});
+
+
+const upload = multer({ storage: storage });
+
+const uploadDocuments = async (req, res) => {
+
+  upload.single('file')(req, res, async (err) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Server Error');
+    } else {
+      const{  id } = req.params; // Assuming pharmacist ID 
+
+      const newFile = new fileModel({
+        Pharmacist: id,
+        filename: req.file.filename,
+        originalname: req.file.originalname,
+        path: req.file.path,
+      });
+
+      try {
+        const savedFile = await newFile.save();
+        res.status(201).json(savedFile);
+      } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+      }
+    }
+  });
+}
+
+
+
+
+
+
+
 //---------------------------------------EXPORTS-----------------------------------------------
 
 module.exports = {
@@ -134,5 +185,6 @@ module.exports = {
   updateMedicine,
   getMedicineDetails,
   getMedicineQuantitySales,
+  uploadDocuments
   pharmacistInfo
 };
