@@ -30,6 +30,7 @@ const {
   updateMedicine,
   getMedicineDetails,
   getMedicineQuantitySales,
+  uploadDocuments,
 } = require("./Routes/pharmacistController");
 
 const { registerPatient, login } = require("./Routes/patientController");
@@ -90,6 +91,8 @@ app.put("/pharmacist/updateMedicine/:id", updateMedicine),
 // app.get("/pharmacist/getMedicineDetails", getMedicineDetails);
 app.get("/pharmacist/getMedicineQuantitySales/:id", getMedicineQuantitySales);
 
+app.post("/pharmacist/uploadDocuments/:id", uploadDocuments);
+
 //------------------Patient Endpoints---------------------
 app.post("/patient/register", registerPatient);
 app.post("/patient/login",login)
@@ -99,4 +102,3 @@ app.get("/medicine/viewMedicineDetails/:id", viewMedicineDetails);
 
 app.get("/medicine/searchForMedicine", searchForMedicine);
 app.post("/medicine/filterMedicineByMedicinalUse", filterMedicineByMedicinalUse);
-
