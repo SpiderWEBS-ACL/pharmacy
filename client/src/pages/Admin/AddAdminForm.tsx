@@ -6,6 +6,7 @@ import {
   validateUsername,
   validatePassword,
 } from "../../utils/ValidationUtils";
+import { headers } from "../../middleware/tokenMiddleware";
 
 const AddAdminForm: React.FC = () => {
   const [Username, setUsername] = useState<string>("");
@@ -45,7 +46,9 @@ const AddAdminForm: React.FC = () => {
     };
 
     try {
-      const response = await api.post("/admin/addAdmin", data);
+      const response = await api.post("/admin/addAdmin", data, {
+        headers: headers,
+      });
       console.log("Response:", response.data);
 
       setError(null);
