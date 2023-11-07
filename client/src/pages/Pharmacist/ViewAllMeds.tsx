@@ -5,6 +5,7 @@ import { Button, Col, Row } from "react-bootstrap";
 import { DatePicker, DatePickerProps, Input, Select } from "antd";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { config, headers } from "../../middleware/tokenMiddleware";
 
 const AllMedicines = () => {
   const [medicines, setMedicines] = useState([]);
@@ -23,11 +24,6 @@ const AllMedicines = () => {
   });
 
   useEffect(() => {
-    const config = {
-      headers: {
-        Authorization: "Bearer " + Cookies.get("accessToken"),
-      },
-    };
     //send http request to backend
     api
       .get(`medicine/viewMedicines`, config) //get request
@@ -57,7 +53,10 @@ const AllMedicines = () => {
     setSearching(true);
     setLoading(true);
     api
-      .get(`medicine/searchForMedicine`, { params: { Name: searchValue } }) //get request
+      .get(`medicine/searchForMedicine`, {
+        params: { Name: searchValue },
+        headers: headers,
+      }) //get request
       .then((response) => {
         setSearchResults(response.data);
         setLoading(false); //loading screen --> off
@@ -72,7 +71,7 @@ const AllMedicines = () => {
   const clearSearch = async () => {
     // setLoading(true);
     api
-      .get(`medicine/viewMedicines`) //get request
+      .get(`medicine/viewMedicines`, config) //get request
       .then((response) => {
         setMedicines(response.data); //store response (medicines) in variable
         setLoading(false); //loading screen --> off
@@ -102,6 +101,7 @@ const AllMedicines = () => {
       api
         .post(`medicine/filterMedicineByMedicinalUse`, data, {
           params: { MedicinalUse: filterValue },
+          headers: headers,
         }) //get request
         .then((response) => {
           // setMedicines(response.data); //store response (medicines) in variable
@@ -120,7 +120,10 @@ const AllMedicines = () => {
   const clearFilter = async () => {
     if (searching) {
       api
-        .get(`medicine/searchForMedicine`, { params: { Name: searchValue } }) //get request
+        .get(`medicine/searchForMedicine`, {
+          params: { Name: searchValue },
+          headers: headers,
+        }) //get request
         .then((response) => {
           setMedicines(response.data); //store response (medicines) in variable
           setLoading(false); //loading screen --> off
@@ -134,7 +137,7 @@ const AllMedicines = () => {
         });
     } else {
       try {
-        const response = await api.get(`/medicine/viewMedicines`);
+        const response = await api.get(`/medicine/viewMedicines`, config);
         setMedicinalUse("");
         setMedicines(response.data);
         setFilterValue("");

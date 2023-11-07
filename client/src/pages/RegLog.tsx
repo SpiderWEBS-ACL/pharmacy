@@ -83,7 +83,6 @@ const RegLog: React.FC = () => {
       message.error(`${error.response.data.error}`);
     }
   };
-
   const handleSignIn = async () => {
     if (!Username || !Password) {
       message.warning("Please Fill In All Fields");
@@ -100,6 +99,7 @@ const RegLog: React.FC = () => {
       localStorage.setItem("id", response.data.id);
       localStorage.setItem("type", response.data.type);
       Cookies.set("accessToken", response.data.accessToken);
+
       handleRedirection(response.data);
       window.location.reload();
     } catch (error: any) {
@@ -117,11 +117,11 @@ const RegLog: React.FC = () => {
 
   const handleRedirection = (item: any) => {
     if (item.type == "Patient") {
-      navigate(`/patient/PatientHome/${item.id}`);
+      navigate(`/patient/Home`);
     } else if (item.type == "Pharmacist") {
-      navigate(`/pharmacist/PharmacistHome/${item.id}`);
+      navigate(`/pharmacist/Home`);
     } else if (item.type == "Admin") {
-      navigate(`/admin/AdminHome`);
+      navigate(`/admin/Home`);
     }
   };
 

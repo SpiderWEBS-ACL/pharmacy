@@ -32,6 +32,7 @@ const {
   updateMedicine,
   getMedicineDetails,
   getMedicineQuantitySales,
+  pharmacistInfo,
 } = require("./Routes/pharmacistController");
 
 const { registerPatient, login, PatientInfo } = require("./Routes/patientController");
@@ -51,6 +52,7 @@ const {
   viewMedicineDetailsInCart,
   updateMedicineQuantity,
 viewPatientCart} = require("./Routes/cartController");
+const { AdminProtect, PharmacistProtect, PatientProtect } = require("./middleware/authMiddleware");
 
 //----------------------CONFIGURATIONS------------------------
 
@@ -95,7 +97,8 @@ app.post("/admin/acceptPharmacist/:id",AdminProtect,acceptPharmacistRequest);
 app.delete("/admin/rejectPharmacist/:id",AdminProtect, rejectPharmacistRequest);
 
 //-------------------Pharmacist Endpoints--------------------
-app.post("/pharmacist/addPharmacist",PharmacistProtect, addPharmacist);
+app.get("/pharmacist/me",PharmacistProtect, pharmacistInfo)
+app.post("/pharmacist/addPharmacist", addPharmacist);
 app.post("/pharmacist/register", registerPharmacist);
 
 app.post("/pharmacist/addMedicine",PharmacistProtect, addMedicine),
@@ -120,6 +123,6 @@ app.post("/cart/:cartId/medicines/:medicineId", addMedicineToCart);
 app.put("/cart/:cartId/medicines/:medicineId", updateMedicineQuantity);
 app.delete("/cart/:cartId/medicines/:medicineId", removeMedicine);
 app.get("/cart/:cartId", viewCart);
-app.get("/cart/viewCart/:patientId", viewPatientCart);
+app.get("/cart/viewCart/:patientId",PatientProtect, viewPatientCart);
 app.get("/cart/medicines/:medicineId", viewMedicineDetailsInCart);
 

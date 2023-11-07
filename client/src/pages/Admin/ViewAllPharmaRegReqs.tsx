@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Spin } from "antd";
 import { useNavigate } from "react-router-dom";
+import { config } from "../../middleware/tokenMiddleware";
 
 const AllPharmaRequests = () => {
   const [doctors, setDoctors] = useState([]);
@@ -12,7 +13,7 @@ const AllPharmaRequests = () => {
 
   useEffect(() => {
     api
-      .get("/registrationRequests")
+      .get("/registrationRequests", config)
       .then((response) => {
         setDoctors(response.data);
         setLoading(false);

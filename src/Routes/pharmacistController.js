@@ -10,6 +10,7 @@ const addPharmacist = async (req, res) => {
     const exists = await pharmacistModel.findOne({ "Username": { $regex: '^' + req.body.Username + '$', $options:'i'}  });
     const exists2 = await pharmacistModel.findOne({"Email" :{ $regex: '^' + req.body.Email + '$', $options:'i'} });
     if (!exists && !exists2) {
+      req.body.Password = await bcrypt.hash(req.body.Password,10);
       const newPharm = await pharmacistModel.create(req.body);
       res.status(201).json(newPharm);
     }  
@@ -22,6 +23,21 @@ const addPharmacist = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+
+const pharmacistInfo = async (req, res) => {
+  try {
+    const id  = req.user.id;
+    const pharmacist = await pharmacistModel.findById(id);
+
+    if (!pharmacist) {
+      return res.status(404).json({ error: "Pharmacist Not Found" });
+    }
+    res.status(200).json(pharmacist);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 
 //---------------------------------------REGISTRATION REQUEST-----------------------------------------------
 
@@ -118,4 +134,5 @@ module.exports = {
   updateMedicine,
   getMedicineDetails,
   getMedicineQuantitySales,
+  pharmacistInfo
 };

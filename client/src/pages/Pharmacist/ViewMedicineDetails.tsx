@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Button, Col, Row } from "react-bootstrap";
 import { format } from "date-fns";
 import { Spin } from "antd";
+import { config } from "../../middleware/tokenMiddleware";
 
 const MedicineDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -16,7 +17,7 @@ const MedicineDetails: React.FC = () => {
 
   useEffect(() => {
     api
-      .get(`/viewMedicineDetails/${id}`)
+      .get(`/viewMedicineDetails/${id}`, config)
       .then((response) => {
         setMedicineDetails(response.data);
         setLoading(false);
