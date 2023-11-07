@@ -8,30 +8,30 @@ import { message } from "antd";
 import { IonProgressBar } from "@ionic/react";
 import { alignPropType } from "react-bootstrap/esm/types";
 import TextArea from "../../components/TextArea";
+import { headers } from "../../middleware/tokenMiddleware";
 
 const addMedicine = () => {
-//   const { id } = useParams<{ id: string }>();
-    const [Name, setName] = useState<string>("");
-    const [Description, setDescription] = useState<string>("");
-    const [Price, setPrice] = useState<number>();
-    const [ActiveIngredients, setActiveIngredients] = useState([""]);
-    const [ActiveIngredientsReq, setActiveIngredientsReq] = useState<boolean>(true);
-    const [Ingredient, setIngredient] = useState<string>("");
-    const [Quantity, setQuantity] = useState<number>();
-    const [MedicinalUse, setMedicinalUse] = useState<string>("");
-    const [imageURL, setImage] = useState<string>("");
-    const [Sales, setSales] = useState<number>(0);
-    const [addedMedicine, setAddedMedicine] = useState<any | null>(null);
-    const [Message, setMessage] = useState("");
-    const [Alert, setAlert] = useState(false);
-    const [error, setError] = useState("");
-    const [viewMedsHidden, setViewMedsHidden] = useState<boolean>(true)
+  //   const { id } = useParams<{ id: string }>();
+  const [Name, setName] = useState<string>("");
+  const [Description, setDescription] = useState<string>("");
+  const [Price, setPrice] = useState<number>();
+  const [ActiveIngredients, setActiveIngredients] = useState([""]);
+  const [ActiveIngredientsReq, setActiveIngredientsReq] =
+    useState<boolean>(true);
+  const [Ingredient, setIngredient] = useState<string>("");
+  const [Quantity, setQuantity] = useState<number>();
+  const [MedicinalUse, setMedicinalUse] = useState<string>("");
+  const [imageURL, setImage] = useState<string>("");
+  const [Sales, setSales] = useState<number>(0);
+  const [addedMedicine, setAddedMedicine] = useState<any | null>(null);
+  const [Message, setMessage] = useState("");
+  const [Alert, setAlert] = useState(false);
+  const [error, setError] = useState("");
+  const [viewMedsHidden, setViewMedsHidden] = useState<boolean>(true);
 
   const api = axios.create({
     baseURL: "http://localhost:5000",
   });
-
-  
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -46,13 +46,15 @@ const addMedicine = () => {
         imageURL,
         Sales,
       };
-      const response = await api.post(`/pharmacist/addMedicine/`, data);
+      const response = await api.post(`/pharmacist/addMedicine/`, data, {
+        headers: headers,
+      });
       console.log("Response:", response.data);
       setAddedMedicine(response.data);
       message.success("Medicine added successfully");
       setAlert(true);
       navigate("/pharmacist/medicineDetails/" + response.data._id);
-    //   setViewMedsHidden(false);
+      //   setViewMedsHidden(false);
     } catch (err) {
       console.error("Error:", err);
       if (axios.isAxiosError(err) && err.response) {
@@ -60,42 +62,39 @@ const addMedicine = () => {
         setError(apiError);
         message.error("Failed to add Medcicine: " + apiError);
       } else {
-        setError("An error occurred");  
+        setError("An error occurred");
       }
     }
-}
+  };
 
-const addIngredient = async(ingredient: string) => {
-    if(ingredient == ""){
-        message.error("Please Specify Active Ingredient");
-        return;
-    }
-    else if(ActiveIngredients[0] == ""){
-        setActiveIngredients([Ingredient]);
-    }
-    else{
-        setActiveIngredients([...ActiveIngredients, Ingredient]);
+  const addIngredient = async (ingredient: string) => {
+    if (ingredient == "") {
+      message.error("Please Specify Active Ingredient");
+      return;
+    } else if (ActiveIngredients[0] == "") {
+      setActiveIngredients([Ingredient]);
+    } else {
+      setActiveIngredients([...ActiveIngredients, Ingredient]);
     }
     setIngredient("");
     setActiveIngredientsReq(false);
-    return ActiveIngredients
-}
+    return ActiveIngredients;
+  };
 
-const removeIngredient = async(index: number) => {
-    if(ActiveIngredients.length == 1){
-        message.error("Medicine must have at least 1 active ingredient")
+  const removeIngredient = async (index: number) => {
+    if (ActiveIngredients.length == 1) {
+      message.error("Medicine must have at least 1 active ingredient");
+    } else {
+      const ingredients = ActiveIngredients.filter((_, i) => i !== index);
+      setActiveIngredients(ingredients);
     }
-    else{
-        const ingredients = ActiveIngredients.filter((_, i) => i !== index);  
-        setActiveIngredients(ingredients);
-    }
-  }
+  };
 
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
-const viewMedicine = async () => {
-    navigate("/pharmacist/medicineDetails/" + addedMedicine._id)
-}
+  const viewMedicine = async () => {
+    navigate("/pharmacist/medicineDetails/" + addedMedicine._id);
+  };
 
   return (
     <div className="container mt-5">
@@ -103,7 +102,7 @@ const viewMedicine = async () => {
         <div className="col-md-6">
           <h1 className="mb-4">Add Medicine</h1>
           <form onSubmit={handleSubmit}>
-          <InputField
+            <InputField
               id="Name"
               label="Name"
               type="text"
@@ -111,17 +110,14 @@ const viewMedicine = async () => {
               onChange={setName}
               required={true}
             ></InputField>
-
-
             <TextArea
               id="Description"
               label="Description"
               value={Description}
-              onChange={setDescription} 
-              type="text" 
+              onChange={setDescription}
+              type="text"
               required={true}
             />
-
             <InputField
               id="Price"
               label="Price"
@@ -130,7 +126,6 @@ const viewMedicine = async () => {
               onChange={setPrice}
               required={true}
             ></InputField>
-
             <InputField
               id="Quantity"
               label="Quantity"
@@ -139,7 +134,6 @@ const viewMedicine = async () => {
               onChange={setQuantity}
               required={true}
             ></InputField>
-
             <InputField
               id="MedicinalUse"
               label="Medicinal Use"
@@ -148,37 +142,37 @@ const viewMedicine = async () => {
               onChange={setMedicinalUse}
               required={true}
             ></InputField>
+            <Row>
+              <InputField
+                id="activeIngredients"
+                label="Active Ingredients"
+                type="text"
+                value={Ingredient}
+                onChange={setIngredient}
+                required={ActiveIngredientsReq} //min 1 active ingredient
+              ></InputField>
+              <br></br>
 
-            <Row >
-            <InputField
-              id="activeIngredients"
-              label="Active Ingredients"
-              type="text"
-              value={Ingredient}
-              onChange={setIngredient}
-              required = {ActiveIngredientsReq}     //min 1 active ingredient
-            ></InputField>
-            <br></br>
-            
-
-            <button
-              className="btn btn-danger"
-              style={{ marginLeft: "10px", marginTop: "20px", width: 50, height:35}}
-              type="button"
-              onClick={(e:any) => addIngredient(Ingredient)}
-            >
-              Add
-            </button>
-
+              <button
+                className="btn btn-danger"
+                style={{
+                  marginLeft: "10px",
+                  marginTop: "20px",
+                  width: 50,
+                  height: 35,
+                }}
+                type="button"
+                onClick={(e: any) => addIngredient(Ingredient)}
+              >
+                Add
+              </button>
             </Row>
+            <body style={{ backgroundColor: "transparent" }}>
+              {ActiveIngredients.map((ingredient: any, index) =>
+                ingredient != "" ? (
+                  <Row>
+                    <li>{ingredient}</li>
 
-            <body style={{backgroundColor: "transparent"}}> 
-                {ActiveIngredients.map((ingredient: any, index) => 
-                
-                    (ingredient!= "" ?
-                    <Row>
-                    <li>{ingredient}</li> 
-                
                     <Button
                       className="btn btn-sm btn-danger"
                       // id = {ingredient.name}
@@ -188,17 +182,15 @@ const viewMedicine = async () => {
                         paddingTop: 0,
                         marginLeft: 10,
                       }}
-
                       onClick={(e) => removeIngredient(index)}
-                  >
-                    <span aria-hidden="true">&times;</span>
-                  </Button>
-                </Row>
-                :null
-                )
-                  
-             )} </body>  <br></br>
-         
+                    >
+                      <span aria-hidden="true">&times;</span>
+                    </Button>
+                  </Row>
+                ) : null
+              )}{" "}
+            </body>{" "}
+            <br></br>
             {/* <InputField
               id="Sales"
               label="Sales"
@@ -207,7 +199,6 @@ const viewMedicine = async () => {
               onChange={setSales}
         
             ></InputField> */}
-
             <InputField
               id="image"
               label="Image URL"
@@ -216,7 +207,6 @@ const viewMedicine = async () => {
               onChange={setImage}
               required={false}
             ></InputField>
-
             <button
               className="btn btn-primary"
               style={{ marginRight: "10px", marginTop: "10px" }}
@@ -224,11 +214,14 @@ const viewMedicine = async () => {
             >
               Submit
             </button>
-
             <button
-              id = "viewMed"
+              id="viewMed"
               className="btn btn-danger"
-              style={{ marginRight: "10px", marginTop: "10px", visibility: viewMedsHidden? "hidden" : "visible" }}
+              style={{
+                marginRight: "10px",
+                marginTop: "10px",
+                visibility: viewMedsHidden ? "hidden" : "visible",
+              }}
               type="button"
               onClick={viewMedicine}
             >

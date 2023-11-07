@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useNavigate,
+} from "react-router-dom";
 import AddAdminForm from "./pages/Admin/AddAdminForm";
 import Pharmacists from "./pages/Admin/Pharmacists";
 import Admins from "./pages/Admin/Admins";
@@ -19,55 +24,92 @@ import AddMedicine from "./pages/Pharmacist/addMedicine";
 import PatientHome from "./pages/Patient/PatientHome";
 import AdminHome from "./pages/Admin/AdminHome";
 import PharmaHome from "./pages/Pharmacist/PharmaHome";
+import Cart from "./pages/Patient/Cart";
+import jwt_decode from "jwt-decode";
+import Cookies from "js-cookie";
+import { JwtPayload } from "./middleware/tokenMiddleware";
+import NotFound from "./NotFound";
 
 const AppRouter: React.FC = () => {
-  return (
-    <Routes>
-      <Route path="/" element={<RegLog />} />
-      <Route path="/admin/add" element={<AddAdminForm />} />
-      <Route path="/admin/allPharmacists" element={<Pharmacists />} />
-      <Route path="/admin/Admins" element={<Admins />} />
-      <Route
-        path="/admin/registrationRequestDetails/:id"
-        element={<RegistrationRequestDetails />}
-      />
-      <Route path="/admin/Patients" element={<Patients />} />
-      <Route
-        path="/admin/registrationRequests"
-        element={<AllPharmaRequests />}
-      />
-      <Route path="/admin/viewMedicines" element={<AllMedicinesAdmin />} />
-      <Route
-        path="/admin/medicineDetails/:id"
-        element={<MedicineDetailsAdmin />}
-      />
-      <Route
-        path="/admin/AdminHome/"
-        element={<AdminHome />}
-      />
-
-      <Route path="/pharmacist/register" element={<RegisterPharmacist />} />
-      <Route path="/pharmacist/viewMedicines" element={<AllMedicinesPharm />} />
-      <Route
-        path="/pharmacist/medicineDetails/:id"
-        element={<MedicineDetailsPharm />}
-      />
-      <Route path="/pharmacist/editMedicine/:id" element={<EditMedicine />} />
-      <Route path="/pharmacist/addMedicine" element={<AddMedicine />} />
-      <Route path="/pharmacist/PharmacistHome/:id" element={<PharmaHome />} />      
-
-      <Route path="/" element={<RegLog />} />
-      <Route path="/patient/viewMedicines" element={<AllMedicinesPatient />} />
-      <Route
-        path="/patient/medicineDetails/:id"
-        element={<MedicineDetailsPatient />}
-      />
-    <Route
-    path="/patient/PatientHome/:id"
-    element={<PatientHome />}
-  />
-</Routes>
-  );
+  const navigate = useNavigate();
+  const accessToken = Cookies.get("accessToken");
+  let role = "";
+  if (accessToken) {
+    const decodedToken: JwtPayload = jwt_decode(accessToken);
+    role = decodedToken.role as string;
+    if (role === "Admin") {
+      return (
+        <Routes>
+          <Route path="/" element={<RegLog />} />
+          <Route path="/admin/add" element={<AddAdminForm />} />
+          <Route path="/admin/allPharmacists" element={<Pharmacists />} />
+          <Route path="/admin/Admins" element={<Admins />} />
+          <Route
+            path="/admin/registrationRequestDetails/:id"
+            element={<RegistrationRequestDetails />}
+          />
+          <Route path="/admin/Patients" element={<Patients />} />
+          <Route
+            path="/admin/registrationRequests"
+            element={<AllPharmaRequests />}
+          />
+          <Route path="/admin/viewMedicines" element={<AllMedicinesAdmin />} />
+          <Route
+            path="/admin/medicineDetails/:id"
+            element={<MedicineDetailsAdmin />}
+          />
+          <Route path="/admin/Home" element={<AdminHome />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      );
+    } else if (role === "Pharmacist") {
+      return (
+        <Routes>
+          <Route path="/" element={<RegLog />} />
+          <Route path="/pharmacist/register" element={<RegisterPharmacist />} />
+          <Route
+            path="/pharmacist/viewMedicines"
+            element={<AllMedicinesPharm />}
+          />
+          <Route
+            path="/pharmacist/medicineDetails/:id"
+            element={<MedicineDetailsPharm />}
+          />
+          <Route
+            path="/pharmacist/editMedicine/:id"
+            element={<EditMedicine />}
+          />
+          <Route path="/pharmacist/addMedicine" element={<AddMedicine />} />
+          <Route path="/pharmacist/Home" element={<PharmaHome />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      );
+    } else if (role === "Patient") {
+      return (
+        <Routes>
+          <Route path="/" element={<RegLog />} />
+          <Route
+            path="/patient/viewMedicines"
+            element={<AllMedicinesPatient />}
+          />
+          <Route
+            path="/patient/medicineDetails/:id"
+            element={<MedicineDetailsPatient />}
+          />
+          <Route path="/patient/Home" element={<PatientHome />} />
+          <Route path="/patient/viewCart" element={<Cart />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      );
+    } else {
+      navigate(-1);
+      return (
+        <Routes>
+          <Route path="/" element={<RegLog />} />
+        </Routes>
+      );
+    }
+  }
 };
 
 export default AppRouter;

@@ -6,6 +6,7 @@ import TextArea from "../../components/TextArea";
 import { Spin , Button , Input} from "antd";
 import { List, Row } from "antd";
 import { message } from "antd";
+import { config, headers } from "../../middleware/tokenMiddleware";
 
 const EditMedicine = () => {
   const { id } = useParams<{ id: string }>();
@@ -29,7 +30,7 @@ const EditMedicine = () => {
 
   useEffect(() => {
     api
-      .get(`/medicine/viewMedicineDetails/${id}`)
+      .get(`/medicine/viewMedicineDetails/${id}`,config)
       .then((response) => {
         setName(response.data.Name);
         setPrice(response.data.Price);
@@ -56,7 +57,7 @@ const EditMedicine = () => {
         MedicinalUse,
         ActiveIngredients
       };
-      const response = await api.put(`/pharmacist/updateMedicine/${id}`, data);
+      const response = await api.put(`/pharmacist/updateMedicine/${id}`, data, {headers: headers});
       console.log("Response:", response.data);
       message.success("Medicine updated successfully");
       setAlert(true);
@@ -74,7 +75,11 @@ const EditMedicine = () => {
   };
 
   const addIngredient = async(ingredient: string) => {
-    if(ActiveIngredients[0] == ""){
+    if(ingredient == ""){
+      message.error("Please Specify Active Ingredient");
+      return;
+   }
+    else if(ActiveIngredients[0] == ""){
         setActiveIngredients([Ingredient]);
     }
     else{
@@ -174,10 +179,12 @@ const EditMedicine = () => {
 
            
             <body style={{backgroundColor: "transparent"}}> 
-                {ActiveIngredients.map((ingredient: any, index) =>
-                  <Row>
+                {ActiveIngredients.map((ingredient: any, index) => 
+                
+                    (ingredient!= "" ?
+                    <Row>
                     <li>{ingredient}</li> 
-                  
+                
                     <Button
                       className="btn btn-sm btn-danger"
                       // id = {ingredient.name}
@@ -193,6 +200,9 @@ const EditMedicine = () => {
                     <span aria-hidden="true">&times;</span>
                   </Button>
                 </Row>
+                :null
+                )
+                  
              )} </body>  <br></br>
 
             <InputField

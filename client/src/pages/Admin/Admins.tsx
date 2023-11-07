@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Spin } from "antd";
+import { config } from "../../middleware/tokenMiddleware";
 
 const AllAdmins = () => {
   const [admins, setAdmins] = useState([]);
@@ -12,7 +13,7 @@ const AllAdmins = () => {
 
   useEffect(() => {
     api
-      .get("/allAdmins")
+      .get("/allAdmins",config)
       .then((response) => {
         setAdmins(response.data);
         setLoading(false);

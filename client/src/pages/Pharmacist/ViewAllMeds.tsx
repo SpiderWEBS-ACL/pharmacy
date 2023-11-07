@@ -4,6 +4,8 @@ import { Spin } from "antd";
 import { Button, Col, Row } from "react-bootstrap";
 import { DatePicker, DatePickerProps, Input, Select } from "antd";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import { config, headers } from "../../middleware/tokenMiddleware";
 
 const AllMedicines = () => {
   const [medicines, setMedicines] = useState([]);
@@ -24,7 +26,7 @@ const AllMedicines = () => {
   useEffect(() => {
     //send http request to backend
     api
-      .get(`medicine/viewMedicines`) //get request
+      .get(`medicine/viewMedicines`, config) //get request
       .then((response) => {
         setMedicines(response.data); //store response (medicines) in variable
         setLoading(false); //loading screen --> off
@@ -51,7 +53,10 @@ const AllMedicines = () => {
     setSearching(true);
     setLoading(true);
     api
-      .get(`medicine/searchForMedicine`, { params: { Name: searchValue } }) //get request
+      .get(`medicine/searchForMedicine`, {
+        params: { Name: searchValue },
+        headers: headers,
+      }) //get request
       .then((response) => {
         setSearchResults(response.data);
         setLoading(false); //loading screen --> off
@@ -66,7 +71,7 @@ const AllMedicines = () => {
   const clearSearch = async () => {
     // setLoading(true);
     api
-      .get(`medicine/viewMedicines`) //get request
+      .get(`medicine/viewMedicines`, config) //get request
       .then((response) => {
         setMedicines(response.data); //store response (medicines) in variable
         setLoading(false); //loading screen --> off
@@ -80,41 +85,45 @@ const AllMedicines = () => {
   };
 
   const handleFilter = () => {
-    if(filterValue != ""){
+    if (filterValue != "") {
       setMedicinalUse(filterValue);
       // setSearching(false);
       // setLoading(true);
 
-    const data = JSON.parse(
-      JSON.stringify(
-        (searching ? searchResults : medicines).map((item) =>
-          JSON.stringify(item)
+      const data = JSON.parse(
+        JSON.stringify(
+          (searching ? searchResults : medicines).map((item) =>
+            JSON.stringify(item)
+          )
         )
-      )
-    );
+      );
 
-    api
-      .post(`medicine/filterMedicineByMedicinalUse`, data, {
-        params: { MedicinalUse: filterValue },
-      }) //get request
-      .then((response) => {
-        // setMedicines(response.data); //store response (medicines) in variable
-        setfilteredResults(response.data);
-        setLoading(false); //loading screen --> off
-        setFiltering(true);
-        setFilterValue("");
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+      api
+        .post(`medicine/filterMedicineByMedicinalUse`, data, {
+          params: { MedicinalUse: filterValue },
+          headers: headers,
+        }) //get request
+        .then((response) => {
+          // setMedicines(response.data); //store response (medicines) in variable
+          setfilteredResults(response.data);
+          setLoading(false); //loading screen --> off
+          setFiltering(true);
+          setFilterValue("");
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
     }
   };
 
   const clearFilter = async () => {
     if (searching) {
       api
-        .get(`medicine/searchForMedicine`, { params: { Name: searchValue } }) //get request
+        .get(`medicine/searchForMedicine`, {
+          params: { Name: searchValue },
+          headers: headers,
+        }) //get request
         .then((response) => {
           setMedicines(response.data); //store response (medicines) in variable
           setLoading(false); //loading screen --> off
@@ -128,7 +137,7 @@ const AllMedicines = () => {
         });
     } else {
       try {
-        const response = await api.get(`/medicine/viewMedicines`);
+        const response = await api.get(`/medicine/viewMedicines`, config);
         setMedicinalUse("");
         setMedicines(response.data);
         setFilterValue("");
@@ -165,7 +174,7 @@ const AllMedicines = () => {
       </h2>
 
       <span>
-      <label style={{ marginRight: 8 }}>
+        <label style={{ marginRight: 8 }}>
           <strong>Filter by Medicinal Use:</strong>
         </label>
         <Select
@@ -180,7 +189,6 @@ const AllMedicines = () => {
           <Option value="Headaches">Headaches</Option>
           <Option value="Irritation">Irritation</Option>
         </Select>
-
         {/* <label style={{ marginRight: 4, marginBottom: 20 }}>
           <strong>Filter By Medicinal Use:</strong>
         </label>
@@ -257,13 +265,18 @@ const AllMedicines = () => {
               </h4>
             )}
           </Col>
-          
+
           {(filtering || searching) && (
             <Col style={{}}>
               <a
                 href=""
                 onClick={clearSearch}
-                style={{ fontSize: 16, float: "right" }}
+                style={{
+                  fontSize: 16,
+                  float: "right",
+                  position: "absolute",
+                  marginTop: 3,
+                }}
               >
                 {" "}
                 Show All Medicine

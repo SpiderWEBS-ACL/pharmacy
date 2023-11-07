@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Spin } from "antd";
+import { config } from "../../middleware/tokenMiddleware";
 
 const allPharmacists = () => {
   const [pharmacists, setPharmacists] = useState([]);
@@ -12,7 +13,7 @@ const allPharmacists = () => {
 
   useEffect(() => {
     api
-      .get("/allPharmacists")
+      .get("/allPharmacists",config)
       .then((response) => {
         setPharmacists(response.data);
         setLoading(false);
@@ -26,7 +27,7 @@ const allPharmacists = () => {
   const handleDelete = async (id: string) => {
     try {
       setLoading(true);
-      const response = await api.delete(`/removePharmacist/${id}`);
+      const response = await api.delete(`/removePharmacist/${id}`,config);
       setDeleted(!deleted);
       console.log("Response:", response.data);
     } catch (error) {

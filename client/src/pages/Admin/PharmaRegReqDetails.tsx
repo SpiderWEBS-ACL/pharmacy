@@ -3,6 +3,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { format } from "date-fns";
 import { Spin } from "antd";
+import { config } from "../../middleware/tokenMiddleware";
 
 const RegistrationRequestDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -15,7 +16,7 @@ const RegistrationRequestDetails: React.FC = () => {
   useEffect(() => {
     api
 
-      .get(`/registrationRequestDetails/${id}`)
+      .get(`/registrationRequestDetails/${id}`, config)
       .then((response) => {
         setRegistrationDetails(response.data);
         setLoading(false);

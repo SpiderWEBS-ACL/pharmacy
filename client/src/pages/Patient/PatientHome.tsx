@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { config } from "../../middleware/tokenMiddleware";
 
 const PatientHome = () => {
-
   const id = localStorage.getItem("id");
 
   const [patientInfo, setPatientInfo] = useState<any>({});
@@ -15,10 +15,10 @@ const PatientHome = () => {
 
   useEffect(() => {
     api
-      .get(`/admin/getPatient/${id}`)
+      .get(`/patient/me`, config)
       .then((response) => {
         setPatientInfo(response.data);
-        setEmergencyContact(response.data.EmergencyContact);
+       // setEmergencyContact(response.data.EmergencyContact);
         console.log(response.data);
       })
       .catch((error) => {
@@ -38,7 +38,7 @@ const PatientHome = () => {
           <p className="card-text">DOB: {datePart}</p>
           <p className="card-text">Gender: {patientInfo.Gender}</p>
           <p className="card-text">Mobile: {patientInfo.Mobile}</p>
-          <p className="card-text">
+          {/* <p className="card-text">
             Emergency Contact Name: {patientEmergencyContact.Name}
           </p>
           <p className="card-text">
@@ -47,7 +47,7 @@ const PatientHome = () => {
           <p className="card-text">
             Emergency Contact Relation:{" "}
             {patientEmergencyContact.relationToPatient}
-          </p>
+          </p> */}
         </div>
       </div>
     </div>
