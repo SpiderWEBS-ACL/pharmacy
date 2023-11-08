@@ -117,7 +117,7 @@ const viewPatientOrder = async (req, res) => {
     const OrderId = req.params.id;
     console.log(OrderId)
  
-    const Order = await orderModel.findById(OrderId).populate("medicines");
+    const Order = await orderModel.findById(OrderId).populate("Medicines.medicine");
     if (!Order) {
       return res.status(404).json({ error: "Order not found" });
     }
