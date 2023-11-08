@@ -36,7 +36,7 @@ const {
   pharmacistInfo,
 } = require("./Routes/pharmacistController");
 
-const { registerPatient, login, PatientInfo } = require("./Routes/patientController");
+const { registerPatient, login, PatientInfo, resetPassword, forgotPassword } = require("./Routes/patientController");
 
 const {
   getAllMedicines,
@@ -101,6 +101,7 @@ app.delete("/admin/rejectPharmacist/:id",AdminProtect, rejectPharmacistRequest);
 app.get("/pharmacist/me",PharmacistProtect, pharmacistInfo)
 app.post("/pharmacist/addPharmacist", addPharmacist);
 app.post("/pharmacist/register", registerPharmacist);
+app.post("/pharmacist/login",login);
 
 app.post("/pharmacist/addMedicine",PharmacistProtect, addMedicine),
 app.put("/pharmacist/updateMedicine/:id",PharmacistProtect, updateMedicine),
@@ -112,7 +113,8 @@ app.post("/pharmacist/uploadDocuments/:id", uploadDocuments);
 //------------------Patient Endpoints---------------------
 app.get("/patient/me",PatientProtect, PatientInfo)
 app.post("/patient/register", registerPatient);
-app.post("/patient/login",login)
+app.post("/patient/login",login);
+app.post("/patient/resetPass", forgotPassword);
 //------------------Medicine Endpoints------------------
 app.get("/medicine/viewMedicines",PharmacistProtect || PatientProtect || AdminProtect, getAllMedicines);
 app.get("/medicine/viewMedicineDetails/:id",PharmacistProtect || PatientProtect || AdminProtect, viewMedicineDetails);

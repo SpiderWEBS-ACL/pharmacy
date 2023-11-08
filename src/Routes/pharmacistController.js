@@ -185,6 +185,6 @@ module.exports = {
   updateMedicine,
   getMedicineDetails,
   getMedicineQuantitySales,
-  uploadDocuments
+  uploadDocuments,
   pharmacistInfo
 };

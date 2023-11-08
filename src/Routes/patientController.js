@@ -4,6 +4,8 @@ const pharmacistModel = require("../Models/Pharmacist");
 const adminModel = require("../Models/Admin");
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
+const Userfront = require("@userfront/core");
+const nodemailer = require('nodemailer');
 const { default: mongoose } = require("mongoose");
 
 //---------------------------------------REGISTRATION-----------------------------------------------
@@ -108,8 +110,82 @@ const login = async(req, res) => {
     res.status(500).json({ error: error.message });
   }
 }
+
+const resetPassword = async(req, res) => {
+
+}
+
+
+const forgotPassword = async(req, res) => {
+
+  //Check the form data is found or not
+  if (req.body == null) 
+    return res.status(400).json({ error: "please provide an email address" });
+  
+  try {
+    
+    
+
+    const  email  = req.body.email;
+    const patient = await patientModel.findOne({ "Email": { $regex: '^' + req.body.Username + '$', $options:'i'}});
+    const pharmacist = await pharmacistModel.findOne({ "Email": { $regex: '^' + req.body.Username + '$', $options:'i'} });
+    // const admin = await adminModel.findOne({ "Username": { $regex: '^' + req.body.Username + '$', $options:'i'} });
+
+        
+        //const patient = await patientModel.find({Email: email});
+        if (!patient) {
+          return res.status(404).json({ error: "Patient Not Found" });
+        }
+
+          const otp = Math.floor(1000 + Math.random() * 9000);    //random otp
+
+          const otpExpire = new Date();
+          otpExpire.setMinutes(otpExpire.getMinutes() + 1);
+
+              const transporter = nodemailer.createTransport({
+                  //service: 'gmail',
+                  host: 'smtp.gmail.com',
+                  port: 587,
+                  secure: false,
+                  requireTLS: true,
+                  auth: {
+                      user: 'spiderwebsacl@gmail.com',
+                      pass: 'vngs gkzg otrz vzbg',
+                  },
+              });
+
+              const mailOptions = {
+                  from: 'spiderwebsacl@gmail.com',
+                  to: req.body.email,
+                  subject: 'Password reset OTP',
+                  text: `Your OTP (It is expired after 1 min) : ${otp}`,
+              };
+
+              transporter.sendMail(mailOptions, (error, info) => {
+                  if (error) {
+                      //return next(new AppError(error, 500));
+                      res.status(500).json({ error: error.message });
+                    } else {
+                      res.json({
+                          data: "Your OTP has been sent to the email"
+                      })
+                  }
+              });
+
+          // })
+
+      // })
+
+  }
+  catch (err) {
+ //     return next(new AppError(err, 500));
+    res.status(500).json({ error: err.message });
+}
+}
+
 //---------------------------------------EXPORTS-----------------------------------------------
 
 module.exports = {
-  registerPatient,login,PatientInfo
+  registerPatient,login,PatientInfo,
+  resetPassword, forgotPassword
 };
