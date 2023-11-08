@@ -127,8 +127,9 @@ app.get("/medicine/searchForMedicine",PharmacistProtect || PatientProtect || Adm
 app.post("/medicine/filterMedicineByMedicinalUse",PharmacistProtect || PatientProtect || AdminProtect, filterMedicineByMedicinalUse);
 //-----------------Cart Endpoints---------------------
 
-app.post("/cart/createCart",createCart);
-app.post("/cart/:cartId/medicines/:medicineId", addMedicineToCart);
+
+app.post("/cart/createCart",createCart)
+app.post("/cart/addMedicines/:medicineId",PatientProtect, addMedicineToCart);
 app.put("/cart/:cartId/medicines/:medicineId", updateMedicineQuantity);
 app.delete("/cart/:cartId/medicines/:medicineId", removeMedicine);
 app.get("/cart/:cartId", viewCart);

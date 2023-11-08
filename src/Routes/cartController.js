@@ -16,9 +16,8 @@ const createCart = async (req, res) => {
 
 const addMedicineToCart = async (req, res) => {
     try {
-      const cartId = req.params.cartId;
+      const cartId = req.user.Cart;
       const medicineId = req.params.medicineId;
-  
       const cart = await Cart.findById(cartId);
       if (!cart) {
         return res.status(404).json({ error: "Cart not found" });
@@ -32,7 +31,7 @@ const addMedicineToCart = async (req, res) => {
       const existingMedicine = cart.medicines.find((m) => m.medicine.toString() === medicineId);
   
       if (existingMedicine) {
-        existingMedicine.quantity -= 1;
+        existingMedicine.quantity += 1;
       } else {
         cart.medicines.push({ medicine: medicineId });
       }
