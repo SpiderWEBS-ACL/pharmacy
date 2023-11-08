@@ -4,6 +4,7 @@ const pharmacistModel = require("../Models/Pharmacist");
 const adminModel = require("../Models/Admin");
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
+const OrdersModel= require("../Models/Orders");
 const { default: mongoose } = require("mongoose");
 
 //---------------------------------------REGISTRATION-----------------------------------------------
@@ -12,7 +13,7 @@ const Cart = require("../Models/Cart");
 const Config = require("../Models/Config");
 const Patient = require("../Models/Patient");
 const { generateAccessToken } = require("../middleware/authMiddleware");
-
+const Orders = require("../Models/Orders"); 
 const registerPatient = async (req, res) => {
   try {
     const exists = await Patient.findOne({ "Username": { $regex: '^' + req.body.Username + '$', $options: 'i' } });
