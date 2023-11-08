@@ -127,7 +127,7 @@ app.put("/pharmacist/updateMedicine/:id",PharmacistProtect, updateMedicine),
 // app.get("/pharmacist/getMedicineDetails", getMedicineDetails);
 app.get("/pharmacist/getMedicineQuantitySales/:id",PharmacistProtect, getMedicineQuantitySales);
 
-app.post("/pharmacist/uploadDocuments/:id", uploadDocuments);
+app.post("/pharmacist/uploadDocuments", PharmacistProtect, uploadDocuments);
 
 //------------------Patient Endpoints---------------------
 app.get("/patient/me",PatientProtect, PatientInfo)

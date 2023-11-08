@@ -140,17 +140,18 @@ const storage = multer.diskStorage({
   } 
 });
 
-
-const upload = multer({ storage: storage });
-
 const uploadDocuments = async (req, res) => {
+
+  const upload = multer({ storage: storage });
 
   upload.single('file')(req, res, async (err) => {
     if (err) {
       console.error(err);
       res.status(500).send('Server Error');
     } else {
-      const{  id } = req.params; // Assuming pharmacist ID 
+
+      //get Pharmacist id
+      const{  id } = req.user.id; 
 
       const newFile = new fileModel({
         Pharmacist: id,
@@ -169,12 +170,6 @@ const uploadDocuments = async (req, res) => {
     }
   });
 }
-
-
-
-
-
-
 
 //---------------------------------------EXPORTS-----------------------------------------------
 
