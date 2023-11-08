@@ -133,7 +133,6 @@ const viewPatientCart = async (req, res) => {
     const patientId = req.user.id;
     const patient = await Patient.findById(patientId)
     const cartId = patient.Cart;
-    console.log(cartId)
     
 
     const cart = await Cart.findById(cartId).populate("medicines");

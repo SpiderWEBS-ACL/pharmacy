@@ -1,4 +1,3 @@
-import React from "react";
 import "../layouts/footer.css"
 
 const Footer = () => {

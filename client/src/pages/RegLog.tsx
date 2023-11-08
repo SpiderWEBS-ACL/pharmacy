@@ -94,7 +94,7 @@ const RegLog: React.FC = () => {
         Username,
         Password,
       };
-      const response = await api.post(`/patient/login`, data);
+      const response = await api.post(`/login`, data);
       console.log(response.data);
       localStorage.setItem("id", response.data.id);
       localStorage.setItem("type", response.data.type);

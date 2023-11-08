@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const configSchema = new Schema({
+const settingsSchema = new Schema({
     wallet: {
         type: Number,
         default: 0,
@@ -16,4 +16,4 @@ const configSchema = new Schema({
     ]
 });
 
-module.exports = mongoose.model("Config", configSchema);
+module.exports = mongoose.model("Settings", settingsSchema);
