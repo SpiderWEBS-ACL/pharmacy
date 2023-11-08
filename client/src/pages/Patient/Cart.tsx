@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { config } from "../../middleware/tokenMiddleware";
 
+
 type CartItem = {
   medicine: string;
   quantity: number;
@@ -32,7 +33,6 @@ const viewCart: React.FC = () => {
       .then((response) => {
         setCart(response.data);
         setLoading(false);
-        console.log(response.data);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -51,6 +51,7 @@ const viewCart: React.FC = () => {
         for (const entry of medicineEntries) {
           try {
             const response = await api.get(`/medicines/${entry.medicineId}`);
+            console.log("RESPONSE: ", response)
             const medicine = response.data;
             medicine.quantity = entry.quantity;
             medicineDetails.push(medicine);
@@ -64,6 +65,11 @@ const viewCart: React.FC = () => {
       fetchMedicineDetails();
     }
   }, [cart]);
+
+  const navigate = useNavigate();
+  const handleViewDetails = async (id: string) => {
+    navigate("/patient/medicineDetails/" + id);
+  };
 
   //const navigate = useNavigate();
 
@@ -102,9 +108,30 @@ const viewCart: React.FC = () => {
         </thead>
 
         <tbody>
-          {
-            //what do i put here
-          }
+          {medicines.map((request: any, index) => (
+            <tr key={request._id} style={{ verticalAlign: "middle" }}>
+              <td>
+                <img src={request.imageURL} width={200} height={200}></img>
+              </td>
+              <td width={500}>
+                <strong style={{ fontSize: 20 }}>{request.Name}</strong>
+                <br></br>
+                <br></br>
+                {request.Description}
+              </td>
+              <td style={{ fontSize: 18, fontWeight: "bold" }}>
+                {request.Price} USD
+              </td>
+              <td>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => handleViewDetails(request._id)}
+                >
+                  View Details
+                </button>
+                </td>
+                </tr>
+          ))}
         </tbody>
       </table>
     </div>

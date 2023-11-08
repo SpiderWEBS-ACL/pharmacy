@@ -2,14 +2,36 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Spin } from "antd";
 import { useNavigate } from "react-router-dom";
-import { config } from "../../middleware/tokenMiddleware";
+import { config, headers } from "../../middleware/tokenMiddleware";
 
 const AllPharmaRequests = () => {
-  const [doctors, setDoctors] = useState([]);
+  const [doctors, setDoctors] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const api = axios.create({
     baseURL: "http://localhost:5000/admin",
   });
+
+  const handleAcceptPharmacist = async (id: string) => {
+    try {
+      const response = await api.post(`/acceptPharmacist/${id}`, {},{headers:headers});
+      console.log("Pharmacist accepted:", response.data);
+      setDoctors((prevDoctors) => prevDoctors.filter(doctor => doctor._id !== id));
+    } catch (error) {
+      console.error("Error accepting pharmacist:", error);
+    }
+  };
+  
+  const handleRejectPharmacist = async (id: string) => {
+    try {
+      const response = await api.delete(`/rejectPharmacist/${id}`, config);
+      console.log("Pharmacist rejected:", response.data);
+      setDoctors((prevDoctors) => prevDoctors.filter(doctor => doctor._id !== id));
+    } catch (error) {
+      console.error("Error rejecting pharmacist:", error);
+    }
+  };
+  
+  
 
   useEffect(() => {
     api
@@ -74,6 +96,7 @@ const AllPharmaRequests = () => {
                     fontSize: "12px",
                     borderRadius: "5px",
                   }}
+                  onClick={() => handleAcceptPharmacist(request._id)}
                 >
                   <span aria-hidden="true" style={{ color: "white" }}>
                     &#10003;
@@ -89,7 +112,7 @@ const AllPharmaRequests = () => {
                     fontSize: "12px",
                     borderRadius: "5px",
                   }}
-                  //TODO onClick in sprint 2 this is just a view
+                  onClick={() => handleRejectPharmacist(request._id)}
                 >
                   <span aria-hidden="true">&times;</span>
                 </button>

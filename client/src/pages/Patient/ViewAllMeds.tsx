@@ -40,7 +40,6 @@ const AllMedicines = () => {
 
   const { Option } = Select;
   const navigate = useNavigate();
-
   const handleViewDetails = async (id: string) => {
     navigate("/patient/medicineDetails/" + id);
   };
@@ -315,7 +314,7 @@ const AllMedicines = () => {
                 {request.Description}
               </td>
               <td style={{ fontSize: 18, fontWeight: "bold" }}>
-                {request.Price} LE
+                {request.Price} USD
               </td>
               <td>
                 <button
