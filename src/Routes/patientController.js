@@ -2,10 +2,6 @@ const patientModel = require("../Models/Patient");
 const medicineModel = require("../Models/Medicine");
 const pharmacistModel = require("../Models/Pharmacist");
 const adminModel = require("../Models/Admin");
-const bcrypt = require("bcrypt");
-const jwt = require('jsonwebtoken');
-const Userfront = require("@userfront/core");
-const nodemailer = require('nodemailer');
 const { default: mongoose } = require("mongoose");
 
 //---------------------------------------REGISTRATION-----------------------------------------------
@@ -13,16 +9,20 @@ const { default: mongoose } = require("mongoose");
 const Cart = require("../Models/Cart");
 const Settings = require("../Models/Settings");
 const Patient = require("../Models/Patient");
-const { generateAccessToken } = require("../middleware/authMiddleware");
+
 
 const registerPatient = async (req, res) => {
   try {
-    const exists = await Patient.findOne({ "Username": { $regex: '^' + req.body.Username + '$', $options: 'i' } });
-    const exists2 = await Patient.findOne({ "Email": { $regex: '^' + req.body.Email + '$', $options: 'i' } });
+    const exists = await Patient.findOne({
+      Username: { $regex: "^" + req.body.Username + "$", $options: "i" },
+    });
+    const exists2 = await Patient.findOne({
+      Email: { $regex: "^" + req.body.Email + "$", $options: "i" },
+    });
 
     if (!exists && !exists2) {
       // Create a new patient
-      req.body.Password = await bcrypt.hash(req.body.Password,10);
+      req.body.Password = await bcrypt.hash(req.body.Password, 10);
       const newPatient = await Patient.create(req.body);
 
       // Create a new cart for the patient
@@ -46,10 +46,9 @@ const registerPatient = async (req, res) => {
   }
 };
 
-
 const PatientInfo = async (req, res) => {
   try {
-    const  id  = req.user.id;
+    const id = req.user.id;
     const patient = await patientModel.findById(id);
     if (!patient) {
       return res.status(404).json({ error: "Patient Not Found" });
@@ -60,135 +59,9 @@ const PatientInfo = async (req, res) => {
   }
 };
 
-const login = async(req, res) => {
-  try{
-    const patient = await patientModel.findOne({ "Username": { $regex: '^' + req.body.Username + '$', $options:'i'}});
-    const pharmacist = await pharmacistModel.findOne({ "Username": { $regex: '^' + req.body.Username + '$', $options:'i'} });
-    const admin = await adminModel.findOne({ "Username": { $regex: '^' + req.body.Username + '$', $options:'i'} });
-
-    
-    if (!pharmacist && !patient && !admin) {
-      return res.status(400).json({ error: "Username not found!" });
-    }
-    else if(patient){
-      if (await bcrypt.compare(req.body.Password, patient.Password)) {
-        const user = {
-          id: patient._id,
-          role: "Patient"
-        }
-        accessToken = generateAccessToken(user);
-        refreshToken = jwt.sign({id: patient._id}, process.env.REFRESH_TOKEN_SECRET);
-        res.json({ accessToken: accessToken, refreshToken: refreshToken, id: patient._id, type:"Patient"});
-      } else {
-        res.status(400).json({ error: "Password doesn't match!" });
-      }
-    }
-    else if(pharmacist){
-      if (await bcrypt.compare(req.body.Password, pharmacist.Password)) {
-        const user = {
-          id: pharmacist._id,
-          role: "Pharmacist"
-        }
-        accessToken = generateAccessToken(user);
-        refreshToken = jwt.sign({id: pharmacist._id}, process.env.REFRESH_TOKEN_SECRET);
-        res.json({ accessToken: accessToken, refreshToken: refreshToken, id: pharmacist._id, type:"Pharmacist"});
-      } else {
-        res.status(400).json({ error: "Password doesn't match!" });
-      }
-    }
-    else if(admin){
-      if (await bcrypt.compare(req.body.Password, admin.Password)) {
-        const user = {
-          id: admin._id,
-          role: "Admin"
-        }
-        accessToken = generateAccessToken(user);
-        refreshToken = jwt.sign({id: admin._id}, process.env.REFRESH_TOKEN_SECRET);
-        res.json({accessToken: accessToken, refreshToken: refreshToken, id: admin._id,type:"Admin" });
-      } else {
-        res.status(400).json({ error: "Password doesn't match!" });
-      }
-    }
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-const resetPassword = async(req, res) => {
-
-}
-
-
-const forgotPassword = async(req, res) => {
-
-  //Check the form data is found or not
-  if (req.body == null) 
-    return res.status(400).json({ error: "please provide an email address" });
-  
-  try {
-    
-    
-
-    const  email  = req.body.email;
-    const patient = await patientModel.findOne({ "Email": { $regex: '^' + req.body.Username + '$', $options:'i'}});
-    const pharmacist = await pharmacistModel.findOne({ "Email": { $regex: '^' + req.body.Username + '$', $options:'i'} });
-    // const admin = await adminModel.findOne({ "Username": { $regex: '^' + req.body.Username + '$', $options:'i'} });
-
-        
-        //const patient = await patientModel.find({Email: email});
-        if (!patient) {
-          return res.status(404).json({ error: "Patient Not Found" });
-        }
-
-          const otp = Math.floor(1000 + Math.random() * 9000);    //random otp
-
-          const otpExpire = new Date();
-          otpExpire.setMinutes(otpExpire.getMinutes() + 1);
-
-              const transporter = nodemailer.createTransport({
-                  //service: 'gmail',
-                  host: 'smtp.gmail.com',
-                  port: 587,
-                  secure: false,
-                  requireTLS: true,
-                  auth: {
-                      user: 'spiderwebsacl@gmail.com',
-                      pass: 'vngs gkzg otrz vzbg',
-                  },
-              });
-
-              const mailOptions = {
-                  from: 'spiderwebsacl@gmail.com',
-                  to: req.body.email,
-                  subject: 'Password reset OTP',
-                  text: `Your OTP (It is expired after 1 min) : ${otp}`,
-              };
-
-              transporter.sendMail(mailOptions, (error, info) => {
-                  if (error) {
-                      //return next(new AppError(error, 500));
-                      res.status(500).json({ error: error.message });
-                    } else {
-                      res.json({
-                          data: "Your OTP has been sent to the email"
-                      })
-                  }
-              });
-
-          // })
-
-      // })
-
-  }
-  catch (err) {
- //     return next(new AppError(err, 500));
-    res.status(500).json({ error: err.message });
-}
-}
-
 //---------------------------------------EXPORTS-----------------------------------------------
 
 module.exports = {
-  registerPatient,login,PatientInfo,
-  resetPassword, forgotPassword
+  registerPatient,
+  PatientInfo,
 };
