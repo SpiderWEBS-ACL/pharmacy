@@ -55,6 +55,12 @@ const {
 viewPatientCart} = require("./Routes/cartController");
 const { AdminProtect, PharmacistProtect, PatientProtect } = require("./middleware/authMiddleware");
 
+const {
+  createConfig,
+  viewPatientConfig,
+  addShippingAddress
+ } = require("./Routes/configController");
+
 //----------------------CONFIGURATIONS------------------------
 
 const app = express();
@@ -121,8 +127,9 @@ app.get("/medicine/searchForMedicine",PharmacistProtect || PatientProtect || Adm
 app.post("/medicine/filterMedicineByMedicinalUse",PharmacistProtect || PatientProtect || AdminProtect, filterMedicineByMedicinalUse);
 //-----------------Cart Endpoints---------------------
 
+
 app.post("/cart/createCart",createCart)
-app.post("/cart/:cartId/medicines/:medicineId", addMedicineToCart);
+app.post("/cart/addMedicines/:medicineId",PatientProtect, addMedicineToCart);
 app.put("/cart/:cartId/medicines/:medicineId", updateMedicineQuantity);
 app.delete("/cart/:cartId/medicines/:medicineId", removeMedicine);
 app.get("/cart/:cartId", viewCart);
@@ -130,3 +137,7 @@ app.get("/cart/viewCart/:patientId",PatientProtect, viewPatientCart);
 app.get("/cart/medicines/:medicineId", viewMedicineDetailsInCart);
 
 
+//------------------Config Endpoints--------------------
+app.post("/config/createConfig",createConfig);
+app.post("/config/addShippingAddress", addShippingAddress);
+app.get("/config/viewConfig",viewPatientConfig);

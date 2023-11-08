@@ -9,6 +9,7 @@ const { default: mongoose } = require("mongoose");
 //---------------------------------------REGISTRATION-----------------------------------------------
 
 const Cart = require("../Models/Cart");
+const Config = require("../Models/Config");
 const Patient = require("../Models/Patient");
 const { generateAccessToken } = require("../middleware/authMiddleware");
 
@@ -24,7 +25,9 @@ const registerPatient = async (req, res) => {
 
       // Create a new cart for the patient
       const cart = new Cart();
+      const config = new Config();
       await cart.save();
+      await config.save();
 
       // Associate the cart with the patient
       newPatient.Cart = cart._id;

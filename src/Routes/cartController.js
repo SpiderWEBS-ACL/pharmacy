@@ -1,7 +1,6 @@
 const Cart = require("../Models/Cart");
 const Medicine = require("../Models/Medicine");
 const Patient = require("../Models/Patient");
-const mongoose = require("mongoose");
 
 const createCart = async (req, res) => {
     try {
@@ -17,23 +16,24 @@ const createCart = async (req, res) => {
 
 const addMedicineToCart = async (req, res) => {
     try {
-      const cartId = req.params.cartId;
+      const cartId = req.user.Cart;
       const medicineId = req.params.medicineId;
-  
       const cart = await Cart.findById(cartId);
       if (!cart) {
         return res.status(404).json({ error: "Cart not found" });
       }
-  
+      
       const medicine = await Medicine.findById(medicineId);
       if (!medicine) {
         return res.status(404).json({ error: "Medicine not found" });
       }
-  
+      else if(medicine.Quantity < 1){
+        return res.status(404).json({ error: "Medicine is out of stock" });
+      }
+      const updatedMedicine = await Medicine.findByIdAndUpdate(medicineId, {Quantity: medicine.Quantity - 1})
       const existingMedicine = cart.medicines.find((m) => m.medicine.toString() === medicineId);
-  
       if (existingMedicine) {
-        existingMedicine.quantity -= 1;
+        existingMedicine.quantity += 1;
       } else {
         cart.medicines.push({ medicine: medicineId });
       }
@@ -45,6 +45,7 @@ const addMedicineToCart = async (req, res) => {
       return res.status(500).json({ error: error.message });
     }
   };
+
   const updateMedicineQuantity = async (req, res) => {
     try {
       const cartId = req.params.cartId;
@@ -161,6 +162,9 @@ const viewMedicineDetailsInCart = async (req, res) => {
   }
 };
 
+  const checkoutWithCard = async (req, res) => {
+    
+  }
 module.exports = {
     createCart,
   addMedicineToCart,

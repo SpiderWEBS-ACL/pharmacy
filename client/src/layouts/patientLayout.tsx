@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import ImportedFooter from "../layouts/footer";
 import {
   BrowserRouter as Router,
   Route,
@@ -12,6 +13,9 @@ import {
   FileOutlined,
   UserOutlined,
   PoweroffOutlined,
+  ShoppingCartOutlined,
+  SettingOutlined
+
 } from "@ant-design/icons";
 import AppRouter from "../AppRouter";
 
@@ -40,7 +44,12 @@ const PatientLayout: React.FC = () => {
     {
       label: "Cart",
       key: "/patient/viewCart",
-      icon: <FileOutlined />,
+      icon: <ShoppingCartOutlined />,
+    },
+    {
+      label: "Settings",
+      key: "/patient/settings",
+      icon: <SettingOutlined />,
     },
     {
       label: "Logout",
@@ -79,6 +88,7 @@ const PatientLayout: React.FC = () => {
         <Content style={{ margin: "0 16px" }}>
           <AppRouter />
         </Content>
+        <ImportedFooter />
       </Layout>
     </Layout>
   );
