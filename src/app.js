@@ -36,7 +36,7 @@ const {
   pharmacistInfo,
 } = require("./Routes/pharmacistController");
 
-const { registerPatient, PatientInfo} = require("./Routes/patientController");
+const { registerPatient, PatientInfo, viewPatientOrder} = require("./Routes/patientController");
 
 const {
   getAllMedicines,
@@ -132,6 +132,7 @@ app.post("/pharmacist/uploadDocuments/:id", uploadDocuments);
 //------------------Patient Endpoints---------------------
 app.get("/patient/me",PatientProtect, PatientInfo)
 app.post("/patient/register", registerPatient);
+app.get("/patient/viewOrder/:id", viewPatientOrder)
 
 //------------------Medicine Endpoints------------------
 app.get("/medicine/viewMedicines",PharmacistProtect || PatientProtect || AdminProtect, getAllMedicines);
@@ -140,9 +141,10 @@ app.get("/medicine/viewMedicineDetails/:id",PharmacistProtect || PatientProtect 
 app.get("/medicine/searchForMedicine",PharmacistProtect || PatientProtect || AdminProtect, searchForMedicine);
 app.post("/medicine/filterMedicineByMedicinalUse",PharmacistProtect || PatientProtect || AdminProtect, filterMedicineByMedicinalUse);
 
+
 //-----------------Cart Endpoints---------------------
-app.post("/cart/createCart",createCart);
-app.post("/cart/:cartId/medicines/:medicineId", addMedicineToCart);
+app.post("/cart/createCart",createCart)
+app.post("/cart/addMedicines/:medicineId",PatientProtect, addMedicineToCart);
 app.put("/cart/:cartId/medicines/:medicineId", updateMedicineQuantity);
 app.delete("/cart/:cartId/medicines/:medicineId", removeMedicine);
 app.get("/cart/:cartId", viewCart);
@@ -150,7 +152,8 @@ app.get("/cart/viewCart/:patientId", PatientProtect, viewPatientCart);
 app.get("/cart/medicines/:medicineId", viewMedicineDetailsInCart);
 
 
-//------------------Settings Endpoints--------------------
-app.post("/settings/createConfig",createConfig);
-app.post("/settings/addShippingAddress", addShippingAddress);
-app.get("/settings/viewConfig",viewPatientConfig);
+//------------------Config Endpoints--------------------
+app.post("/config/createConfig",createConfig);
+app.post("/config/addShippingAddress", addShippingAddress);
+app.get("/config/viewConfig",viewPatientConfig);
+

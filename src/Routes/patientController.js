@@ -2,6 +2,7 @@ const patientModel = require("../Models/Patient");
 const medicineModel = require("../Models/Medicine");
 const pharmacistModel = require("../Models/Pharmacist");
 const adminModel = require("../Models/Admin");
+const orderModel= require("../Models/Orders");
 const { default: mongoose } = require("mongoose");
 
 //---------------------------------------REGISTRATION-----------------------------------------------
@@ -59,9 +60,26 @@ const PatientInfo = async (req, res) => {
   }
 };
 
+const viewPatientOrder = async (req, res) => {
+  try {
+    const OrderId = req.params.id;
+    console.log(OrderId)
+ 
+    const Order = await orderModel.findById(OrderId).populate("Medicines.medicine");
+    if (!Order) {
+      return res.status(404).json({ error: "Order not found" });
+    }
+
+    return res.status(200).json(Order);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+}
+
 //---------------------------------------EXPORTS-----------------------------------------------
 
 module.exports = {
   registerPatient,
   PatientInfo,
+  viewPatientOrder,
 };
