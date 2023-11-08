@@ -40,7 +40,6 @@ const AllMedicines = () => {
 
   const { Option } = Select;
   const navigate = useNavigate();
-
   const handleViewDetails = async (id: string) => {
     navigate("/patient/medicineDetails/" + id);
   };

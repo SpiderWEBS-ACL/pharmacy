@@ -1,7 +1,6 @@
 const Cart = require("../Models/Cart");
 const Medicine = require("../Models/Medicine");
 const Patient = require("../Models/Patient");
-const mongoose = require("mongoose");
 
 const createCart = async (req, res) => {
     try {
