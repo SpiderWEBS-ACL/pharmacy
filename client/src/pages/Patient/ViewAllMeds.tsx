@@ -314,7 +314,7 @@ const AllMedicines = () => {
                 {request.Description}
               </td>
               <td style={{ fontSize: 18, fontWeight: "bold" }}>
-                {request.Price} LE
+                {request.Price} USD
               </td>
               <td>
                 <button

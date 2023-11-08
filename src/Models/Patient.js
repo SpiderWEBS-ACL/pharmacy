@@ -53,9 +53,9 @@ const patientSchema = new Schema(
       ref: "Cart",
       required: false
     },
-    Config: {
+    Settings: {
       type: Schema.Types.ObjectId,
-      ref: "Config",
+      ref: "Settings",
       required: false
     },
   },

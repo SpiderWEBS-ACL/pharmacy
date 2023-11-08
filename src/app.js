@@ -59,7 +59,7 @@ const {
   createConfig,
   viewPatientConfig,
   addShippingAddress
- } = require("./Routes/configController");
+ } = require("./Routes/settingsController");
 
 //----------------------CONFIGURATIONS------------------------
 
@@ -136,7 +136,7 @@ app.get("/cart/viewCart/:patientId",PatientProtect, viewPatientCart);
 app.get("/cart/medicines/:medicineId", viewMedicineDetailsInCart);
 
 
-//------------------Config Endpoints--------------------
-app.post("/config/createConfig",createConfig);
-app.post("/config/addShippingAddress", addShippingAddress);
-app.get("/config/viewConfig",viewPatientConfig);
+//------------------Settings Endpoints--------------------
+app.post("/settings/createConfig",createConfig);
+app.post("/settings/addShippingAddress", addShippingAddress);
+app.get("/settings/viewConfig",viewPatientConfig);

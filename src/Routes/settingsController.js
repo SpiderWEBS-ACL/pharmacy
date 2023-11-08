@@ -1,12 +1,12 @@
-const Config = require("../Models/Config");
+const Settings = require("../Models/Settings");
 const Patient = require("../Models/Patient");
 
 const createConfig = async (req, res) => {
     try {
-      const config = new Config();
-      await config.save();
+      const settings = new Settings();
+      await settings.save();
   
-      return res.status(201).json(config);
+      return res.status(201).json(settings);
     } catch (error) {
       return res.status(500).json({ error: error.message });
     }
@@ -16,15 +16,15 @@ const createConfig = async (req, res) => {
     try {
       const patientId = req.user.id;
       const patient = await Patient.findById(patientId)
-      const configId = patient.Config;
+      const settingsId = patient.Settings;
       
   
-      const config = await Config.findById(configId);
-      if (!config) {
-        return res.status(404).json({ error: "Configuration not found" });
+      const settings = await Settings.findById(settingsId);
+      if (!settings) {
+        return res.status(404).json({ error: "Settings not found" });
       }
   
-      return res.status(200).json(config);
+      return res.status(200).json(settings);
     } catch (error) {
       return res.status(500).json({ error: error.message });
     }
@@ -37,16 +37,16 @@ const createConfig = async (req, res) => {
       if (!patient) {
         return res.status(404).json({ error: "Patient not found" });
       }
-      const configId = patient.Config;
-      const config = await Config.findById(configId);
-      if (!config) {
-        return res.status(404).json({ error: "Configuration not found" });
+      const settingsId = patient.Settings;
+      const settings = await Settings.findById(settingsId);
+      if (!settings) {
+        return res.status(404).json({ error: "Settings not found" });
       }
       const { shippingAddress } = req.body;
-      config.shippingAddresses.push({ shippingAddress });
-      await config.save();
+      settings.shippingAddresses.push({ shippingAddress });
+      await settings.save();
   
-      return res.status(201).json(config);
+      return res.status(201).json(settings);
     } catch (error) {
       return res.status(500).json({ error: error.message });
     }

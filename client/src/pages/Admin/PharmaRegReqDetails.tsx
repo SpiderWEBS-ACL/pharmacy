@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import { format } from "date-fns";
 import { Spin } from "antd";
-import { config } from "../../middleware/tokenMiddleware";
+import { config, headers } from "../../middleware/tokenMiddleware";
 
 const RegistrationRequestDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -12,6 +11,30 @@ const RegistrationRequestDetails: React.FC = () => {
   const api = axios.create({
     baseURL: "http://localhost:5000/admin",
   });
+
+  const handleAcceptPharmacist = async (id: string) => {
+    try {
+      const response = await api.post(`/acceptPharmacist/${id}`,{},{headers:headers});
+      console.log("Pharmacist accepted:", response.data);
+      const updatedRegistrationDetails = { ...registrationDetails };
+      updatedRegistrationDetails.accepted = true;
+      setRegistrationDetails(updatedRegistrationDetails);
+    } catch (error) {
+      console.error("Error accepting pharmacist:", error);
+    }
+  };
+  
+  const handleRejectPharmacist = async (id: string) => {
+    try {
+      const response = await api.delete(`/rejectPharmacist/${id}`, config);
+      console.log("Pharmacist rejected:", response.data);
+      const updatedRegistrationDetails = { ...registrationDetails };
+      updatedRegistrationDetails.rejected = true;
+      setRegistrationDetails(updatedRegistrationDetails);
+    } catch (error) {
+      console.error("Error rejecting pharmacist:", error);
+    }
+  };
 
   useEffect(() => {
     api
@@ -77,6 +100,7 @@ const RegistrationRequestDetails: React.FC = () => {
                   fontSize: "12px",
                   borderRadius: "5px",
                 }}
+                onClick={()=>{handleAcceptPharmacist(registrationDetails._id)}}
               >
                 <span aria-hidden="true" style={{ color: "white" }}>
                   &#10003;
@@ -92,7 +116,7 @@ const RegistrationRequestDetails: React.FC = () => {
                   fontSize: "12px",
                   borderRadius: "5px",
                 }}
-                //TODO onClick in sprint 2 this is just a view
+                onClick={()=>{handleRejectPharmacist(registrationDetails._id)}}
               >
                 <span aria-hidden="true">&times;</span>
               </button>
