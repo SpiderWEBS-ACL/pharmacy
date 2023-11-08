@@ -4,7 +4,7 @@ const pharmacistModel = require("../Models/Pharmacist");
 const adminModel = require("../Models/Admin");
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
-const OrdersModel= require("../Models/Orders");
+const orderModel= require("../Models/Orders");
 const { default: mongoose } = require("mongoose");
 
 //---------------------------------------REGISTRATION-----------------------------------------------
@@ -13,7 +13,7 @@ const Cart = require("../Models/Cart");
 const Config = require("../Models/Config");
 const Patient = require("../Models/Patient");
 const { generateAccessToken } = require("../middleware/authMiddleware");
-const Orders = require("../Models/Orders"); 
+
 const registerPatient = async (req, res) => {
   try {
     const exists = await Patient.findOne({ "Username": { $regex: '^' + req.body.Username + '$', $options: 'i' } });
@@ -112,8 +112,23 @@ const login = async(req, res) => {
     res.status(500).json({ error: error.message });
   }
 }
+const viewPatientOrder = async (req, res) => {
+  try {
+    const OrderId = req.params.id;
+    console.log(OrderId)
+ 
+    const Order = await orderModel.findById(OrderId).populate("medicines");
+    if (!Order) {
+      return res.status(404).json({ error: "Order not found" });
+    }
+
+    return res.status(200).json(Order);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+}
 //---------------------------------------EXPORTS-----------------------------------------------
 
 module.exports = {
-  registerPatient,login,PatientInfo
+  registerPatient,login,PatientInfo,viewPatientOrder
 };

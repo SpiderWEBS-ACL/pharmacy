@@ -36,7 +36,7 @@ const {
   pharmacistInfo,
 } = require("./Routes/pharmacistController");
 
-const { registerPatient, login, PatientInfo } = require("./Routes/patientController");
+const { registerPatient, login, PatientInfo,viewPatientOrder } = require("./Routes/patientController");
 
 const {
   getAllMedicines,
@@ -119,6 +119,7 @@ app.post("/pharmacist/uploadDocuments/:id", uploadDocuments);
 app.get("/patient/me",PatientProtect, PatientInfo)
 app.post("/patient/register", registerPatient);
 app.post("/patient/login",login)
+app.get("patient/viewOrder/:orderId", viewPatientOrder)
 //------------------Medicine Endpoints------------------
 app.get("/medicine/viewMedicines",PharmacistProtect || PatientProtect || AdminProtect, getAllMedicines);
 app.get("/medicine/viewMedicineDetails/:id",PharmacistProtect || PatientProtect || AdminProtect, viewMedicineDetails);
@@ -135,6 +136,7 @@ app.delete("/cart/:cartId/medicines/:medicineId", removeMedicine);
 app.get("/cart/:cartId", viewCart);
 app.get("/cart/viewCart/:patientId",PatientProtect, viewPatientCart);
 app.get("/cart/medicines/:medicineId", viewMedicineDetailsInCart);
+
 
 
 //------------------Config Endpoints--------------------
