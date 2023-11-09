@@ -29,6 +29,9 @@ import jwt_decode from "jwt-decode";
 import Cookies from "js-cookie";
 import { JwtPayload } from "./middleware/tokenMiddleware";
 import NotFound from "./NotFound";
+import ChangePasswordAdmin from "./pages/Admin/ChangePassword";
+import ChangePasswordPharm from "./pages/Pharmacist/ChangePassword";
+import ChangePasswordPatient from "./pages/Patient/ChangePassword";
 
 const AppRouter: React.FC = () => {
   const navigate = useNavigate();
@@ -59,6 +62,7 @@ const AppRouter: React.FC = () => {
             element={<MedicineDetailsAdmin />}
           />
           <Route path="/admin/Home" element={<AdminHome />} />
+          <Route path="/admin/changePassword" element={<ChangePasswordAdmin/>}/>
           <Route path="*" element={<NotFound />} />
         </Routes>
       );
@@ -81,6 +85,7 @@ const AppRouter: React.FC = () => {
           />
           <Route path="/pharmacist/addMedicine" element={<AddMedicine />} />
           <Route path="/pharmacist/Home" element={<PharmaHome />} />
+          <Route path="/pharmacist/changePassword" element={<ChangePasswordPharm/>}/>
           <Route path="*" element={<NotFound />} />
         </Routes>
       );
@@ -98,6 +103,7 @@ const AppRouter: React.FC = () => {
           />
           <Route path="/patient/Home" element={<PatientHome />} />
           <Route path="/patient/viewCart" element={<Cart />} />
+          <Route path="/patient/changePassword" element={<ChangePasswordPatient/>}/>
           <Route path="*" element={<NotFound />} />
         </Routes>
       );

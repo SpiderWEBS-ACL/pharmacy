@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { config } from "../../middleware/tokenMiddleware";
 
 const PatientHome = () => {
@@ -8,6 +8,8 @@ const PatientHome = () => {
 
   const [patientInfo, setPatientInfo] = useState<any>({});
   const [patientEmergencyContact, setEmergencyContact] = useState<any>({});
+
+  const navigate = useNavigate();
 
   const api = axios.create({
     baseURL: "http://localhost:5000/",
@@ -49,6 +51,17 @@ const PatientHome = () => {
             {patientEmergencyContact.relationToPatient}
           </p> */}
         </div>
+      </div>
+      <br />
+      <div style={{ display: "flex" }}>
+        <button
+          style={{ marginLeft: "auto", marginRight: "20px" }}
+          className="btn btn-danger"
+          type="button"
+          onClick={()=> {navigate("/patient/changePassword")}}
+        >
+          Change Password
+        </button>
       </div>
     </div>
   );
