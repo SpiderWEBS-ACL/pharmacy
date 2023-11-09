@@ -69,7 +69,7 @@ const accessToken = Cookies.get("accessToken");
         console.error("Error:", error);
       });
       
-  }, [id]);
+  }, [cart]);
 
   const navigate = useNavigate();
   // const handleViewDetails = async (id: string) => {

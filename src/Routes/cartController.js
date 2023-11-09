@@ -89,7 +89,9 @@ const removeMedicine = async (req, res) => {
   try {
       const patientId = req.user.id;
       const patient = await Patient.findById(patientId)
+      console.log(patient.Cart)
       const cartId = patient.Cart;
+
       
   
       const cart = await Cart.findById(cartId).populate("medicines");
