@@ -16,9 +16,15 @@ const createCart = async (req, res) => {
 
 const addMedicineToCart = async (req, res) => {
     try {
-      const cartId = req.user.Cart;
+
+      const patientId = req.user.id;
+      const patient = await Patient.findById(patientId)
+      const cartId = patient.Cart;
+      
+  
+      const cart = await Cart.findById(cartId).populate("medicines");
       const medicineId = req.params.medicineId;
-      const cart = await Cart.findById(cartId);
+
       if (!cart) {
         return res.status(404).json({ error: "Cart not found" });
       }
@@ -86,10 +92,15 @@ const addMedicineToCart = async (req, res) => {
 
 const removeMedicine = async (req, res) => {
   try {
-    const cartId = req.params.cartId;
-    const medicineId = req.params.medicineId;
+      const patientId = req.user.id;
+      const patient = await Patient.findById(patientId)
+      console.log(patient.Cart)
+      const cartId = patient.Cart;
 
-    const cart = await Cart.findById(cartId);
+      
+  
+      const cart = await Cart.findById(cartId).populate("medicines");
+    const medicineId = req.params.medicineId;
     if (!cart) {
       return res.status(404).json({ error: "Cart not found" });
     }
@@ -130,7 +141,7 @@ const viewCart = async (req, res) => {
 };
 const viewPatientCart = async (req, res) => {
   try {
-    const patientId = req.user.id;
+    const patientId = req.params.id;
     const patient = await Patient.findById(patientId)
     const cartId = patient.Cart;
     

@@ -1,8 +1,10 @@
 import { Spin } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { config } from "../../middleware/tokenMiddleware";
+import { useNavigate } from "react-router-dom";
+import { JwtPayload, config} from "../../middleware/tokenMiddleware";
+import Cookies from "js-cookie";
+import jwt_decode from "jwt-decode";
 
 
 type CartItem = {
@@ -18,7 +20,11 @@ type MedicineItem = {
 };
 
 const viewCart: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+const accessToken = Cookies.get("accessToken");
+  let id = "";
+  if (accessToken) {
+    const decodedToken: JwtPayload = jwt_decode(accessToken);
+    id = decodedToken.id as string;}
   const [cart, setCart] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [medicines, setMedicines] = useState<MedicineItem[]>([]);
@@ -32,44 +38,53 @@ const viewCart: React.FC = () => {
       .get(`/viewCart/${id}`, config)
       .then((response) => {
         setCart(response.data);
+        console.log("RES:",response.data.medicines)
+        if (response.data.medicines.length > 0) {
+          const medicineEntries = response.data.medicines.map((item: { medicine: any; quantity: any; }) => ({
+            medicineId: item.medicine,
+            quantity: item.quantity,
+          }));
+          console.log("MEDS: ",medicineEntries);
+          const fetchMedicineDetails = async () => {
+            const medicineDetails = [];
+            for (const entry of medicineEntries) {
+              try {
+                const response = await api.get(`/medicines/${entry.medicineId}`);
+                console.log("RESPONSE: ", response)
+                const medicine = response.data;
+                medicine.quantity = entry.quantity;
+                medicineDetails.push(medicine);
+              } catch (error) {
+                console.error("Error fetching medicine:", error);
+              }
+            }
+            setMedicines(medicineDetails);
+          };
+    
+          fetchMedicineDetails();
+        }
         setLoading(false);
       })
       .catch((error) => {
         console.error("Error:", error);
       });
-  }, [id]);
-
-  useEffect(() => {
-    if (cart.length > 0) {
-      const medicineEntries = cart.map((item) => ({
-        medicineId: item.medicine,
-        quantity: item.quantity,
-      }));
-
-      const fetchMedicineDetails = async () => {
-        const medicineDetails = [];
-        for (const entry of medicineEntries) {
-          try {
-            const response = await api.get(`/medicines/${entry.medicineId}`);
-            console.log("RESPONSE: ", response)
-            const medicine = response.data;
-            medicine.quantity = entry.quantity;
-            medicineDetails.push(medicine);
-          } catch (error) {
-            console.error("Error fetching medicine:", error);
-          }
-        }
-        setMedicines(medicineDetails);
-      };
-
-      fetchMedicineDetails();
-    }
+      
   }, [cart]);
 
   const navigate = useNavigate();
-  const handleViewDetails = async (id: string) => {
-    navigate("/patient/medicineDetails/" + id);
-  };
+  // const handleViewDetails = async (id: string) => {
+  //   navigate("/patient/medicineDetails/" + id);
+  // };
+
+  const handleRemove = async (id: string) => {
+    try{
+      await api.delete(`/medicines/${id}`, config)
+      console.log("medicine removed:" ,id)
+
+    }catch(error){
+      console.log("error removing medicine: ", error);
+    }
+  }
 
   //const navigate = useNavigate();
 
@@ -124,10 +139,10 @@ const viewCart: React.FC = () => {
               </td>
               <td>
                 <button
-                  className="btn btn-primary"
-                  onClick={() => handleViewDetails(request._id)}
+                  className="btn btn-danger"
+                  onClick={() => handleRemove(request._id)}
                 >
-                  View Details
+                  remove
                 </button>
                 </td>
                 </tr>

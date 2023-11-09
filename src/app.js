@@ -143,12 +143,12 @@ app.post("/medicine/filterMedicineByMedicinalUse",PharmacistProtect || PatientPr
 
 
 //-----------------Cart Endpoints---------------------
-app.post("/cart/createCart",createCart)
-app.post("/cart/addMedicines/:medicineId",PatientProtect, addMedicineToCart);
+app.post("/cart/createCart",createCart);
+app.post("/cart/medicines/:medicineId",PatientProtect, addMedicineToCart);
 app.put("/cart/:cartId/medicines/:medicineId", updateMedicineQuantity);
-app.delete("/cart/:cartId/medicines/:medicineId", removeMedicine);
+app.delete("/cart/medicines/:medicineId", PatientProtect, removeMedicine);
 app.get("/cart/:cartId", viewCart);
-app.get("/cart/viewCart/:patientId", PatientProtect, viewPatientCart);
+app.get("/cart/viewCart/:id",PatientProtect, viewPatientCart);
 app.get("/cart/medicines/:medicineId", viewMedicineDetailsInCart);
 
 
