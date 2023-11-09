@@ -98,13 +98,10 @@ const removeMedicine = async (req, res) => {
   try {
       const patientId = req.user.id;
       const patient = await Patient.findById(patientId)
-      console.log(patient.Cart)
       const cartId = patient.Cart;
-
-      
-  
       const cart = await Cart.findById(cartId).populate("medicines");
-    const medicineId = req.params.medicineId;
+      const medicineId = req.params.medicineId;
+      const med = await Medicine.findById(medicineId);
     if (!cart) {
       return res.status(404).json({ error: "Cart not found" });
     }
@@ -119,7 +116,7 @@ const removeMedicine = async (req, res) => {
     if (index === -1) {
       return res.status(404).json({ error: "Medicine not found in the cart" });
     }
-
+    med.Quantity += cart.medicines[i].quantity;
     cart.medicines.splice(index, 1);
     await cart.save();
 
