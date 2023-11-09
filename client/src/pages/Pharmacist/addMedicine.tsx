@@ -6,7 +6,7 @@ import InputField from "../../components/InputField";
 import { List, Row, Spin, Button } from "antd";
 import { message } from "antd";
 import { IonProgressBar } from "@ionic/react";
-import { alignPropType } from "react-bootstrap/esm/types";
+// import { alignPropType } from "react-bootstrap/esm/types";
 import TextArea from "../../components/TextArea";
 import { headers } from "../../middleware/tokenMiddleware";
 
