@@ -2,9 +2,10 @@ import { Spin } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { JwtPayload, config} from "../../middleware/tokenMiddleware";
+import { JwtPayload, config, headers} from "../../middleware/tokenMiddleware";
 import Cookies from "js-cookie";
 import jwt_decode from "jwt-decode";
+import {PlusOutlined ,MinusOutlined, DeleteOutlined } from "@ant-design/icons"
 
 
 type CartItem = {
@@ -86,6 +87,15 @@ const accessToken = Cookies.get("accessToken");
     }
   }
 
+  const handleIncrease = async (id:string) => {
+    await api.put(`/medicines/${id}`,{quantity:1}, {headers: headers})
+    window.location.reload();
+  }
+  const handleDecrease = async (id:string) => {
+    await api.put(`/medicines/${id}`,{quantity:-1}, {headers: headers})
+    window.location.reload();
+  }
+
   //const navigate = useNavigate();
 
   //NAVIGATE TO PAYMENT GATEWAY
@@ -118,6 +128,7 @@ const accessToken = Cookies.get("accessToken");
             <th></th>
             <th>Medicine Name</th>
             <th>Price</th>
+            <th>Quantity</th>
             <th></th>
           </tr>
         </thead>
@@ -137,12 +148,34 @@ const accessToken = Cookies.get("accessToken");
               <td style={{ fontSize: 18, fontWeight: "bold" }}>
                 {request.Price} USD
               </td>
+              <td style={{ fontSize: 18, fontWeight: "bold" }}>
+                {request.quantity} 
+              </td>
               <td>
                 <button
                   className="btn btn-danger"
                   onClick={() => handleRemove(request._id)}
                 >
                   remove
+                  &nbsp;
+                  <DeleteOutlined />
+                </button>
+                <br></br>
+                <br></br>
+                <button
+                className="btn btn-secondary"
+                onClick={() => handleDecrease(request._id)}
+                >
+                  <MinusOutlined />
+                </button>
+                &nbsp;
+                &nbsp;
+                &nbsp;
+                <button
+                className="btn btn-secondary"
+                onClick={() => handleIncrease(request._id)}
+                >
+                  <PlusOutlined />      
                 </button>
                 </td>
                 </tr>

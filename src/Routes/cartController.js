@@ -54,15 +54,14 @@ const addMedicineToCart = async (req, res) => {
 
   const updateMedicineQuantity = async (req, res) => {
     try {
-      const cartId = req.params.cartId;
+      const patientId = req.user.id;
+      const patient = await Patient.findById(patientId)
+      const cartId = patient.Cart;
+      
+  
+      const cart = await Cart.findById(cartId).populate("medicines");
       const medicineId = req.params.medicineId;
-      const quantity = req.body.quantity;
-  
-      if (!quantity || quantity <= 0) {
-        return res.status(400).json({ error: "Quantity must be greater than 0" });
-      }
-  
-      const cart = await Cart.findById(cartId);
+      const updateQuantity = req.body.quantity;
       if (!cart) {
         return res.status(404).json({ error: "Cart not found" });
       }
@@ -76,12 +75,17 @@ const addMedicineToCart = async (req, res) => {
       if (!medicine) {
         return res.status(404).json({ error: "Medicine not found" });
       }
-      if (quantity > medicine.Quantity) {
+      if (medicine.Quantity == 0) {
         return res.status(400).json({ error: "Requested quantity exceeds available stock" });
       }
+      if(medicineInCart.quantity===1 && updateQuantity===-1){
+        return res.status(400).json({error: "min quantity in cart"})
+      }
 
-      medicineInCart.quantity = quantity;
+      medicineInCart.quantity += updateQuantity;
       await cart.save();
+      medicine.Quantity-=updateQuantity
+      await medicine.save();
   
       return res.status(200).json(cart);
     } catch (error) {
