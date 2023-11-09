@@ -69,7 +69,7 @@ const accessToken = Cookies.get("accessToken");
         console.error("Error:", error);
       });
       
-  }, [cart]);
+  }, [id]);
 
   const navigate = useNavigate();
   // const handleViewDetails = async (id: string) => {
@@ -80,6 +80,7 @@ const accessToken = Cookies.get("accessToken");
     try{
       await api.delete(`/medicines/${id}`, config)
       console.log("medicine removed:" ,id)
+      window.location.reload();
 
     }catch(error){
       console.log("error removing medicine: ", error);
