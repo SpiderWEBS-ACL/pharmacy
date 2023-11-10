@@ -157,7 +157,11 @@ const addShippingAddress = async (req, res) => {
   }
 }
 
+const payCartWithWallet  = async(req,res) => {
+ 
 
+
+}
 //---------------------------------------EXPORTS-----------------------------------------------
 
 module.exports = {

@@ -4,6 +4,7 @@ const cors = require('cors');
 mongoose.set('strictQuery', false);
 require("dotenv").config();
 const bcrypt = require("bcrypt");
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const MongoURI = process.env.MONGO_URI;
 const PORT = process.env.PORT || "5000";
