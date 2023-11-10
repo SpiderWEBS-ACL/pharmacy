@@ -7,7 +7,6 @@ const PatientHome = () => {
   const id = localStorage.getItem("id");
 
   const [patientInfo, setPatientInfo] = useState<any>({});
-  const [patientEmergencyContact, setEmergencyContact] = useState<any>({});
 
   const navigate = useNavigate();
 
@@ -40,6 +39,7 @@ const PatientHome = () => {
           <p className="card-text">DOB: {datePart}</p>
           <p className="card-text">Gender: {patientInfo.Gender}</p>
           <p className="card-text">Mobile: {patientInfo.Mobile}</p>
+          <p className="card-text">Shipping Addresses: {patientInfo.shippingAddresses}</p>
           {/* <p className="card-text">
             Emergency Contact Name: {patientEmergencyContact.Name}
           </p>
