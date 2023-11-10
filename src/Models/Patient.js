@@ -32,7 +32,8 @@ const patientSchema = new Schema(
       required: true,
     },
     Wallet: {
-      type: Number
+      type: Number,
+      default: 0
     },
     EmergencyContact: {
       Name: {

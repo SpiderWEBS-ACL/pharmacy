@@ -141,9 +141,9 @@ app.post("/pharmacist/uploadDocuments", PharmacistProtect, uploadDocuments);
 app.get("/patient/me",PatientProtect, PatientInfo)
 app.post("/patient/register", registerPatient);
 app.get("/patient/viewOrder/:id", viewPatientOrder);
-app.get("/patient/shippingAddresses", viewShippingAdresses)
-app.put("/patient/shippingAddress", addShippingAddress);
-app.get("patient/wallet",viewWallet)
+app.get("/patient/shippingAddresses", PatientProtect,viewShippingAdresses)
+app.put("/patient/shippingAddress",PatientProtect, addShippingAddress);
+app.get("/patient/wallet",PatientProtect,viewWallet)
 app.put("/patient/changePassword", PatientProtect, changePasswordPatient);
 app.get("/patient/viewOrder/:id", viewPatientOrder)
 
