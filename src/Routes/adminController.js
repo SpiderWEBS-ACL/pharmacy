@@ -46,12 +46,8 @@ const addAdmin = async (req,res) => {
 }
 
 const changePasswordAdmin = async(req, res) => {
-
-  try {
-    // console.log(req.user);
-  
+  try {  
     const {id} = req.user;
-
     const { currPass, newPass, newPassConfirm } = req.body;
 
     if (!(currPass && newPass && newPassConfirm)) {

@@ -32,6 +32,7 @@ import NotFound from "./NotFound";
 import ChangePasswordAdmin from "./pages/Admin/ChangePassword";
 import ChangePasswordPharm from "./pages/Pharmacist/ChangePassword";
 import ChangePasswordPatient from "./pages/Patient/ChangePassword";
+import ForgotPassword from "./pages/ForgotPassword";
 
 const AppRouter: React.FC = () => {
   const navigate = useNavigate();
@@ -111,6 +112,7 @@ const AppRouter: React.FC = () => {
       navigate(-1);
       return (
         <Routes>
+          <Route path="/forgotPassword" element={<ForgotPassword />} />
           <Route path="/" element={<RegLog />} />
         </Routes>
       );

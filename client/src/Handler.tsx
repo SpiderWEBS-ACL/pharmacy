@@ -5,6 +5,7 @@ import RegLog from "./pages/RegLog";
 
 import RegisterPharmacist from "./pages/Pharmacist/Register";
 import { useNavigate } from "react-router-dom";
+import ForgotPassword from "./pages/ForgotPassword";
 const Handler: React.FC = () => {
   const navigate = useNavigate();
   const userType = localStorage.getItem("type");
@@ -14,6 +15,8 @@ const Handler: React.FC = () => {
   else if (userType === "Pharmacist") return <PharmacistLayout />;
   else if (currentPath.includes("pharmacist/register"))
     return <RegisterPharmacist />;
+  else if (currentPath.includes("/forgotPassword"))
+    return <ForgotPassword   />;
   else return <RegLog />;
 };
 export default Handler;

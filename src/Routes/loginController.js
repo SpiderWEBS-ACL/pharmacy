@@ -105,7 +105,7 @@ const forgotPassword = async (req, res) => {
     //const patient = await patientModel.find({Email: email});
     if (!pharmacist && !patient && !admin) {
       return res.status(404).json({
-        error: "There's no account associated with the provided email.",
+        error: "There's no account associated with the provided email."
       });
     }
 
@@ -198,7 +198,10 @@ const verifyOTP = async(req, res) => {
 
     //check if otp is correct
     // return await bcrypt.compare(otp, hashedOTP);
-    res.status(200).json({valid: await bcrypt.compare(otp, hashedOTP)});
+    if( await bcrypt.compare(otp, hashedOTP)) 
+      res.status(200).json({valid: true});
+    else
+      res.status(400).json( {error: "Invalid OTP"} );
 
   } catch(error){
       res.status(500).json({ error: error.message });
@@ -208,31 +211,31 @@ const verifyOTP = async(req, res) => {
 
 const resetPassword = async (req, res) => {
   try {
-    const { Email, newPassword } = req.body;
+    const { email, newPass } = req.body;
 
-    if (!(Email && newPassword)) {
+    if (!(email && newPass)) {
       return res.status(404).json({ error: "missing fields" });
     }
 
     //find user to update password
     const patient = await patientModel.findOne({
-      Email: { $regex: "^" + req.body.Email + "$", $options: "i" },
+      Email: { $regex: "^" + req.body.email + "$", $options: "i" },
     });
     const pharmacist = await pharmacistModel.findOne({
-      Email: { $regex: "^" + req.body.Email + "$", $options: "i" },
+      Email: { $regex: "^" + req.body.email + "$", $options: "i" },
     });
     const admin = await adminModel.findOne({
-      Email: { $regex: "^" + req.body.Email + "$", $options: "i" },
+      Email: { $regex: "^" + req.body.email + "$", $options: "i" },
     });
 
     if (!pharmacist && !patient && !admin) {
       return res.status(404).json({
-        error: "There's no account associated with the provided email.",
+        error: "There's no account associated with the provided email."
       });
     }
 
     //hash new Password
-    const hashedPass = await bcrypt.hash(newPassword, 10);
+    const hashedPass = await bcrypt.hash(newPass, 10);
 
     //update password
      var newUser;
@@ -249,7 +252,7 @@ const resetPassword = async (req, res) => {
     }
 
     //otp no longer needed
-    await OTP.deleteOne({Email});
+    await OTP.deleteOne({email});
 
     res.status(200).json(newUser);
   } catch (error) {
