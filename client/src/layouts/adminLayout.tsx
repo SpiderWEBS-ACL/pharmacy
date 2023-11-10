@@ -1,34 +1,32 @@
 import React, { useState } from "react";
 import {
   BrowserRouter as Router,
-  Route,
-  Link,
-  Routes,
   useNavigate,
 } from "react-router-dom";
 import { Layout, Menu } from "antd";
 import {
-  HomeOutlined,
-  FileOutlined,
   UserOutlined,
   PoweroffOutlined,
+  IdcardOutlined,
+  TeamOutlined,
+  AppstoreOutlined 
 } from "@ant-design/icons";
 import AppRouter from "../AppRouter";
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Content, Sider } = Layout;
 
 const AdminLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const items = [
     {
-      label: "Home",
+      label: "Account info",
       key: "/admin/Home",
-      icon: <HomeOutlined />,
+      icon: <IdcardOutlined />
     },
     {
       label: "Admin",
-      icon: <UserOutlined />,
+      icon: <TeamOutlined />,
       key: "parent1",
       children: [
         { label: "Admins", key: "/admin/Admins" },
@@ -57,7 +55,7 @@ const AdminLayout: React.FC = () => {
     },
     {
       label: "Medicines",
-      icon: <FileOutlined />,
+      icon: <AppstoreOutlined />,
       key: "parentMeds",
       children: [
         {
