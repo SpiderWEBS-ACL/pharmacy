@@ -4,7 +4,7 @@ const medicineModel = require("../Models/Medicine");
 const fileModel = require("../Models/File");
 const multer = require("multer") 
 const bcrypt = require("bcrypt");
-const { default: mongoose } = require("mongoose");
+
 
 // FOR TESTING
 const addPharmacist = async (req, res) => {

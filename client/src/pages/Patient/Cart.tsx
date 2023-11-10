@@ -70,12 +70,15 @@ const accessToken = Cookies.get("accessToken");
         console.error("Error:", error);
       });
       
-  }, [id]);
+
+  }, [cart,medicines]);
+
 
   const navigate = useNavigate();
-  // const handleViewDetails = async (id: string) => {
-  //   navigate("/patient/medicineDetails/" + id);
-  // };
+
+  const handleCheckout = async () => {
+   //STRIPE INTEGRATION
+  };
 
   const handleRemove = async (id: string) => {
     try{
@@ -90,7 +93,7 @@ const accessToken = Cookies.get("accessToken");
 
   const handleIncrease = async (id:string) => {
     await api.put(`/medicines/${id}`,{quantity:1}, {headers: headers})
-    window.location.reload();
+   
   }
   const handleDecrease = async (id:string) => {
     await api.put(`/medicines/${id}`,{quantity:-1}, {headers: headers})
@@ -183,6 +186,11 @@ const accessToken = Cookies.get("accessToken");
           ))}
         </tbody>
       </table>
+      <button
+      className="btn btn-success"
+      onClick={() => handleCheckout()} >
+          Checkout 
+      </button>
     </div>
   );
 };

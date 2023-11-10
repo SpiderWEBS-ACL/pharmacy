@@ -6,7 +6,6 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const { generateAccessToken } = require("../middleware/authMiddleware");
-const { default: mongoose } = require("mongoose");
 
 const login = async (req, res) => {
   try {

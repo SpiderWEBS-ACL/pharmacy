@@ -31,14 +31,15 @@ const {
   addPharmacist,
   addMedicine,
   updateMedicine,
-  getMedicineDetails,
   getMedicineQuantitySales,
   uploadDocuments,
   pharmacistInfo,
   changePasswordPharmacist,
 } = require("./Routes/pharmacistController");
 
-const { registerPatient, PatientInfo, viewPatientOrder, changePasswordPatient} = require("./Routes/patientController");
+
+const { registerPatient, PatientInfo, viewPatientOrder, viewWallet, viewShippingAdresses, addShippingAddress} = require("./Routes/patientController");
+
 
 const {
   getAllMedicines,
@@ -54,14 +55,9 @@ const {
   viewCart,
   viewMedicineDetailsInCart,
   updateMedicineQuantity,
-viewPatientCart} = require("./Routes/cartController");
+viewPatientCart,
+getCartTotal} = require("./Routes/cartController");
 const { AdminProtect, PharmacistProtect, PatientProtect } = require("./middleware/authMiddleware");
-
-const {
-  createConfig,
-  viewPatientConfig,
-  addShippingAddress
- } = require("./Routes/settingsController");
 
  const {
   login,
@@ -138,8 +134,13 @@ app.post("/pharmacist/uploadDocuments", PharmacistProtect, uploadDocuments);
 //------------------Patient Endpoints---------------------
 app.get("/patient/me",PatientProtect, PatientInfo)
 app.post("/patient/register", registerPatient);
+app.get("/patient/viewOrder/:id", viewPatientOrder);
+app.get("/patient/shippingAddresses", viewShippingAdresses)
+app.put("/patient/shippingAddress", addShippingAddress);
+app.get("patient/wallet",viewWallet)
 app.put("/patient/changePassword", PatientProtect, changePasswordPatient);
 app.get("/patient/viewOrder/:id", viewPatientOrder)
+
 
 //------------------Medicine Endpoints------------------
 app.get("/medicine/viewMedicines",PharmacistProtect || PatientProtect || AdminProtect, getAllMedicines);
@@ -157,10 +158,8 @@ app.delete("/cart/medicines/:medicineId", PatientProtect, removeMedicine);
 app.get("/cart/:cartId", viewCart);
 app.get("/cart/viewCart/:id",PatientProtect, viewPatientCart);
 app.get("/cart/medicines/:medicineId", viewMedicineDetailsInCart);
+app.get("/cart/getCartTotal/:cartId",getCartTotal)
 
 
-//------------------Config Endpoints--------------------
-app.post("/config/createConfig",createConfig);
-app.post("/config/addShippingAddress", addShippingAddress);
-app.get("/config/viewConfig",viewPatientConfig);
+
 

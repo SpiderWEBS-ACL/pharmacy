@@ -3,7 +3,6 @@ const adminModel = require("../Models/Admin");
 const pharmacistModel = require("../Models/Pharmacist");
 const patientModel = require("../Models/Patient");
 const pharmacistRegisterRequestModel = require("../Models/PharmacistRegisterRequest");
-const medicineModel = require("../Models/Medicine");
 const bcrypt = require("bcrypt");
 
 const { default: mongoose } = require("mongoose");
