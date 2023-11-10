@@ -1,7 +1,4 @@
 const patientModel = require("../Models/Patient");
-const medicineModel = require("../Models/Medicine");
-const pharmacistModel = require("../Models/Pharmacist");
-const adminModel = require("../Models/Admin");
 const orderModel= require("../Models/Orders");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -164,7 +161,6 @@ module.exports = {
   viewPatientOrder,
   viewWallet,
   viewShippingAdresses,
-  addShippingAddress
-  changePasswordPatient,
-
+  addShippingAddress,
+  changePasswordPatient
 };

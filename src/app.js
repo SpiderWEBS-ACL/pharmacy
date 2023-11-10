@@ -38,7 +38,13 @@ const {
 } = require("./Routes/pharmacistController");
 
 
-const { registerPatient, PatientInfo, viewPatientOrder, viewWallet, viewShippingAdresses, addShippingAddress} = require("./Routes/patientController");
+const { registerPatient,
+   PatientInfo,
+    viewPatientOrder,
+     viewWallet,
+      viewShippingAdresses, 
+      addShippingAddress,
+       changePasswordPatient} = require("./Routes/patientController");
 
 
 const {
