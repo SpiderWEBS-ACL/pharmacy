@@ -70,7 +70,9 @@ const accessToken = Cookies.get("accessToken");
         console.error("Error:", error);
       });
       
+
   }, [cart,medicines]);
+
 
   const navigate = useNavigate();
 
@@ -83,6 +85,7 @@ const accessToken = Cookies.get("accessToken");
       await api.delete(`/medicines/${id}`, config)
       console.log("medicine removed:" ,id)
       window.location.reload();
+
     }catch(error){
       console.log("error removing medicine: ", error);
     }

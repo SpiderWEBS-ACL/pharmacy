@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { config } from "../../middleware/tokenMiddleware";
 import { alignProperty } from "@mui/material/styles/cssUtils";
 
@@ -8,6 +8,7 @@ const PharmaHome = () => {
   const id = localStorage.getItem("id");
 
   const [pharmacistInfo, setPharmacistInfo] = useState<any>({});
+  const navigate = useNavigate();
 
   const api = axios.create({
     baseURL: "http://localhost:5000/",
@@ -55,12 +56,23 @@ const PharmaHome = () => {
         <div style={{ display: "flex" }}>
         <button
           style={{ marginLeft: "auto", marginRight: "20px" }}
-          className="btn btn-danger"
+          className="btn btn-primary"
           type="button"
           onClick={handleUpload}
         >
           Upload Documents
         </button>
+
+        <div style={{ display: "flex" }}>
+        <button
+          style={{ marginLeft: "auto", marginRight: "20px" }}
+          className="btn btn-danger"
+          type="button"
+          onClick={()=> {navigate("/pharmacist/changePassword")}}
+        >
+          Change Password
+        </button>
+      </div>
       </div>
 
     </div>

@@ -106,3 +106,5 @@ class PasswordResetForm extends React.Component<any, any> {
     );
   }
 }
+
+export default PasswordResetForm;

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./style.css";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { message } from "antd";
 import {
   validateMobile,
@@ -182,7 +182,9 @@ const RegLog: React.FC = () => {
           required={true}
           onBlur={() => handleBlur("password")}
         />
-        <p className="forgot-pass">Forgot password?</p>
+        
+        <Link to= "/forgotPassword"  className="forgot-pass text-right" style={{display: "block", textAlign:"center"}}>Forgot Password?</Link>
+        
         <button onClick={handleSignIn} type="button" className="submit button">
           Sign In
         </button>
