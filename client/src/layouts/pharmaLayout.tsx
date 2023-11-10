@@ -1,34 +1,29 @@
 import React, { useState } from "react";
 import {
   BrowserRouter as Router,
-  Route,
-  Link,
-  Routes,
   useNavigate,
 } from "react-router-dom";
 import { Layout, Menu } from "antd";
 import {
-  HomeOutlined,
-  FileOutlined,
   UserOutlined,
   PoweroffOutlined,
+  AppstoreOutlined
 } from "@ant-design/icons";
 import AppRouter from "../AppRouter";
 
-const { Header, Content, Footer, Sider } = Layout;
-const id = localStorage.getItem("id");
+const { Content, Sider } = Layout;
 const PharmacistLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const items = [
     {
-      label: "Home",
+      label: "Account Info",
       key: "/pharmacist/Home",
-      icon: <HomeOutlined />,
+      icon: <UserOutlined />,
     },
     {
       label: "Medicines",
-      icon: <FileOutlined />,
+      icon: <AppstoreOutlined />,
       key: "parentMeds",
       children: [
         {

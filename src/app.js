@@ -4,6 +4,7 @@ const cors = require('cors');
 mongoose.set('strictQuery', false);
 require("dotenv").config();
 const bcrypt = require("bcrypt");
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const MongoURI = process.env.MONGO_URI;
 const PORT = process.env.PORT || "5000";
@@ -164,7 +165,7 @@ app.delete("/cart/medicines/:medicineId", PatientProtect, removeMedicine);
 app.get("/cart/:cartId", viewCart);
 app.get("/cart/viewCart/:id",PatientProtect, viewPatientCart);
 app.get("/cart/medicines/:medicineId", viewMedicineDetailsInCart);
-app.get("/cart/getCartTotal/:cartId",getCartTotal)
+app.get("/cart/getCartTotal/:cartId",PatientProtect,getCartTotal)
 
 
 
