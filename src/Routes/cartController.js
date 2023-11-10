@@ -98,14 +98,11 @@ const removeMedicine = async (req, res) => {
   try {
       const patientId = req.user.id;
       const patient = await Patient.findById(patientId)
-      console.log(patient.Cart)
       const cartId = patient.Cart;
-
-      
-  
       const cart = await Cart.findById(cartId).populate("medicines");
-    const medicineId = req.params.medicineId;
-    if (!cart) {
+      const medicineId = req.params.medicineId;
+    
+      if (!cart) {
       return res.status(404).json({ error: "Cart not found" });
     }
 
@@ -119,7 +116,13 @@ const removeMedicine = async (req, res) => {
     if (index === -1) {
       return res.status(404).json({ error: "Medicine not found in the cart" });
     }
+    medicine = await Medicine.findById(cart.medicines[index].medicine);
+    if(!medicine){
+      return res.status(404).json({ error: "Medicine not found" });
+    }
+    medicine.Quantity+= cart.medicines[index].quantity;
 
+    await medicine.save();
     cart.medicines.splice(index, 1);
     await cart.save();
 
@@ -175,6 +178,34 @@ const viewMedicineDetailsInCart = async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 };
+const getCartTotal = async (req, res) => {
+  try {
+    const cartId = req.params.cartId;
+    const cart = await Cart.findById(cartId).populate("medicines");;
+
+    if (!cart) {
+      return res.status(404).json({ error: "Cart not found" });
+    }
+
+    let total = 0;
+
+    for (const item of cart.medicines) {
+      const medicineId = item.medicine;
+      const medicine = await Medicine.findById(medicineId);
+
+      if (!medicine) {
+        return res.status(404).json({ error: "Medicine not found" });
+      }
+
+      total += item.quantity * medicine.Price;
+    }
+
+    return res.status(200).json({ total });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
+
 
   const checkoutWithCard = async (req, res) => {
     
@@ -186,5 +217,6 @@ module.exports = {
   viewCart,
   viewMedicineDetailsInCart,
   updateMedicineQuantity,
-  viewPatientCart
+  viewPatientCart,
+  getCartTotal
 };

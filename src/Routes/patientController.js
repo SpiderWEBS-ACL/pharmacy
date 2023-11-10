@@ -5,12 +5,11 @@ const adminModel = require("../Models/Admin");
 const orderModel= require("../Models/Orders");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { default: mongoose } = require("mongoose");
+
 
 //---------------------------------------REGISTRATION-----------------------------------------------
 
 const Cart = require("../Models/Cart");
-const Settings = require("../Models/Settings");
 const Patient = require("../Models/Patient");
 
 
@@ -30,9 +29,7 @@ const registerPatient = async (req, res) => {
 
       // Create a new cart for the patient
       const cart = new Cart();
-      const settings = new Settings();
       await cart.save();
-      await settings.save();
 
       // Associate the cart with the patient
       newPatient.Cart = cart._id;
@@ -77,6 +74,47 @@ const viewPatientOrder = async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 }
+const viewWallet = async (req,res) => {
+  try{
+    const patientId = req.user.id;
+    const patient = await Patient.findById(patientId);
+    if (!patient) {
+      return res.status(404).json({ error: "Patient Not Found" });
+    }
+    res.status(200).json(patient.Wallet)
+
+  }catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+  
+}
+const viewShippingAdresses = async (req,res) => {
+  try{
+    const patientId = req.user.id;
+    const patient = await Patient.findById(patientId);
+    if (!patient) {
+      return res.status(404).json({ error: "Patient Not Found" });
+    }
+    res.status(200).json(patient.shippingAddresses)
+  }catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+const addShippingAddress = async (req,res) => {
+  try{
+    const shipping = req.body;
+    const patientId = req.user.id;
+    const patient = await Patient.findById(patientId);
+    if (!patient) {
+      return res.status(404).json({ error: "Patient Not Found" });
+    }
+    patient.shippingAddresses.push(shipping);
+    await patient.save
+
+  }catch{
+    res.status(500).json({ error: error.message });
+  }
+}
 
 //---------------------------------------EXPORTS-----------------------------------------------
 
@@ -84,4 +122,7 @@ module.exports = {
   registerPatient,
   PatientInfo,
   viewPatientOrder,
+  viewWallet,
+  viewShippingAdresses,
+  addShippingAddress
 };

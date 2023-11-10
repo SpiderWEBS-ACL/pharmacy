@@ -14,7 +14,8 @@ import {
   UserOutlined,
   PoweroffOutlined,
   ShoppingCartOutlined,
-  SettingOutlined
+  SettingOutlined,
+  WalletOutlined
 
 } from "@ant-design/icons";
 import AppRouter from "../AppRouter";
@@ -45,6 +46,11 @@ const PatientLayout: React.FC = () => {
       label: "Cart",
       key: "/patient/viewCart",
       icon: <ShoppingCartOutlined />,
+    },
+    {
+      label: "Wallet",
+      key: "/patient/wallet",
+      icon: <WalletOutlined />,
     },
     {
       label: "Settings",
