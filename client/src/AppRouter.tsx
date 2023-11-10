@@ -33,6 +33,7 @@ import ChangePasswordAdmin from "./pages/Admin/ChangePassword";
 import ChangePasswordPharm from "./pages/Pharmacist/ChangePassword";
 import ChangePasswordPatient from "./pages/Patient/ChangePassword";
 import ForgotPassword from "./pages/ForgotPassword";
+import Wallet from "./pages/Patient/Wallet";
 
 const AppRouter: React.FC = () => {
   const navigate = useNavigate();
@@ -106,6 +107,7 @@ const AppRouter: React.FC = () => {
           <Route path="/patient/viewCart" element={<Cart />} />
           <Route path="/patient/changePassword" element={<ChangePasswordPatient/>}/>
           <Route path="*" element={<NotFound />} />
+          <Route path="/patient/wallet" element={<Wallet />} />
         </Routes>
       );
     } else {
