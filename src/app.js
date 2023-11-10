@@ -165,7 +165,7 @@ app.delete("/cart/medicines/:medicineId", PatientProtect, removeMedicine);
 app.get("/cart/:cartId", viewCart);
 app.get("/cart/viewCart/:id",PatientProtect, viewPatientCart);
 app.get("/cart/medicines/:medicineId", viewMedicineDetailsInCart);
-app.get("/cart/getCartTotal/:cartId",getCartTotal)
+app.get("/cart/getCartTotal/:cartId",PatientProtect,getCartTotal)
 
 
 

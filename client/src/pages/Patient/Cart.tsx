@@ -8,6 +8,7 @@ import jwt_decode from "jwt-decode";
 import {PlusOutlined ,MinusOutlined, DeleteOutlined } from "@ant-design/icons"
 
 
+
 type CartItem = {
   medicine: string;
   quantity: number;
@@ -29,11 +30,14 @@ const accessToken = Cookies.get("accessToken");
   const [cart, setCart] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [medicines, setMedicines] = useState<MedicineItem[]>([]);
+  const [total, setTotal] = useState<number | null>(null);
+
 
   const api = axios.create({
     baseURL: "http://localhost:5000/cart",
   });
 
+ 
   useEffect(() => {
     api
       .get(`/viewCart/${id}`, config)
@@ -70,12 +74,26 @@ const accessToken = Cookies.get("accessToken");
         console.error("Error:", error);
       });
       
+      fetchCartTotal();
+  }, [cart.length]);
 
-  }, [cart,medicines]);
-
-
-  const navigate = useNavigate();
-
+  const handleIncrease = async (id:string) => {
+    await api.put(`/medicines/${id}`,{quantity:1}, {headers: headers})
+    window.location.reload();
+  }
+  const handleDecrease = async (id:string) => {
+    await api.put(`/medicines/${id}`,{quantity:-1}, {headers: headers})
+    window.location.reload();
+  }
+  const fetchCartTotal = async () => {
+    try {
+      const response = await api.get(`/getCartTotal/${id}`, config); // Replace 'cartId' with the actual cartId
+      setTotal(response.data.total);
+    } catch (error) {
+      console.error("Error fetching cart total:", error);
+    }
+  };
+  
   const handleCheckout = async () => {
    //STRIPE INTEGRATION
   };
@@ -91,14 +109,8 @@ const accessToken = Cookies.get("accessToken");
     }
   }
 
-  const handleIncrease = async (id:string) => {
-    await api.put(`/medicines/${id}`,{quantity:1}, {headers: headers})
-   
-  }
-  const handleDecrease = async (id:string) => {
-    await api.put(`/medicines/${id}`,{quantity:-1}, {headers: headers})
-    window.location.reload();
-  }
+  
+  
 
   //const navigate = useNavigate();
 
@@ -186,6 +198,9 @@ const accessToken = Cookies.get("accessToken");
           ))}
         </tbody>
       </table>
+      <div>
+      <strong style={{ fontSize: 20 }}> Total: {total} USD </strong>
+      </div>
       <button
       className="btn btn-success"
       onClick={() => handleCheckout()} >
