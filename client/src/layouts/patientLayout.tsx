@@ -28,9 +28,9 @@ const PatientLayout: React.FC = () => {
   const navigate = useNavigate();
   const items = [
     {
-      label: "Home",
+      label: "Account Info",
       key: "/patient/Home",
-      icon: <HomeOutlined />,
+      icon: <UserOutlined />,
     },
     {
       label: "Medicines",
@@ -57,11 +57,6 @@ const PatientLayout: React.FC = () => {
       label: "Orders",
       key: "/patient/orders",
       icon: <HistoryOutlined /> ,
-    },
-    {
-      label: "Settings",
-      key: "/patient/settings",
-      icon: <SettingOutlined />,
     },
     {
       label: "Logout",

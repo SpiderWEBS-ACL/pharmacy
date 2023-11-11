@@ -57,14 +57,7 @@ const patientSchema = new Schema(
       ref: "Cart",
       required: false
     },
-    shippingAddresses: [
-      {
-          shippingAddress: {
-              type: String,
-              default: "no shipping address"
-          }
-      }
-  ]
+    shippingAddresses: [String],
   },
   { timestamps: true }
 );

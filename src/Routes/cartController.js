@@ -183,8 +183,10 @@ const viewMedicineDetailsInCart = async (req, res) => {
 };
 const getCartTotal = async (req, res) => {
   try {
-    const cartId = req.params.cartId;
-    const cart = await Cart.findById(cartId).populate("medicines");;
+    const patientId = req.user.id;
+      const patient = await Patient.findById(patientId)
+      const cartId = patient.Cart;
+      const cart = await Cart.findById(cartId).populate("medicines");
 
     if (!cart) {
       return res.status(404).json({ error: "Cart not found" });
