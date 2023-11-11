@@ -37,9 +37,9 @@ const viewCart: React.FC = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [medicines, setMedicines] = useState<MedicineItem[]>([]);
+  const [flag, setFlag] = useState(true);
   const [total, setTotal] = useState<number>(0);
   const navigate = useNavigate();
-
   const api = axios.create({
     baseURL: "http://localhost:5000/cart",
   });
@@ -84,17 +84,19 @@ const viewCart: React.FC = () => {
         console.error("Error:", error);
       });
 
-    fetchCartTotal();
-  }, [cart.length]);
+      
+      fetchCartTotal();
+  }, [cart.length,flag]);
 
-  const handleIncrease = async (id: string) => {
-    await api.put(`/medicines/${id}`, { quantity: 1 }, { headers: headers });
-    window.location.reload();
-  };
-  const handleDecrease = async (id: string) => {
-    await api.put(`/medicines/${id}`, { quantity: -1 }, { headers: headers });
-    window.location.reload();
-  };
+  const handleIncrease = async (id:string) => {
+    await api.put(`/medicines/${id}`,{quantity:1}, {headers: headers})
+    setFlag(!flag);
+  }
+  const handleDecrease = async (id:string) => {
+    await api.put(`/medicines/${id}`,{quantity:-1}, {headers: headers})
+    setFlag(!flag);
+  }
+
   const fetchCartTotal = async () => {
     try {
       const response = await api.get(`/getCartTotal/${id}`, config); // Replace 'cartId' with the actual cartId
