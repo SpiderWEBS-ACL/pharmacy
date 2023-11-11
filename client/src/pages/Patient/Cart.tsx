@@ -31,6 +31,7 @@ const accessToken = Cookies.get("accessToken");
   const [loading, setLoading] = useState(true);
   const [medicines, setMedicines] = useState<MedicineItem[]>([]);
   const [total, setTotal] = useState<number | null>(null);
+  const [flag, setFlag] = useState(true);
 
 
   const api = axios.create({
@@ -75,15 +76,15 @@ const accessToken = Cookies.get("accessToken");
       });
       
       fetchCartTotal();
-  }, [cart.length]);
+  }, [cart.length,flag]);
 
   const handleIncrease = async (id:string) => {
     await api.put(`/medicines/${id}`,{quantity:1}, {headers: headers})
-    window.location.reload();
+    setFlag(!flag);
   }
   const handleDecrease = async (id:string) => {
     await api.put(`/medicines/${id}`,{quantity:-1}, {headers: headers})
-    window.location.reload();
+    setFlag(!flag);
   }
   const fetchCartTotal = async () => {
     try {
