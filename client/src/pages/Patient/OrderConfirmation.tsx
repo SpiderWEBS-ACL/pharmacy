@@ -1,4 +1,4 @@
-import { Button, Card, Col, Modal, Row, Spin } from "antd";
+import { Button, Card, Col, Modal, Row, Spin, Select, Input } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -6,14 +6,12 @@ import { JwtPayload, config, headers } from "../../middleware/tokenMiddleware";
 import Cookies from "js-cookie";
 import jwt_decode from "jwt-decode";
 import {
-  PlusOutlined,
-  MinusOutlined,
-  DeleteOutlined,
   WalletFilled,
   CreditCardFilled,
   DollarCircleFilled,
 } from "@ant-design/icons";
-import { Money } from "@material-ui/icons";
+
+const { Option } = Select;
 
 export type CartItem = {
   medicine: string;
@@ -40,6 +38,12 @@ const OrderConfirmation: React.FC = () => {
   const [total, setTotal] = useState<number>(0);
   const [balance, setBalance] = useState<number>(0);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [shipping, setShippingAddress] = useState<String>("No Shipping Address Selected")
+  const [shippingAddresses, setShippingAddresses] = useState<string[]>([]);
+  const [newShippingAddress, setNewShippingAddress] = useState<string>("");
+  const [addingNewAddress, setAddingNewAddress] = useState(false);
+
+  const [showShippingModal, setShowShippingModal] = useState(false);
 
   const api = axios.create({
     baseURL: "http://localhost:5000/cart",
@@ -84,9 +88,19 @@ const OrderConfirmation: React.FC = () => {
       .catch((error) => {
         console.error("Error:", error);
       });
-
+    fetchShippingAddress();
     fetchCartTotal();
+    fetchShippingAddress();
   }, [cart.length]);
+
+  const fetchShippingAddress = async () =>{
+    try{
+      const response = await axios.get("http://localhost:5000/patient/shippingAddresses", config);
+      setShippingAddresses(response.data);
+    }catch(error){
+      console.error("Error fetching shipping address:", error);
+    }
+  }
 
   const fetchCartTotal = async () => {
     try {
@@ -119,16 +133,22 @@ const OrderConfirmation: React.FC = () => {
     Balance();
     setShowPaymentModal(true);
   };
+  const handleChangeAddress = () =>{
+    setShowShippingModal(true)
+  }
 
-  const handleRemove = async (id: string) => {
-    try {
-      await api.delete(`/medicines/${id}`, config);
-      console.log("medicine removed:", id);
-      window.location.reload();
-    } catch (error) {
-      console.log("error removing medicine: ", error);
+  const handleSaveAddress = () => {
+    if (newShippingAddress) {
+      try{
+          axios.put("http://localhost:5000/patient/shippingAddress", {address: newShippingAddress},config);
+      }catch{
+        console.log("shipping address add error")
+      }
+      setShippingAddress(newShippingAddress);
+      setShowShippingModal(false);
     }
   };
+
 
   //const navigate = useNavigate();
 
@@ -151,13 +171,29 @@ const OrderConfirmation: React.FC = () => {
 
   const handlePaymentSelection = (type: string) => {
     if (type === "Wallet") {
-      //WALLET
+      payWithWallet()
     } else if (type === "Card") {
       payWithStripe();
     } else {
-      //COD
+      payCOD();
     }
   };
+  const payCOD = () =>{
+   
+      window.location.href = "http://localhost:5173/patient/success"
+  }
+  const payWithWallet = async () =>{
+    await api
+    .post("/payWithWallet", {}, config)
+    .then((response) => {
+      
+      window.location.href = response.data;
+      
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
 
   return (
     <>
@@ -255,6 +291,54 @@ const OrderConfirmation: React.FC = () => {
                 </Row>
               </Button>
             </Modal>
+            <Modal
+      title="Select Delivery Address"
+      visible={showShippingModal}
+      onCancel={() => {
+        setShowShippingModal(false);
+        setAddingNewAddress(false);
+        setNewShippingAddress("");
+      }}
+      footer={null}
+    >
+      <Select
+        value={shipping}
+        style={{ width: "100%" }}
+        onChange={(value) => setShippingAddress(value)}
+      >
+        {shippingAddresses.map((address, index) => (
+          <Option key={index} value={address}>
+            {address}
+          </Option>
+        ))}
+      </Select>
+      <br></br>
+      {addingNewAddress ? (
+        <div>
+          <Input
+            placeholder="Enter a new shipping address"
+            value={newShippingAddress}
+            onChange={(e) => setNewShippingAddress(e.target.value)}
+          />
+          <br></br>
+          <Button
+            type="primary"
+            block
+            onClick={() => handleSaveAddress()}
+          >
+            Save
+          </Button>
+        </div>
+      ) : (
+        <Button
+          type="primary"
+          block
+          onClick={() => setAddingNewAddress(true)}
+        >
+          Add New Address
+        </Button>
+      )}
+    </Modal>
           </div>
         </Col>
         <Col span={8}>
@@ -262,7 +346,11 @@ const OrderConfirmation: React.FC = () => {
             {/* Delivery Address */}
             <div style={{ marginBottom: 16 }}>
               <strong>Delivery Address:</strong>
-              {/* Add your logic to display the delivery address here */}
+              {shipping}
+              <button
+              className= "btn btn-secondary"
+              onClick={()=> handleChangeAddress()}
+              >Change Delivery Address</button>
             </div>
 
             {/* Total */}

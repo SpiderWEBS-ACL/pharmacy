@@ -35,6 +35,8 @@ import ChangePasswordPatient from "./pages/Patient/ChangePassword";
 import ForgotPassword from "./pages/ForgotPassword";
 import Wallet from "./pages/Patient/Wallet";
 import OrderConfirmation from "./pages/Patient/OrderConfirmation";
+import Success from "./pages/Patient/Success";
+import Cancel from "./pages/Patient/Cancel";
 
 const AppRouter: React.FC = () => {
   const navigate = useNavigate();
@@ -120,6 +122,14 @@ const AppRouter: React.FC = () => {
           <Route
             path="/patient/orderConfirmation"
             element={<OrderConfirmation />}
+          />
+          <Route      
+          path = "/patient/success"
+          element= {<Success/>}
+          />
+          <Route      
+          path = "/patient/cancel"
+          element= {<Cancel/>}
           />
           <Route path="*" element={<NotFound />} />
         </Routes>
