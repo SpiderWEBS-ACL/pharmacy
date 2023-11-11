@@ -8,12 +8,8 @@ import jwt_decode from "jwt-decode";
 import {
   PlusOutlined,
   MinusOutlined,
-  DeleteOutlined,
-  WalletFilled,
-  CreditCardFilled,
-  DollarCircleFilled,
+  DeleteOutlined
 } from "@ant-design/icons";
-import { Money } from "@material-ui/icons";
 
 export type CartItem = {
   medicine: string;
@@ -119,9 +115,6 @@ const viewCart: React.FC = () => {
       console.log("error removing medicine: ", error);
     }
   };
-
-  //const navigate = useNavigate();
-
 
   if (loading) {
     return (
