@@ -119,7 +119,8 @@ app.post("/pharmacist/uploadDocuments/:id", uploadDocuments);
 app.get("/patient/me",PatientProtect, PatientInfo)
 app.post("/patient/register", registerPatient);
 app.post("/patient/login",login)
-app.get("/patient/viewOrder/:id", viewPatientOrder)
+app.get("/patient/viewOrder/:id", viewPatientOrder);
+
 //------------------Medicine Endpoints------------------
 app.get("/medicine/viewMedicines",PharmacistProtect || PatientProtect || AdminProtect, getAllMedicines);
 app.get("/medicine/viewMedicineDetails/:id",PharmacistProtect || PatientProtect || AdminProtect, viewMedicineDetails);

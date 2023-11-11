@@ -114,10 +114,9 @@ const login = async(req, res) => {
 }
 const viewPatientOrder = async (req, res) => {
   try {
-    const OrderId = req.params.id;
-    console.log(OrderId)
+    const { id } = req.params;
  
-    const Order = await orderModel.findById(OrderId).populate("Medicines.medicine");
+    const Order = await orderModel.findById(id).populate("Medicines.medicine");
     if (!Order) {
       return res.status(404).json({ error: "Order not found" });
     }

@@ -29,6 +29,7 @@ import jwt_decode from "jwt-decode";
 import Cookies from "js-cookie";
 import { JwtPayload } from "./middleware/tokenMiddleware";
 import NotFound from "./NotFound";
+import OrderDetails from "./pages/Patient/ViewOrderDetails";
 
 const AppRouter: React.FC = () => {
   const navigate = useNavigate();
@@ -98,6 +99,7 @@ const AppRouter: React.FC = () => {
           />
           <Route path="/patient/Home" element={<PatientHome />} />
           <Route path="/patient/viewCart" element={<Cart />} />
+          <Route path="/patient/viewOrder/:id" element={<OrderDetails />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       );
