@@ -1,6 +1,8 @@
 const Cart = require("../Models/Cart");
 const Medicine = require("../Models/Medicine");
 const Patient = require("../Models/Patient");
+require('dotenv').config();
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const createCart = async (req, res) => {
     try {
@@ -210,11 +212,58 @@ const getCartTotal = async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 };
+const getCartTotalHelper = async (req,res) => {
 
+    const patientId = req.user.id;
+      const patient = await Patient.findById(patientId)
+      const cartId = patient.Cart;
+      const cart = await Cart.findById(cartId).populate("medicines");
 
-  const checkoutWithCard = async (req, res) => {
+    if (!cart) {
+      return 0;
+    }
+
+    let total = 0;
+
+    for (const item of cart.medicines) {
+      const medicineId = item.medicine;
+      const medicine = await Medicine.findById(medicineId);
+
+      if (!medicine) {
+        return 0;
+      }
+      total += item.quantity * medicine.Price;
+    }
     
+
+    return total;
   }
+
+
+const payCartWithStripe = async (req,res) => {
+  try {
+    const total = await getCartTotalHelper(req,res);
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      mode: 'payment', //or subscription
+      line_items:[
+        {
+          price_data: {
+            currency: 'usd',
+            product_data: {name: "Cart"},
+            unit_amount: total*100 //In cents
+          },
+          quantity: 1
+        }],
+        success_url: `${process.env.SERVER_URL}/appointment/success`,
+        cancel_url: `${process.env.SERVER_URL}/patient/viewAllDoctors`,
+        
+      })
+    res.json({url: session.url})
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+}
 module.exports = {
     createCart,
   addMedicineToCart,
@@ -223,5 +272,6 @@ module.exports = {
   viewMedicineDetailsInCart,
   updateMedicineQuantity,
   viewPatientCart,
-  getCartTotal
+  getCartTotal,
+  payCartWithStripe
 };

@@ -34,6 +34,7 @@ import ChangePasswordPharm from "./pages/Pharmacist/ChangePassword";
 import ChangePasswordPatient from "./pages/Patient/ChangePassword";
 import ForgotPassword from "./pages/ForgotPassword";
 import Wallet from "./pages/Patient/Wallet";
+import OrderConfirmation from "./pages/Patient/OrderConfirmation";
 
 const AppRouter: React.FC = () => {
   const navigate = useNavigate();
@@ -64,7 +65,10 @@ const AppRouter: React.FC = () => {
             element={<MedicineDetailsAdmin />}
           />
           <Route path="/admin/Home" element={<AdminHome />} />
-          <Route path="/admin/changePassword" element={<ChangePasswordAdmin/>}/>
+          <Route
+            path="/admin/changePassword"
+            element={<ChangePasswordAdmin />}
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       );
@@ -87,7 +91,10 @@ const AppRouter: React.FC = () => {
           />
           <Route path="/pharmacist/addMedicine" element={<AddMedicine />} />
           <Route path="/pharmacist/Home" element={<PharmaHome />} />
-          <Route path="/pharmacist/changePassword" element={<ChangePasswordPharm/>}/>
+          <Route
+            path="/pharmacist/changePassword"
+            element={<ChangePasswordPharm />}
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       );
@@ -105,9 +112,16 @@ const AppRouter: React.FC = () => {
           />
           <Route path="/patient/Home" element={<PatientHome />} />
           <Route path="/patient/viewCart" element={<Cart />} />
-          <Route path="/patient/changePassword" element={<ChangePasswordPatient/>}/>
-          <Route path="*" element={<NotFound />} />
+          <Route
+            path="/patient/changePassword"
+            element={<ChangePasswordPatient />}
+          />
           <Route path="/patient/wallet" element={<Wallet />} />
+          <Route
+            path="/patient/orderConfirmation"
+            element={<OrderConfirmation />}
+          />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       );
     } else {

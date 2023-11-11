@@ -1,20 +1,26 @@
-import { Spin } from "antd";
+import { Button, Col, Modal, Row, Spin } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { JwtPayload, config, headers} from "../../middleware/tokenMiddleware";
+import { JwtPayload, config, headers } from "../../middleware/tokenMiddleware";
 import Cookies from "js-cookie";
 import jwt_decode from "jwt-decode";
-import {PlusOutlined ,MinusOutlined, DeleteOutlined } from "@ant-design/icons"
+import {
+  PlusOutlined,
+  MinusOutlined,
+  DeleteOutlined,
+  WalletFilled,
+  CreditCardFilled,
+  DollarCircleFilled,
+} from "@ant-design/icons";
+import { Money } from "@material-ui/icons";
 
-
-
-type CartItem = {
+export type CartItem = {
   medicine: string;
   quantity: number;
 };
 
-type MedicineItem = {
+export type MedicineItem = {
   _id: string;
   name: string;
   price: number;
@@ -22,40 +28,44 @@ type MedicineItem = {
 };
 
 const viewCart: React.FC = () => {
-const accessToken = Cookies.get("accessToken");
+  const accessToken = Cookies.get("accessToken");
   let id = "";
   if (accessToken) {
     const decodedToken: JwtPayload = jwt_decode(accessToken);
-    id = decodedToken.id as string;}
+    id = decodedToken.id as string;
+  }
   const [cart, setCart] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [medicines, setMedicines] = useState<MedicineItem[]>([]);
-  const [total, setTotal] = useState<number | null>(null);
-
+  const [total, setTotal] = useState<number>(0);
+  const navigate = useNavigate();
 
   const api = axios.create({
     baseURL: "http://localhost:5000/cart",
   });
 
- 
   useEffect(() => {
     api
       .get(`/viewCart/${id}`, config)
       .then((response) => {
         setCart(response.data);
-        console.log("RES:",response.data.medicines)
+        console.log("RES:", response.data.medicines);
         if (response.data.medicines.length > 0) {
-          const medicineEntries = response.data.medicines.map((item: { medicine: any; quantity: any; }) => ({
-            medicineId: item.medicine,
-            quantity: item.quantity,
-          }));
-          console.log("MEDS: ",medicineEntries);
+          const medicineEntries = response.data.medicines.map(
+            (item: { medicine: any; quantity: any }) => ({
+              medicineId: item.medicine,
+              quantity: item.quantity,
+            })
+          );
+          console.log("MEDS: ", medicineEntries);
           const fetchMedicineDetails = async () => {
             const medicineDetails = [];
             for (const entry of medicineEntries) {
               try {
-                const response = await api.get(`/medicines/${entry.medicineId}`);
-                console.log("RESPONSE: ", response)
+                const response = await api.get(
+                  `/medicines/${entry.medicineId}`
+                );
+                console.log("RESPONSE: ", response);
                 const medicine = response.data;
                 medicine.quantity = entry.quantity;
                 medicineDetails.push(medicine);
@@ -65,7 +75,7 @@ const accessToken = Cookies.get("accessToken");
             }
             setMedicines(medicineDetails);
           };
-    
+
           fetchMedicineDetails();
         }
         setLoading(false);
@@ -73,18 +83,18 @@ const accessToken = Cookies.get("accessToken");
       .catch((error) => {
         console.error("Error:", error);
       });
-      
-      fetchCartTotal();
+
+    fetchCartTotal();
   }, [cart.length]);
 
-  const handleIncrease = async (id:string) => {
-    await api.put(`/medicines/${id}`,{quantity:1}, {headers: headers})
+  const handleIncrease = async (id: string) => {
+    await api.put(`/medicines/${id}`, { quantity: 1 }, { headers: headers });
     window.location.reload();
-  }
-  const handleDecrease = async (id:string) => {
-    await api.put(`/medicines/${id}`,{quantity:-1}, {headers: headers})
+  };
+  const handleDecrease = async (id: string) => {
+    await api.put(`/medicines/${id}`, { quantity: -1 }, { headers: headers });
     window.location.reload();
-  }
+  };
   const fetchCartTotal = async () => {
     try {
       const response = await api.get(`/getCartTotal/${id}`, config); // Replace 'cartId' with the actual cartId
@@ -93,28 +103,23 @@ const accessToken = Cookies.get("accessToken");
       console.error("Error fetching cart total:", error);
     }
   };
-  
+
   const handleCheckout = async () => {
-   //STRIPE INTEGRATION
+    navigate("/patient/orderConfirmation");
   };
 
   const handleRemove = async (id: string) => {
-    try{
-      await api.delete(`/medicines/${id}`, config)
-      console.log("medicine removed:" ,id)
+    try {
+      await api.delete(`/medicines/${id}`, config);
+      console.log("medicine removed:", id);
       window.location.reload();
-
-    }catch(error){
+    } catch (error) {
       console.log("error removing medicine: ", error);
     }
-  }
-
-  
-  
+  };
 
   //const navigate = useNavigate();
 
-  //NAVIGATE TO PAYMENT GATEWAY
 
   if (loading) {
     return (
@@ -165,46 +170,41 @@ const accessToken = Cookies.get("accessToken");
                 {request.Price} USD
               </td>
               <td style={{ fontSize: 18, fontWeight: "bold" }}>
-                {request.quantity} 
+                {request.quantity}
               </td>
               <td>
                 <button
                   className="btn btn-danger"
                   onClick={() => handleRemove(request._id)}
                 >
-                  remove
-                  &nbsp;
+                  remove &nbsp;
                   <DeleteOutlined />
                 </button>
                 <br></br>
                 <br></br>
                 <button
-                className="btn btn-secondary"
-                onClick={() => handleDecrease(request._id)}
+                  className="btn btn-secondary"
+                  onClick={() => handleDecrease(request._id)}
                 >
                   <MinusOutlined />
                 </button>
-                &nbsp;
-                &nbsp;
-                &nbsp;
+                &nbsp; &nbsp; &nbsp;
                 <button
-                className="btn btn-secondary"
-                onClick={() => handleIncrease(request._id)}
+                  className="btn btn-secondary"
+                  onClick={() => handleIncrease(request._id)}
                 >
-                  <PlusOutlined />      
+                  <PlusOutlined />
                 </button>
-                </td>
-                </tr>
+              </td>
+            </tr>
           ))}
         </tbody>
       </table>
       <div>
-      <strong style={{ fontSize: 20 }}> Total: {total} USD </strong>
+        <strong style={{ fontSize: 20 }}> Total: {total} USD </strong>
       </div>
-      <button
-      className="btn btn-success"
-      onClick={() => handleCheckout()} >
-          Checkout 
+      <button className="btn btn-success" onClick={() => handleCheckout()}>
+        Checkout
       </button>
     </div>
   );
