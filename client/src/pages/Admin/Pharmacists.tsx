@@ -11,6 +11,8 @@ const allPharmacists = () => {
     baseURL: "http://localhost:5000/admin",
   });
 
+  
+
   useEffect(() => {
     api
       .get("/allPharmacists",config)

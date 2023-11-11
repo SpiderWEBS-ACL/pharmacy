@@ -29,6 +29,11 @@ import jwt_decode from "jwt-decode";
 import Cookies from "js-cookie";
 import { JwtPayload } from "./middleware/tokenMiddleware";
 import NotFound from "./NotFound";
+import ChangePasswordAdmin from "./pages/Admin/ChangePassword";
+import ChangePasswordPharm from "./pages/Pharmacist/ChangePassword";
+import ChangePasswordPatient from "./pages/Patient/ChangePassword";
+import ForgotPassword from "./pages/ForgotPassword";
+import Wallet from "./pages/Patient/Wallet";
 import OrderDetails from "./pages/Patient/ViewOrderDetails";
 
 const AppRouter: React.FC = () => {
@@ -60,6 +65,7 @@ const AppRouter: React.FC = () => {
             element={<MedicineDetailsAdmin />}
           />
           <Route path="/admin/Home" element={<AdminHome />} />
+          <Route path="/admin/changePassword" element={<ChangePasswordAdmin/>}/>
           <Route path="*" element={<NotFound />} />
         </Routes>
       );
@@ -82,6 +88,7 @@ const AppRouter: React.FC = () => {
           />
           <Route path="/pharmacist/addMedicine" element={<AddMedicine />} />
           <Route path="/pharmacist/Home" element={<PharmaHome />} />
+          <Route path="/pharmacist/changePassword" element={<ChangePasswordPharm/>}/>
           <Route path="*" element={<NotFound />} />
         </Routes>
       );
@@ -99,14 +106,17 @@ const AppRouter: React.FC = () => {
           />
           <Route path="/patient/Home" element={<PatientHome />} />
           <Route path="/patient/viewCart" element={<Cart />} />
+          <Route path="/patient/changePassword" element={<ChangePasswordPatient/>}/>
           <Route path="/patient/viewOrder/:id" element={<OrderDetails />} />
           <Route path="*" element={<NotFound />} />
+          <Route path="/patient/wallet" element={<Wallet />} />
         </Routes>
       );
     } else {
       navigate(-1);
       return (
         <Routes>
+          <Route path="/forgotPassword" element={<ForgotPassword />} />
           <Route path="/" element={<RegLog />} />
         </Routes>
       );

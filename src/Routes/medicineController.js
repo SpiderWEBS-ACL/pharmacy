@@ -1,5 +1,4 @@
 const medicineModel = require("../Models/Medicine");
-const { default: mongoose } = require("mongoose");
 
 const getAllMedicines = async (req, res) => {
   try {

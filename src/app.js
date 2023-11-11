@@ -3,7 +3,8 @@ const mongoose = require("mongoose");
 const cors = require('cors');
 mongoose.set('strictQuery', false);
 require("dotenv").config();
-
+const bcrypt = require("bcrypt");
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const MongoURI = process.env.MONGO_URI;
 const PORT = process.env.PORT || "5000";
@@ -22,7 +23,8 @@ const {
   getAllPatients,
   getAllPharmacists,
   acceptPharmacistRequest,
-  rejectPharmacistRequest
+  rejectPharmacistRequest,
+  changePasswordAdmin
 } = require("./Routes/adminController");
 
 const {
@@ -30,13 +32,21 @@ const {
   addPharmacist,
   addMedicine,
   updateMedicine,
-  getMedicineDetails,
   getMedicineQuantitySales,
   uploadDocuments,
   pharmacistInfo,
+  changePasswordPharmacist,
 } = require("./Routes/pharmacistController");
 
-const { registerPatient, login, PatientInfo,viewPatientOrder } = require("./Routes/patientController");
+
+const { registerPatient,
+   PatientInfo,
+    viewPatientOrder,
+     viewWallet,
+      viewShippingAdresses, 
+      addShippingAddress,
+       changePasswordPatient} = require("./Routes/patientController");
+
 
 const {
   getAllMedicines,
@@ -52,14 +62,17 @@ const {
   viewCart,
   viewMedicineDetailsInCart,
   updateMedicineQuantity,
-viewPatientCart} = require("./Routes/cartController");
+viewPatientCart,
+getCartTotal} = require("./Routes/cartController");
 const { AdminProtect, PharmacistProtect, PatientProtect } = require("./middleware/authMiddleware");
 
-const {
-  createConfig,
-  viewPatientConfig,
-  addShippingAddress
- } = require("./Routes/configController");
+ const {
+  login,
+  resetPassword,
+  sendPasswordResetOTP,
+  forgotPassword,
+  verifyOTP
+ } = require("./Routes/loginController");
 
 //----------------------CONFIGURATIONS------------------------
 
@@ -84,11 +97,20 @@ app.get("/", (req, res) => {
 });
 app.use(express.json());
 
+
+// console.log(await bcrypt.compare("adminPass234", "$2b$10$GDx2MtOUhksjweB5.BRHA.e6teuzfGVJA5eL3pBomWk1culO4atx2"));
+
 //---------------------------------------ENDPOINTS-----------------------------------------------
+
+//-----------------------Login Endpoints----------------------------------------
+app.post('/login', login);
+app.post('/forgotPassword', forgotPassword);
+app.post('/verifyOTP', verifyOTP);
+app.put('/resetPassword', resetPassword);
 
 //-----------------Admin Endpoints---------------------
 app.post("/admin/addAdmin", AdminProtect, addAdmin);
-
+app.put("/admin/changePassword", AdminProtect, changePasswordAdmin);
 app.get("/admin/allAdmins", AdminProtect, getAllAdmins);
 app.get("/admin/allPatients",AdminProtect, getAllPatients);
 app.get("/admin/allPharmacists",AdminProtect, getAllPharmacists); 
@@ -107,19 +129,25 @@ app.delete("/admin/rejectPharmacist/:id",AdminProtect, rejectPharmacistRequest);
 app.get("/pharmacist/me",PharmacistProtect, pharmacistInfo)
 app.post("/pharmacist/addPharmacist", addPharmacist);
 app.post("/pharmacist/register", registerPharmacist);
+app.put("/pharmacist/changePassword", PharmacistProtect, changePasswordPharmacist);
 
 app.post("/pharmacist/addMedicine",PharmacistProtect, addMedicine),
 app.put("/pharmacist/updateMedicine/:id",PharmacistProtect, updateMedicine),
 // app.get("/pharmacist/getMedicineDetails", getMedicineDetails);
 app.get("/pharmacist/getMedicineQuantitySales/:id",PharmacistProtect, getMedicineQuantitySales);
 
-app.post("/pharmacist/uploadDocuments/:id", uploadDocuments);
+app.post("/pharmacist/uploadDocuments", PharmacistProtect, uploadDocuments);
 
 //------------------Patient Endpoints---------------------
 app.get("/patient/me",PatientProtect, PatientInfo)
 app.post("/patient/register", registerPatient);
-app.post("/patient/login",login)
 app.get("/patient/viewOrder/:id", viewPatientOrder);
+app.get("/patient/shippingAddresses", PatientProtect,viewShippingAdresses)
+app.put("/patient/shippingAddress",PatientProtect, addShippingAddress);
+app.get("/patient/wallet",PatientProtect,viewWallet)
+app.put("/patient/changePassword", PatientProtect, changePasswordPatient);
+
+
 
 //------------------Medicine Endpoints------------------
 app.get("/medicine/viewMedicines",PharmacistProtect || PatientProtect || AdminProtect, getAllMedicines);
@@ -127,20 +155,18 @@ app.get("/medicine/viewMedicineDetails/:id",PharmacistProtect || PatientProtect 
 
 app.get("/medicine/searchForMedicine",PharmacistProtect || PatientProtect || AdminProtect, searchForMedicine);
 app.post("/medicine/filterMedicineByMedicinalUse",PharmacistProtect || PatientProtect || AdminProtect, filterMedicineByMedicinalUse);
+
+
 //-----------------Cart Endpoints---------------------
-
-
-app.post("/cart/createCart",createCart)
-app.post("/cart/addMedicines/:medicineId",PatientProtect, addMedicineToCart);
-app.put("/cart/:cartId/medicines/:medicineId", updateMedicineQuantity);
-app.delete("/cart/:cartId/medicines/:medicineId", removeMedicine);
+app.post("/cart/createCart",createCart);
+app.post("/cart/medicines/:medicineId",PatientProtect, addMedicineToCart);
+app.put("/cart/medicines/:medicineId",PatientProtect, updateMedicineQuantity);
+app.delete("/cart/medicines/:medicineId", PatientProtect, removeMedicine);
 app.get("/cart/:cartId", viewCart);
-app.get("/cart/viewCart/:patientId",PatientProtect, viewPatientCart);
+app.get("/cart/viewCart/:id",PatientProtect, viewPatientCart);
 app.get("/cart/medicines/:medicineId", viewMedicineDetailsInCart);
+app.get("/cart/getCartTotal/:cartId",PatientProtect,getCartTotal)
 
 
 
-//------------------Config Endpoints--------------------
-app.post("/config/createConfig",createConfig);
-app.post("/config/addShippingAddress", addShippingAddress);
-app.get("/config/viewConfig",viewPatientConfig);
+

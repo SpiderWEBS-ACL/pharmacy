@@ -1,34 +1,32 @@
 const patientModel = require("../Models/Patient");
-const medicineModel = require("../Models/Medicine");
-const pharmacistModel = require("../Models/Pharmacist");
-const adminModel = require("../Models/Admin");
-const bcrypt = require("bcrypt");
-const jwt = require('jsonwebtoken');
 const orderModel= require("../Models/Orders");
-const { default: mongoose } = require("mongoose");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
 
 //---------------------------------------REGISTRATION-----------------------------------------------
 
 const Cart = require("../Models/Cart");
-const Config = require("../Models/Config");
 const Patient = require("../Models/Patient");
-const { generateAccessToken } = require("../middleware/authMiddleware");
+
 
 const registerPatient = async (req, res) => {
   try {
-    const exists = await Patient.findOne({ "Username": { $regex: '^' + req.body.Username + '$', $options: 'i' } });
-    const exists2 = await Patient.findOne({ "Email": { $regex: '^' + req.body.Email + '$', $options: 'i' } });
+    const exists = await Patient.findOne({
+      Username: { $regex: "^" + req.body.Username + "$", $options: "i" },
+    });
+    const exists2 = await Patient.findOne({
+      Email: { $regex: "^" + req.body.Email + "$", $options: "i" },
+    });
 
     if (!exists && !exists2) {
       // Create a new patient
-      req.body.Password = await bcrypt.hash(req.body.Password,10);
+      req.body.Password = await bcrypt.hash(req.body.Password, 10);
       const newPatient = await Patient.create(req.body);
 
       // Create a new cart for the patient
       const cart = new Cart();
-      const config = new Config();
       await cart.save();
-      await config.save();
 
       // Associate the cart with the patient
       newPatient.Cart = cart._id;
@@ -45,10 +43,9 @@ const registerPatient = async (req, res) => {
   }
 };
 
-
 const PatientInfo = async (req, res) => {
   try {
-    const  id  = req.user.id;
+    const id = req.user.id;
     const patient = await patientModel.findById(id);
     if (!patient) {
       return res.status(404).json({ error: "Patient Not Found" });
@@ -59,59 +56,46 @@ const PatientInfo = async (req, res) => {
   }
 };
 
-const login = async(req, res) => {
-  try{
-    const patient = await patientModel.findOne({ "Username": { $regex: '^' + req.body.Username + '$', $options:'i'}});
-    const pharmacist = await pharmacistModel.findOne({ "Username": { $regex: '^' + req.body.Username + '$', $options:'i'} });
-    const admin = await adminModel.findOne({ "Username": { $regex: '^' + req.body.Username + '$', $options:'i'} });
 
-    
-    if (!pharmacist && !patient && !admin) {
-      return res.status(400).json({ error: "Username not found!" });
+const changePasswordPatient = async (req, res) => {
+  try {
+    const { id } = req.user;
+    const { currPass, newPass, newPassConfirm } = req.body;
+
+    if (!(currPass && newPass && newPassConfirm)) {
+      return res.status(404).json({ error: "Please fill out all required fields" });
     }
-    else if(patient){
-      if (await bcrypt.compare(req.body.Password, patient.Password)) {
-        const user = {
-          id: patient._id,
-          role: "Patient"
-        }
-        accessToken = generateAccessToken(user);
-        refreshToken = jwt.sign({id: patient._id}, process.env.REFRESH_TOKEN_SECRET);
-        res.json({ accessToken: accessToken, refreshToken: refreshToken, id: patient._id, type:"Patient"});
-      } else {
-        res.status(400).json({ error: "Password doesn't match!" });
-      }
+
+    //find patient to update password
+    const patient = await patientModel.findById(id);
+
+    //Current password entered incorrect
+    if (!(await bcrypt.compare(currPass, patient.Password))) {
+      return res.status(400).json("Current Password is Incorrect");
     }
-    else if(pharmacist){
-      if (await bcrypt.compare(req.body.Password, pharmacist.Password)) {
-        const user = {
-          id: pharmacist._id,
-          role: "Pharmacist"
-        }
-        accessToken = generateAccessToken(user);
-        refreshToken = jwt.sign({id: pharmacist._id}, process.env.REFRESH_TOKEN_SECRET);
-        res.json({ accessToken: accessToken, refreshToken: refreshToken, id: pharmacist._id, type:"Pharmacist"});
-      } else {
-        res.status(400).json({ error: "Password doesn't match!" });
-      }
+
+    //confirm password not matching
+    if (newPass !== newPassConfirm) {
+      return res.status(400).json("The passwords do not match.");
     }
-    else if(admin){
-      if (await bcrypt.compare(req.body.Password, admin.Password)) {
-        const user = {
-          id: admin._id,
-          role: "Admin"
-        }
-        accessToken = generateAccessToken(user);
-        refreshToken = jwt.sign({id: admin._id}, process.env.REFRESH_TOKEN_SECRET);
-        res.json({accessToken: accessToken, refreshToken: refreshToken, id: admin._id,type:"Admin" });
-      } else {
-        res.status(400).json({ error: "Password doesn't match!" });
-      }
+
+     //new password same as old
+     if(await bcrypt.compare(newPass, patient.Password)){
+      return res.status(400).json("New password cannot be the same as your current password.");
     }
+
+    //hash new Password
+    const hashedPass = await bcrypt.hash(newPass, 10);
+
+    //update password
+    const newPatient = await patientModel.findByIdAndUpdate(id, { Password: hashedPass }, {new:true});
+
+    res.status(200).json(newPatient);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-}
+};
+
 const viewPatientOrder = async (req, res) => {
   try {
     const { id } = req.params;
@@ -126,8 +110,65 @@ const viewPatientOrder = async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 }
+const viewWallet = async (req,res) => {
+  try{
+    const patientId = req.user.id;
+    const patient = await Patient.findById(patientId);
+    if (!patient) {
+      return res.status(404).json({ error: "Patient Not Found" });
+    }
+    res.status(200).json(patient.Wallet)
+
+  }catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+  
+}
+const viewShippingAdresses = async (req,res) => {
+  try{
+    const patientId = req.user.id;
+    const patient = await Patient.findById(patientId);
+    if (!patient) {
+      return res.status(404).json({ error: "Patient Not Found" });
+    }
+    res.status(200).json(patient.shippingAddresses)
+  }catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+const addShippingAddress = async (req, res) => {
+  try {
+    const shipping = req.body.address;
+    const patientId = req.user.id;
+    const patient = await Patient.findById(patientId);
+
+    if (!patient) {
+      return res.status(404).json({ error: "Patient Not Found" });
+    }
+
+    patient.shippingAddresses.push(shipping);
+    await patient.save();
+    
+    return res.status(200).json({ message: "Shipping address added successfully" });
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+const payCartWithWallet  = async(req,res) => {
+ 
+
+
+}
 //---------------------------------------EXPORTS-----------------------------------------------
 
 module.exports = {
-  registerPatient,login,PatientInfo,viewPatientOrder
+  registerPatient,
+  PatientInfo,
+  viewPatientOrder,
+  viewWallet,
+  viewShippingAdresses,
+  addShippingAddress,
+  changePasswordPatient
 };

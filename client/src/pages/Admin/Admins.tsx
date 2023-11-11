@@ -4,9 +4,11 @@ import { Spin } from "antd";
 import { config } from "../../middleware/tokenMiddleware";
 
 const AllAdmins = () => {
+  const accessToken = localStorage.getItem("accessToken");
   const [admins, setAdmins] = useState([]);
   const [deleted, setDeleted] = useState(false);
   const [loading, setLoading] = useState(true);
+  const id = localStorage.getItem("id");
   const api = axios.create({
     baseURL: "http://localhost:5000/admin",
   });
@@ -60,13 +62,18 @@ const AllAdmins = () => {
         <thead>
           <tr>
             <th>Username</th>
-            {/* <th>Remove</th> */}
+            <th>Email</th>
           </tr>
         </thead>
         <tbody>
           {admins.map((request: any, index) => (
             <tr key={request._id}>
-              <td>{request.Username}</td>
+              <td>
+                {request._id == id
+                  ? request.Username + " (You)"
+                  : request.Username}
+              </td>
+              <td>{request.Email}</td>
               {/* <td>
                 <button
                   className="btn btn-sm btn-danger"

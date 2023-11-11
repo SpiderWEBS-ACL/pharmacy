@@ -1,8 +1,13 @@
 import { Spin } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { config } from "../../middleware/tokenMiddleware";
+import { useNavigate } from "react-router-dom";
+import { JwtPayload, config, headers} from "../../middleware/tokenMiddleware";
+import Cookies from "js-cookie";
+import jwt_decode from "jwt-decode";
+import {PlusOutlined ,MinusOutlined, DeleteOutlined } from "@ant-design/icons"
+
+
 
 type CartItem = {
   medicine: string;
@@ -17,53 +22,95 @@ type MedicineItem = {
 };
 
 const viewCart: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+const accessToken = Cookies.get("accessToken");
+  let id = "";
+  if (accessToken) {
+    const decodedToken: JwtPayload = jwt_decode(accessToken);
+    id = decodedToken.id as string;}
   const [cart, setCart] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [medicines, setMedicines] = useState<MedicineItem[]>([]);
+  const [total, setTotal] = useState<number | null>(null);
+
 
   const api = axios.create({
     baseURL: "http://localhost:5000/cart",
   });
 
+ 
   useEffect(() => {
     api
       .get(`/viewCart/${id}`, config)
       .then((response) => {
         setCart(response.data);
+        console.log("RES:",response.data.medicines)
+        if (response.data.medicines.length > 0) {
+          const medicineEntries = response.data.medicines.map((item: { medicine: any; quantity: any; }) => ({
+            medicineId: item.medicine,
+            quantity: item.quantity,
+          }));
+          console.log("MEDS: ",medicineEntries);
+          const fetchMedicineDetails = async () => {
+            const medicineDetails = [];
+            for (const entry of medicineEntries) {
+              try {
+                const response = await api.get(`/medicines/${entry.medicineId}`);
+                console.log("RESPONSE: ", response)
+                const medicine = response.data;
+                medicine.quantity = entry.quantity;
+                medicineDetails.push(medicine);
+              } catch (error) {
+                console.error("Error fetching medicine:", error);
+              }
+            }
+            setMedicines(medicineDetails);
+          };
+    
+          fetchMedicineDetails();
+        }
         setLoading(false);
-        console.log(response.data);
       })
       .catch((error) => {
         console.error("Error:", error);
       });
-  }, [id]);
+      
+      fetchCartTotal();
+  }, [cart.length]);
 
-  useEffect(() => {
-    if (cart.length > 0) {
-      const medicineEntries = cart.map((item) => ({
-        medicineId: item.medicine,
-        quantity: item.quantity,
-      }));
-
-      const fetchMedicineDetails = async () => {
-        const medicineDetails = [];
-        for (const entry of medicineEntries) {
-          try {
-            const response = await api.get(`/medicines/${entry.medicineId}`);
-            const medicine = response.data;
-            medicine.quantity = entry.quantity;
-            medicineDetails.push(medicine);
-          } catch (error) {
-            console.error("Error fetching medicine:", error);
-          }
-        }
-        setMedicines(medicineDetails);
-      };
-
-      fetchMedicineDetails();
+  const handleIncrease = async (id:string) => {
+    await api.put(`/medicines/${id}`,{quantity:1}, {headers: headers})
+    window.location.reload();
+  }
+  const handleDecrease = async (id:string) => {
+    await api.put(`/medicines/${id}`,{quantity:-1}, {headers: headers})
+    window.location.reload();
+  }
+  const fetchCartTotal = async () => {
+    try {
+      const response = await api.get(`/getCartTotal/${id}`, config); // Replace 'cartId' with the actual cartId
+      setTotal(response.data.total);
+    } catch (error) {
+      console.error("Error fetching cart total:", error);
     }
-  }, [cart]);
+  };
+  
+  const handleCheckout = async () => {
+   //STRIPE INTEGRATION
+  };
+
+  const handleRemove = async (id: string) => {
+    try{
+      await api.delete(`/medicines/${id}`, config)
+      console.log("medicine removed:" ,id)
+      window.location.reload();
+
+    }catch(error){
+      console.log("error removing medicine: ", error);
+    }
+  }
+
+  
+  
 
   //const navigate = useNavigate();
 
@@ -97,16 +144,68 @@ const viewCart: React.FC = () => {
             <th></th>
             <th>Medicine Name</th>
             <th>Price</th>
+            <th>Quantity</th>
             <th></th>
           </tr>
         </thead>
 
         <tbody>
-          {
-            //what do i put here
-          }
+          {medicines.map((request: any, index) => (
+            <tr key={request._id} style={{ verticalAlign: "middle" }}>
+              <td>
+                <img src={request.imageURL} width={200} height={200}></img>
+              </td>
+              <td width={500}>
+                <strong style={{ fontSize: 20 }}>{request.Name}</strong>
+                <br></br>
+                <br></br>
+                {request.Description}
+              </td>
+              <td style={{ fontSize: 18, fontWeight: "bold" }}>
+                {request.Price} USD
+              </td>
+              <td style={{ fontSize: 18, fontWeight: "bold" }}>
+                {request.quantity} 
+              </td>
+              <td>
+                <button
+                  className="btn btn-danger"
+                  onClick={() => handleRemove(request._id)}
+                >
+                  remove
+                  &nbsp;
+                  <DeleteOutlined />
+                </button>
+                <br></br>
+                <br></br>
+                <button
+                className="btn btn-secondary"
+                onClick={() => handleDecrease(request._id)}
+                >
+                  <MinusOutlined />
+                </button>
+                &nbsp;
+                &nbsp;
+                &nbsp;
+                <button
+                className="btn btn-secondary"
+                onClick={() => handleIncrease(request._id)}
+                >
+                  <PlusOutlined />      
+                </button>
+                </td>
+                </tr>
+          ))}
         </tbody>
       </table>
+      <div>
+      <strong style={{ fontSize: 20 }}> Total: {total} USD </strong>
+      </div>
+      <button
+      className="btn btn-success"
+      onClick={() => handleCheckout()} >
+          Checkout 
+      </button>
     </div>
   );
 };

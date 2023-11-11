@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 
 const AdminHome = () => {
+
+  const navigate = useNavigate();
 
       const containerStyle: React.CSSProperties = {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        minHeight: "100vh",
+        minHeight: "80vh",
       };
     
       const headingStyle: React.CSSProperties = {
@@ -26,8 +28,21 @@ const AdminHome = () => {
       };
     
       return (
+        <div className="container">
         <div style={containerStyle}>
           <h1 style={headingStyle}>Welcome, Admin!</h1>
+        </div>
+
+        <div style={{ display: "flex" }}>
+        <button
+          style={{ marginLeft: "auto", marginRight: "20px" }}
+          className="btn btn-danger"
+          type="button"
+          onClick={()=> {navigate("/admin/changePassword")}}
+        >
+          Change Password
+        </button>
+      </div>
         </div>
       );
     };

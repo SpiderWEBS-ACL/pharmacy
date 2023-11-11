@@ -22,7 +22,8 @@ const fileSchema = new Schema(
         type: String,
         required: true
     }
-  }
+  },
+  { timestamps: true }
 );
 
 const File = mongoose.model("File", fileSchema);

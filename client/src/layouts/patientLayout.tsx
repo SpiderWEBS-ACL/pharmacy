@@ -14,7 +14,9 @@ import {
   UserOutlined,
   PoweroffOutlined,
   ShoppingCartOutlined,
-  SettingOutlined
+  SettingOutlined,
+  WalletOutlined,
+  HistoryOutlined
 
 } from "@ant-design/icons";
 import AppRouter from "../AppRouter";
@@ -26,9 +28,9 @@ const PatientLayout: React.FC = () => {
   const navigate = useNavigate();
   const items = [
     {
-      label: "Home",
+      label: "Account Info",
       key: "/patient/Home",
-      icon: <HomeOutlined />,
+      icon: <UserOutlined />,
     },
     {
       label: "Medicines",
@@ -47,9 +49,14 @@ const PatientLayout: React.FC = () => {
       icon: <ShoppingCartOutlined />,
     },
     {
-      label: "Settings",
-      key: "/patient/settings",
-      icon: <SettingOutlined />,
+      label: "Wallet",
+      key: "/patient/wallet",
+      icon: <WalletOutlined />,
+    },
+    {
+      label: "Orders",
+      key: "/patient/orders",
+      icon: <HistoryOutlined /> ,
     },
     {
       label: "Logout",

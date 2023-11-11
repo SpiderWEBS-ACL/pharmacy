@@ -31,6 +31,10 @@ const patientSchema = new Schema(
       type: Number,
       required: true,
     },
+    Wallet: {
+      type: Number,
+      default: 0
+    },
     EmergencyContact: {
       Name: {
         type: String,
@@ -53,11 +57,7 @@ const patientSchema = new Schema(
       ref: "Cart",
       required: false
     },
-    Config: {
-      type: Schema.Types.ObjectId,
-      ref: "Config",
-      required: false
-    },
+    shippingAddresses: [String],
   },
   { timestamps: true }
 );

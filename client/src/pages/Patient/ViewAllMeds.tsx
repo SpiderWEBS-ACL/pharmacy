@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Spin } from "antd";
-import { Button, Col, Row } from "react-bootstrap";
-import { DatePicker, DatePickerProps, Input, Select } from "antd";
+import { Col, Row } from "react-bootstrap";
+import { Input, Select } from "antd";
 import { useNavigate } from "react-router-dom";
 import { config, headers } from "../../middleware/tokenMiddleware";
 
@@ -44,11 +44,12 @@ const AllMedicines = () => {
     navigate("/patient/medicineDetails/" + id);
   };
   const handleAddToCart = async (id: string) => {
-    //ADD MEDICINE ID TO PATIENT'S CART
-    //
-    //
-    //
-    //
+    try{
+      await api.post(`/cart/medicines/${id}`,{}, config)
+      console.log("med added to cart", id)
+    }catch(error){
+      console.log("error adding to cart:",error);
+    }
   };
 
   const handleSearch = async () => {
@@ -314,7 +315,7 @@ const AllMedicines = () => {
                 {request.Description}
               </td>
               <td style={{ fontSize: 18, fontWeight: "bold" }}>
-                {request.Price} LE
+                {request.Price} USD
               </td>
               <td>
                 <button
