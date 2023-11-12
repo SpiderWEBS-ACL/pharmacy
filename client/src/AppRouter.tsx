@@ -39,6 +39,8 @@ import OrderConfirmation from "./pages/Patient/OrderConfirmation";
 import Success from "./pages/Patient/Success";
 import Cancel from "./pages/Patient/Cancel";
 import ViewAllOrders from "./pages/Patient/ViewAllOrders";
+import Commercial from "./pages/Patient/Commercial";
+
 
 const AppRouter: React.FC = () => {
   const navigate = useNavigate();
@@ -106,6 +108,9 @@ const AppRouter: React.FC = () => {
       return (
         <Routes>
           <Route path="/" element={<RegLog />} />
+          <Route
+            path="/patient/commercial"
+            element = {<Commercial/>}/>
           <Route
             path="/patient/viewMedicines"
             element={<AllMedicinesPatient />}
