@@ -35,9 +35,13 @@ const orderSchema = new Schema(
     },
     PaymentMethod: {
       type: String,
-      enum: ["Wallet", "Credit Card", "Cash On Delivery"],
+      enum: ["Wallet", "Card", "Cash On Delivery"],
       required: true,
     },
+    Date: {
+      type: Date,
+      required: true,
+    }
   },
   { timestamps: true }
 );

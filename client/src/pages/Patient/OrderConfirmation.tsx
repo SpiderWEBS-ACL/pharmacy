@@ -1,4 +1,4 @@
-import { Button, Card, Col, Modal, Row, Spin, Select, Input } from "antd";
+import { Button, Card, Col, Modal, Row, Spin, Select, Input, message } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -38,7 +38,7 @@ const OrderConfirmation: React.FC = () => {
   const [total, setTotal] = useState<number>(0);
   const [balance, setBalance] = useState<number>(0);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [shipping, setShippingAddress] = useState<String>("No Shipping Address Selected")
+  const [shipping, setShippingAddress] = useState<String>("No Delivery Address Selected")
   const [shippingAddresses, setShippingAddresses] = useState<string[]>([]);
   const [newShippingAddress, setNewShippingAddress] = useState<string>("");
   const [addingNewAddress, setAddingNewAddress] = useState(false);
@@ -119,17 +119,27 @@ const OrderConfirmation: React.FC = () => {
   };
 
   const payWithStripe = async () => {
-    await api
-      .post("/payWithStripe/", {}, config)
+    try {
+      setLoading(true);
+      await api
+      .post("/payWithStripe/", {shipping, paymentMethod: "Card"}, config)
       .then((response) => {
         window.location.href = response.data.url;
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
+  
   };
 
   const handleCheckout = () => {
+    if(shipping == "No Delivery Address Selected"){
+      message.error("Please select a delivery address");
+      return;
+    }
+
     Balance();
     setShowPaymentModal(true);
   };
@@ -178,21 +188,34 @@ const OrderConfirmation: React.FC = () => {
       payCOD();
     }
   };
-  const payCOD = () =>{
-   
-      window.location.href = "http://localhost:5173/patient/success"
-  }
-  const payWithWallet = async () =>{
-    await api
-    .post("/payWithWallet", {}, config)
-    .then((response) => {
-      
-      window.location.href = response.data;
-      
-    })
-    .catch((error) => {
+
+  const payCOD = async() =>{
+    setLoading(true);
+     try{
+      await api
+      .post("/placeOrder", {shipping, paymentMethod: "Cash On Delivery"}, config)
+      .then((response) => {
+        // window.location.href = `http://localhost:5173/patient/viewOrder/${response.data._id}`
+        window.location.href = response.data.url;
+      });
+    }
+    catch (error)  {
       console.log(error);
-    });
+    };
+  }
+  
+  const payWithWallet = async () =>{
+    setLoading(true);
+    try{
+      await api
+      .post("/payWithWallet", {shipping, paymentMethod: "Wallet"}, config)
+      .then((response) => {
+        window.location.href = response.data.url;
+      });
+    }
+    catch (error)  {
+      console.log(error);
+    };
   }
 
   return (
@@ -204,42 +227,42 @@ const OrderConfirmation: React.FC = () => {
       <Row gutter={[16, 16]} justify="center" align="middle">
         <Col span={16}>
           <div className="container">
+          <Card>
             <table className="table">
               <thead>
-                <tr style={{ fontSize: 22 }}>
+                <tr style={{ fontSize: 20 }}>
                   <th></th>
                   <th>Medicine Name</th>
                   <th>Price</th>
                   <th>Quantity</th>
                 </tr>
               </thead>
-
               <tbody>
                 {medicines.map((request: any, index) => (
                   <tr key={request._id} style={{ verticalAlign: "middle" }}>
                     <td>
                       <img
                         src={request.imageURL}
-                        width={200}
-                        height={200}
+                        width={100}
+                        height={100}
                       ></img>
                     </td>
-                    <td width={500}>
-                      <strong style={{ fontSize: 20 }}>{request.Name}</strong>
-                      <br></br>
+                    <td width={"70%"}>
+                      <strong style={{ fontSize: 18 }}>{request.Name}</strong>
                       <br></br>
                       {request.Description}
                     </td>
-                    <td style={{ fontSize: 18, fontWeight: "bold" }}>
+                    <td width={"15%"} style={{ fontSize: 16, fontWeight: "bold" }}>
                       {request.Price} USD
                     </td>
-                    <td style={{ fontSize: 18, fontWeight: "bold" }}>
-                      {request.quantity}
+                    <td style={{ fontSize: 16, textAlign: "center" }}>
+                     x{request.quantity}
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
+            </Card>
             <Modal
               title="Select Payment Method"
               visible={showPaymentModal}
@@ -287,10 +310,11 @@ const OrderConfirmation: React.FC = () => {
                   <Col>
                     <DollarCircleFilled />
                   </Col>
-                  <Col style={{ marginLeft: 8, textAlign: "center" }}>COD</Col>
+                  <Col style={{ marginLeft: 8, textAlign: "center" }}>Cash On Delivery</Col>
                 </Row>
               </Button>
             </Modal>
+
             <Modal
       title="Select Delivery Address"
       visible={showShippingModal}
@@ -312,7 +336,7 @@ const OrderConfirmation: React.FC = () => {
           </Option>
         ))}
       </Select>
-      <br></br>
+      <br></br><br />
       {addingNewAddress ? (
         <div>
           <Input
@@ -320,7 +344,7 @@ const OrderConfirmation: React.FC = () => {
             value={newShippingAddress}
             onChange={(e) => setNewShippingAddress(e.target.value)}
           />
-          <br></br>
+          <br></br><br />
           <Button
             type="primary"
             block
@@ -344,9 +368,9 @@ const OrderConfirmation: React.FC = () => {
         <Col span={8}>
           <Card title="Order Summary">
             {/* Delivery Address */}
-            <div style={{ marginBottom: 16 }}>
-              <strong>Delivery Address:</strong>
-              {shipping}
+            <div style={{ marginBottom: 16}}>
+              <strong >Delivery Address: </strong><br />
+              {shipping} &nbsp;
               <button
               className= "btn btn-secondary"
               onClick={()=> handleChangeAddress()}
@@ -354,17 +378,20 @@ const OrderConfirmation: React.FC = () => {
             </div>
 
             {/* Total */}
-            <div style={{ marginBottom: 16 }}>
-              <strong>Total:</strong> {total} USD
-            </div>
+            <div style={{ marginBottom: 16 , float: "right", textAlign: "right"}}>
+              <strong style={{ fontSize: 16}}>Total:</strong> {total} USD
+              <br />
 
-            {/* Confirm Order Button */}
+              {/* Confirm Order Button */}
             <button
               className="btn btn-success"
               onClick={() => handleCheckout()}
             >
               Confirm Order
             </button>
+            </div>
+
+           
           </Card>
         </Col>
       </Row>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Spin } from "antd";
 import { Col, Row } from "react-bootstrap";
-import { Input, Select } from "antd";
+import { Input, Select, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import { config, headers } from "../../middleware/tokenMiddleware";
 
@@ -46,9 +46,16 @@ const AllMedicines = () => {
   const handleAddToCart = async (id: string) => {
     try{
       await api.post(`/cart/medicines/${id}`,{}, config)
+      message.success("Medicine added to cart")
       console.log("med added to cart", id)
     }catch(error){
       console.log("error adding to cart:",error);
+      if (axios.isAxiosError(error) && error.response) {
+        const apiError = error.response.data;
+        message.error(apiError);
+      } else {
+        message.error("An error occurred");
+      }
     }
   };
 

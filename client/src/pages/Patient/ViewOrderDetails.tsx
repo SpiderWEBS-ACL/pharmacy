@@ -153,11 +153,14 @@ const viewOrder: React.FC = () => {
       </Card>
       <br />
 
-      <Card style={{ width: "75%" }}>
-        <h4>
-          <b>Order Details</b>
-        </h4>
-        <br></br>
+      <Card
+        style={{ width: "75%" }}
+        title={
+          <h4 style={{ marginBottom: -5 }}>
+            <b>Order Details</b>
+          </h4>
+        }
+      >
         <Row>
           <Col>
             <h6>
@@ -203,11 +206,11 @@ const viewOrder: React.FC = () => {
 
       <div style={{ display: "flex" }}>
         <button
-          style={{ marginLeft: "auto", marginRight: "20px"}}
+          style={{ marginLeft: "auto", marginRight: "20px" }}
           className="btn btn-danger"
           type="button"
           onClick={handleCancel}
-          hidden={(order.Status == "Cancelled")? true:false}
+          hidden={order.Status == "Cancelled" ? true : false}
         >
           Cancel Order
         </button>

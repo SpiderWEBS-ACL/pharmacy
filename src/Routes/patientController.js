@@ -97,10 +97,33 @@ const changePasswordPatient = async (req, res) => {
   }
 };
 
+const viewAllOrders = async(req, res) => {
+  try {
+    const { id } = req.user;
+ 
+    const orders = await orderModel.find({Patient: id}).populate("Medicines.medicine");
+
+    res.status(200).json(orders);
+  } catch (error) {
+    res.status(500).json({error: error.message});
+  }
+}
+
+const removeAllOrders = async(req, res) => {
+  try{
+    // const {id} = req.user;
+    await orderModel.deleteMany({});
+    res.status(200).json("Orders Deleted");
+  }
+  catch(error){
+    res.status(400).json({error: error.message})
+  }
+}
+
 const viewPatientOrder = async (req, res) => {
   try {
     const { id } = req.params;
- 
+
     const order = await orderModel.findById(id).populate("Medicines.medicine").populate("Patient");
 
     if (!order) {
@@ -173,5 +196,7 @@ module.exports = {
   viewWallet,
   viewShippingAdresses,
   addShippingAddress,
-  changePasswordPatient
+  changePasswordPatient,
+  viewAllOrders,
+  removeAllOrders
 };

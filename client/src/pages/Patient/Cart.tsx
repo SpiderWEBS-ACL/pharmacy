@@ -1,4 +1,4 @@
-import { Button, Col, Modal, Row, Spin } from "antd";
+import { Button, Col, Modal, Row, Spin, message } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -103,13 +103,19 @@ const viewCart: React.FC = () => {
   };
 
   const handleCheckout = async () => {
+    if(medicines.length == 0){
+      message.error("Your Cart is Empty");
+      return;
+    }
     navigate("/patient/orderConfirmation");
   };
 
   const handleRemove = async (id: string) => {
     try {
+      setLoading(true);
       await api.delete(`/medicines/${id}`, config);
       console.log("medicine removed:", id);
+      setLoading(false);
       window.location.reload();
     } catch (error) {
       console.log("error removing medicine: ", error);
@@ -153,18 +159,17 @@ const viewCart: React.FC = () => {
           {medicines.map((request: any, index) => (
             <tr key={request._id} style={{ verticalAlign: "middle" }}>
               <td>
-                <img src={request.imageURL} width={200} height={200}></img>
+                <img src={request.imageURL} width={100} height={100}></img>
               </td>
               <td width={500}>
                 <strong style={{ fontSize: 20 }}>{request.Name}</strong>
-                <br></br>
                 <br></br>
                 {request.Description}
               </td>
               <td style={{ fontSize: 18, fontWeight: "bold" }}>
                 {request.Price} USD
               </td>
-              <td style={{ fontSize: 18, fontWeight: "bold" }}>
+              <td style={{ fontSize: 18, fontWeight: "bold" , textAlign: "center"}}>
                 {request.quantity}
               </td>
               <td>
@@ -195,12 +200,14 @@ const viewCart: React.FC = () => {
           ))}
         </tbody>
       </table>
-      <div>
+      <div style={{float: "right", textAlign: "right", marginRight: 20}}>
         <strong style={{ fontSize: 20 }}> Total: {total} USD </strong>
-      </div>
-      <button className="btn btn-success" onClick={() => handleCheckout()}>
+      <br /><br />
+      <button className="btn btn-success" onClick={() => handleCheckout()} style={{ fontSize: 20 }} >
         Checkout
       </button>
+      <br /><br />
+      </div>
     </div>
   );
 };
