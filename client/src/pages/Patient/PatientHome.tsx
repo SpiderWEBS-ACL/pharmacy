@@ -39,10 +39,10 @@ const PatientHome = () => {
           <p className="card-text">DOB: {datePart}</p>
           <p className="card-text">Gender: {patientInfo.Gender}</p>
           <p className="card-text">Mobile: {patientInfo.Mobile}</p>
-          <p className="card-text">
+          {/* <p className="card-text">
             Shipping Addresses:
             {patientInfo.shippingAddresses.map((address: string, index: React.Key | null | undefined) => (<p key={index}>{address}</p>))}
-          </p>
+          </p> */}
         </div>
       </div>
       <br />
