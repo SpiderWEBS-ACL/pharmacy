@@ -142,12 +142,11 @@ app.post("/pharmacist/uploadDocuments", PharmacistProtect, uploadDocuments);
 //------------------Patient Endpoints---------------------
 app.get("/patient/me",PatientProtect, PatientInfo)
 app.post("/patient/register", registerPatient);
-app.get("/patient/viewOrder/:id", viewPatientOrder);
+app.get("/patient/viewOrder/:id", PatientProtect, viewPatientOrder);
 app.get("/patient/shippingAddresses", PatientProtect,viewShippingAdresses)
 app.put("/patient/shippingAddress",PatientProtect, addShippingAddress);
 app.get("/patient/wallet",PatientProtect,viewWallet)
 app.put("/patient/changePassword", PatientProtect, changePasswordPatient);
-app.get("/patient/viewOrder/:id", viewPatientOrder)
 
 
 //------------------Medicine Endpoints------------------

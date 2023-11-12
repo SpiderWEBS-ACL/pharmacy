@@ -34,6 +34,7 @@ import ChangePasswordPharm from "./pages/Pharmacist/ChangePassword";
 import ChangePasswordPatient from "./pages/Patient/ChangePassword";
 import ForgotPassword from "./pages/ForgotPassword";
 import Wallet from "./pages/Patient/Wallet";
+import OrderDetails from "./pages/Patient/ViewOrderDetails";
 import OrderConfirmation from "./pages/Patient/OrderConfirmation";
 import Success from "./pages/Patient/Success";
 import Cancel from "./pages/Patient/Cancel";
@@ -114,6 +115,7 @@ const AppRouter: React.FC = () => {
           />
           <Route path="/patient/Home" element={<PatientHome />} />
           <Route path="/patient/viewCart" element={<Cart />} />
+          <Route path="/patient/viewOrder/:id" element={<OrderDetails />} />
           <Route
             path="/patient/changePassword"
             element={<ChangePasswordPatient />}

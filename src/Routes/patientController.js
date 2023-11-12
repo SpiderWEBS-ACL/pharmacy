@@ -8,6 +8,7 @@ const jwt = require("jsonwebtoken");
 
 const Cart = require("../Models/Cart");
 const Patient = require("../Models/Patient");
+const Medicine = require("../Models/Medicine");
 
 
 const registerPatient = async (req, res) => {
@@ -98,19 +99,24 @@ const changePasswordPatient = async (req, res) => {
 
 const viewPatientOrder = async (req, res) => {
   try {
-    const OrderId = req.params.id;
-    console.log(OrderId)
+    const { id } = req.params;
  
-    const Order = await orderModel.findById(OrderId).populate("Medicines.medicine");
-    if (!Order) {
+    const order = await orderModel.findById(id).populate("Medicines.medicine").populate("Patient");
+
+    if (!order) {
       return res.status(404).json({ error: "Order not found" });
     }
 
-    return res.status(200).json(Order);
+    // if(order.Patient._id !== req.user._id){
+    //   return res.status(400).json({ error: "You are not authorized to view this order" });
+    // }
+
+    return res.status(200).json(order);
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
 }
+
 const viewWallet = async (req,res) => {
   try{
     const patientId = req.user.id;
