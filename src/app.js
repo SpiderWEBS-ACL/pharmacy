@@ -63,7 +63,8 @@ const {
   viewMedicineDetailsInCart,
   updateMedicineQuantity,
 viewPatientCart,
-getCartTotal} = require("./Routes/cartController");
+getCartTotal,
+payCartWithStripe, emptyCart, payCartWithWallet} = require("./Routes/cartController");
 const { AdminProtect, PharmacistProtect, PatientProtect } = require("./middleware/authMiddleware");
 
  const {
@@ -164,7 +165,10 @@ app.delete("/cart/medicines/:medicineId", PatientProtect, removeMedicine);
 app.get("/cart/:cartId", viewCart);
 app.get("/cart/viewCart/:id",PatientProtect, viewPatientCart);
 app.get("/cart/medicines/:medicineId", viewMedicineDetailsInCart);
-app.get("/cart/getCartTotal/:cartId",PatientProtect,getCartTotal)
+app.get("/cart/getCartTotal/:cartId",PatientProtect,getCartTotal);
+app.post("/cart/payWithStripe/",PatientProtect,payCartWithStripe);
+app.post("/cart/payWithWallet",PatientProtect,payCartWithWallet);
+app.put("/cart/emptyCart",PatientProtect,emptyCart)
 
 
 

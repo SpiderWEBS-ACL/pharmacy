@@ -35,6 +35,9 @@ import ChangePasswordPatient from "./pages/Patient/ChangePassword";
 import ForgotPassword from "./pages/ForgotPassword";
 import Wallet from "./pages/Patient/Wallet";
 import OrderDetails from "./pages/Patient/ViewOrderDetails";
+import OrderConfirmation from "./pages/Patient/OrderConfirmation";
+import Success from "./pages/Patient/Success";
+import Cancel from "./pages/Patient/Cancel";
 
 const AppRouter: React.FC = () => {
   const navigate = useNavigate();
@@ -65,7 +68,10 @@ const AppRouter: React.FC = () => {
             element={<MedicineDetailsAdmin />}
           />
           <Route path="/admin/Home" element={<AdminHome />} />
-          <Route path="/admin/changePassword" element={<ChangePasswordAdmin/>}/>
+          <Route
+            path="/admin/changePassword"
+            element={<ChangePasswordAdmin />}
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       );
@@ -88,7 +94,10 @@ const AppRouter: React.FC = () => {
           />
           <Route path="/pharmacist/addMedicine" element={<AddMedicine />} />
           <Route path="/pharmacist/Home" element={<PharmaHome />} />
-          <Route path="/pharmacist/changePassword" element={<ChangePasswordPharm/>}/>
+          <Route
+            path="/pharmacist/changePassword"
+            element={<ChangePasswordPharm />}
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       );
@@ -106,10 +115,25 @@ const AppRouter: React.FC = () => {
           />
           <Route path="/patient/Home" element={<PatientHome />} />
           <Route path="/patient/viewCart" element={<Cart />} />
-          <Route path="/patient/changePassword" element={<ChangePasswordPatient/>}/>
           <Route path="/patient/viewOrder/:id" element={<OrderDetails />} />
-          <Route path="*" element={<NotFound />} />
+          <Route
+            path="/patient/changePassword"
+            element={<ChangePasswordPatient />}
+          />
           <Route path="/patient/wallet" element={<Wallet />} />
+          <Route
+            path="/patient/orderConfirmation"
+            element={<OrderConfirmation />}
+          />
+          <Route      
+          path = "/patient/success"
+          element= {<Success/>}
+          />
+          <Route      
+          path = "/patient/cancel"
+          element= {<Cancel/>}
+          />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       );
     } else {
