@@ -1,0 +1,19 @@
+.carousel-image {
+    width: 1500px; /* Set your desired width */
+    height: 600px; /* Set your desired height */
+  }
+  .ant-carousel .slick-slide {
+    height: 300px; /* Adjust the height to your preference */
+  }
+  
+  /* Center the images vertically within the carousel */
+  .ant-carousel .slick-slide img {
+    max-height: 100%;
+    max-width: 100%;
+    margin: auto;
+  }
+  .welcome{
+    background-color: rgb(107, 136, 183);
+    color: white;
+    padding: 10px;
+  }
