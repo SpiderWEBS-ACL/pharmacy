@@ -39,17 +39,10 @@ const PatientHome = () => {
           <p className="card-text">DOB: {datePart}</p>
           <p className="card-text">Gender: {patientInfo.Gender}</p>
           <p className="card-text">Mobile: {patientInfo.Mobile}</p>
-          <p className="card-text">Shipping Addresses: {patientInfo.shippingAddresses}</p>
-          {/* <p className="card-text">
-            Emergency Contact Name: {patientEmergencyContact.Name}
-          </p>
           <p className="card-text">
-            Emergency Contact Number: {patientEmergencyContact.Mobile}
+            Shipping Addresses:
+            {patientInfo.shippingAddresses.map((address: string, index: React.Key | null | undefined) => (<p key={index}>{address}</p>))}
           </p>
-          <p className="card-text">
-            Emergency Contact Relation:{" "}
-            {patientEmergencyContact.relationToPatient}
-          </p> */}
         </div>
       </div>
       <br />
