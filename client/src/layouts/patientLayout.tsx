@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import ImportedFooter from "../layouts/footer";
+import ImportedHeader from "../layouts/header";
 import {
   BrowserRouter as Router,
   Route,
@@ -27,6 +28,11 @@ const PatientLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const items = [
+    {
+      label: "Home",
+      key: "/patient/commercial",
+      icon: <HomeOutlined/>
+    },
     {
       label: "Account Info",
       key: "/patient/Home",
@@ -72,12 +78,12 @@ const PatientLayout: React.FC = () => {
         collapsible
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
+        theme = "light"
       >
         <div className="demo-logo-vertical" />
         <Menu
           onClick={({ key }) => {
             if (key === "/") {
-              //TODO signout feature here
               localStorage.clear();
               navigate(key);
               window.location.reload();
@@ -85,13 +91,15 @@ const PatientLayout: React.FC = () => {
               navigate(key);
             }
           }}
-          theme="dark"
+          theme="light"
           defaultSelectedKeys={["1"]}
           mode="inline"
           items={items}
         ></Menu>
+        
       </Sider>
       <Layout>
+        <ImportedHeader />
         <Content style={{ margin: "0 16px" }}>
           <AppRouter />
         </Content>
