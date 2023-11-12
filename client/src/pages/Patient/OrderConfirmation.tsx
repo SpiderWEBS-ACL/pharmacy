@@ -204,42 +204,42 @@ const OrderConfirmation: React.FC = () => {
       <Row gutter={[16, 16]} justify="center" align="middle">
         <Col span={16}>
           <div className="container">
+          <Card>
             <table className="table">
               <thead>
-                <tr style={{ fontSize: 22 }}>
+                <tr style={{ fontSize: 20 }}>
                   <th></th>
                   <th>Medicine Name</th>
                   <th>Price</th>
                   <th>Quantity</th>
                 </tr>
               </thead>
-
               <tbody>
                 {medicines.map((request: any, index) => (
                   <tr key={request._id} style={{ verticalAlign: "middle" }}>
                     <td>
                       <img
                         src={request.imageURL}
-                        width={200}
-                        height={200}
+                        width={100}
+                        height={100}
                       ></img>
                     </td>
-                    <td width={500}>
-                      <strong style={{ fontSize: 20 }}>{request.Name}</strong>
-                      <br></br>
+                    <td width={"70%"}>
+                      <strong style={{ fontSize: 18 }}>{request.Name}</strong>
                       <br></br>
                       {request.Description}
                     </td>
-                    <td style={{ fontSize: 18, fontWeight: "bold" }}>
+                    <td width={"15%"} style={{ fontSize: 16, fontWeight: "bold" }}>
                       {request.Price} USD
                     </td>
-                    <td style={{ fontSize: 18, fontWeight: "bold" }}>
-                      {request.quantity}
+                    <td style={{ fontSize: 16, textAlign: "center" }}>
+                     x{request.quantity}
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
+            </Card>
             <Modal
               title="Select Payment Method"
               visible={showPaymentModal}
@@ -291,6 +291,7 @@ const OrderConfirmation: React.FC = () => {
                 </Row>
               </Button>
             </Modal>
+
             <Modal
       title="Select Delivery Address"
       visible={showShippingModal}
@@ -312,7 +313,7 @@ const OrderConfirmation: React.FC = () => {
           </Option>
         ))}
       </Select>
-      <br></br>
+      <br></br><br />
       {addingNewAddress ? (
         <div>
           <Input
@@ -320,7 +321,7 @@ const OrderConfirmation: React.FC = () => {
             value={newShippingAddress}
             onChange={(e) => setNewShippingAddress(e.target.value)}
           />
-          <br></br>
+          <br></br><br />
           <Button
             type="primary"
             block
@@ -344,9 +345,9 @@ const OrderConfirmation: React.FC = () => {
         <Col span={8}>
           <Card title="Order Summary">
             {/* Delivery Address */}
-            <div style={{ marginBottom: 16 }}>
-              <strong>Delivery Address:</strong>
-              {shipping}
+            <div style={{ marginBottom: 16}}>
+              <strong >Delivery Address: </strong><br />
+              {shipping} &nbsp;
               <button
               className= "btn btn-secondary"
               onClick={()=> handleChangeAddress()}
@@ -354,17 +355,20 @@ const OrderConfirmation: React.FC = () => {
             </div>
 
             {/* Total */}
-            <div style={{ marginBottom: 16 }}>
-              <strong>Total:</strong> {total} USD
-            </div>
+            <div style={{ marginBottom: 16 , float: "right", textAlign: "right"}}>
+              <strong style={{ fontSize: 16}}>Total:</strong> {total} USD
+              <br />
 
-            {/* Confirm Order Button */}
+              {/* Confirm Order Button */}
             <button
               className="btn btn-success"
               onClick={() => handleCheckout()}
             >
               Confirm Order
             </button>
+            </div>
+
+           
           </Card>
         </Col>
       </Row>
