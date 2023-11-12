@@ -117,7 +117,7 @@ const RegLog: React.FC = () => {
 
   const handleRedirection = (item: any) => {
     if (item.type == "Patient") {
-      navigate(`/patient/Home`);
+      navigate(`/patient/commercial`);
     } else if (item.type == "Pharmacist") {
       navigate(`/pharmacist/Home`);
     } else if (item.type == "Admin") {
