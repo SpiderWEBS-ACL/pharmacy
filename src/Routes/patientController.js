@@ -166,7 +166,6 @@ const payCartWithWallet  = async(req,res) => {
 const cancelOrder = async (req,res) => {
   try {
     const {id} = req.params;
-    console.log(id);
     const order = await orderModel.findById(id);
     if(order.Status == "Shipped"){
       return res.status(400).json({error: "Order is already shipped, you can not cancel"});
@@ -188,11 +187,15 @@ const cancelOrder = async (req,res) => {
 
 }
 const choosedeliveryaddress = async (req,res) => {
-  const selectedadd = OrdersModel.findByld; //find addresses
-  Orders.DeliveryAddress = selectedadd; //the selected address be the delivery address
-  if (!selectedadd){
-    res.status(400).json({error: "No delivery address selected"}); //error message for not choosing the delivery address
-  }
+  try {
+    const {id} = req.body;
+    const order = await orderModel.findById(id);
+    order.updateOne({DeliveryAddress});
+    
+}
+catch (error){
+  res.status(500).json({ error: error.message });
+}
 }
 
 //---------------------------------------EXPORTS-----------------------------------------------
