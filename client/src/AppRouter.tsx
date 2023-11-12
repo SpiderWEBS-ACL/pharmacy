@@ -38,6 +38,7 @@ import OrderDetails from "./pages/Patient/ViewOrderDetails";
 import OrderConfirmation from "./pages/Patient/OrderConfirmation";
 import Success from "./pages/Patient/Success";
 import Cancel from "./pages/Patient/Cancel";
+import ViewAllOrders from "./pages/Patient/ViewAllOrders";
 
 const AppRouter: React.FC = () => {
   const navigate = useNavigate();
@@ -115,6 +116,7 @@ const AppRouter: React.FC = () => {
           />
           <Route path="/patient/Home" element={<PatientHome />} />
           <Route path="/patient/viewCart" element={<Cart />} />
+          <Route path="/patient/orders" element={<ViewAllOrders />} />
           <Route path="/patient/viewOrder/:id" element={<OrderDetails />} />
           <Route
             path="/patient/changePassword"

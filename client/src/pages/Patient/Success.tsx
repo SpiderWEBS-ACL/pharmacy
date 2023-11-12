@@ -1,28 +1,48 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom';
 import axios from "axios";
 import { config, headers } from '../../middleware/tokenMiddleware';
+import { Spin, message } from 'antd';
 
 const Success: React.FC = () =>{
     const api = axios.create({
         baseURL: "http://localhost:5000/cart",
       });
     
+      const [searchParams, setSearchParams] = useSearchParams();
+      const shipping = searchParams.get("shipping");
+
+      // const shipping = session.metadata.shipping;
 
 
     useEffect(() => {
-            api
-            .put(`/emptyCart`,{}, {headers: headers})
-            .then((response) =>{
-                console.log("RES",response.data);
-            })
-    });
+      try{
+        api
+       .post("/placeOrder", {shipping, paymentMethod: "Card"}, config)
+       .then((response) => {
+         // window.location.href = `http://localhost:5173/patient/viewOrder/${response.data._id}`
+         window.location.href = response.data.url;
+       });
+     }
+     catch (error)  {
+       console.log(error);
+     };
 
-  return (
-    <div>
-      SUCCESS!
-      <button>Go to Orders</button>
-    </div>
-  )
+           
+    }, []);
+
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <Spin size="large" />
+      </div>
+    );
 }
 
 export default Success

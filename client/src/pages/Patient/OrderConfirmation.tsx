@@ -1,4 +1,4 @@
-import { Button, Card, Col, Modal, Row, Spin, Select, Input } from "antd";
+import { Button, Card, Col, Modal, Row, Spin, Select, Input, message } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -38,7 +38,7 @@ const OrderConfirmation: React.FC = () => {
   const [total, setTotal] = useState<number>(0);
   const [balance, setBalance] = useState<number>(0);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [shipping, setShippingAddress] = useState<String>("No Shipping Address Selected")
+  const [shipping, setShippingAddress] = useState<String>("No Delivery Address Selected")
   const [shippingAddresses, setShippingAddresses] = useState<string[]>([]);
   const [newShippingAddress, setNewShippingAddress] = useState<string>("");
   const [addingNewAddress, setAddingNewAddress] = useState(false);
@@ -119,17 +119,27 @@ const OrderConfirmation: React.FC = () => {
   };
 
   const payWithStripe = async () => {
-    await api
-      .post("/payWithStripe/", {}, config)
+    try {
+      setLoading(true);
+      await api
+      .post("/payWithStripe/", {shipping, paymentMethod: "Card"}, config)
       .then((response) => {
         window.location.href = response.data.url;
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
+  
   };
 
   const handleCheckout = () => {
+    if(shipping == "No Delivery Address Selected"){
+      message.error("Please select a delivery address");
+      return;
+    }
+
     Balance();
     setShowPaymentModal(true);
   };
@@ -178,21 +188,34 @@ const OrderConfirmation: React.FC = () => {
       payCOD();
     }
   };
-  const payCOD = () =>{
-   
-      window.location.href = "http://localhost:5173/patient/success"
-  }
-  const payWithWallet = async () =>{
-    await api
-    .post("/payWithWallet", {}, config)
-    .then((response) => {
-      
-      window.location.href = response.data;
-      
-    })
-    .catch((error) => {
+
+  const payCOD = async() =>{
+    setLoading(true);
+     try{
+      await api
+      .post("/placeOrder", {shipping, paymentMethod: "Cash On Delivery"}, config)
+      .then((response) => {
+        // window.location.href = `http://localhost:5173/patient/viewOrder/${response.data._id}`
+        window.location.href = response.data.url;
+      });
+    }
+    catch (error)  {
       console.log(error);
-    });
+    };
+  }
+  
+  const payWithWallet = async () =>{
+    setLoading(true);
+    try{
+      await api
+      .post("/payWithWallet", {shipping, paymentMethod: "Wallet"}, config)
+      .then((response) => {
+        window.location.href = response.data.url;
+      });
+    }
+    catch (error)  {
+      console.log(error);
+    };
   }
 
   return (
@@ -287,7 +310,7 @@ const OrderConfirmation: React.FC = () => {
                   <Col>
                     <DollarCircleFilled />
                   </Col>
-                  <Col style={{ marginLeft: 8, textAlign: "center" }}>COD</Col>
+                  <Col style={{ marginLeft: 8, textAlign: "center" }}>Cash On Delivery</Col>
                 </Row>
               </Button>
             </Modal>

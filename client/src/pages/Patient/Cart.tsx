@@ -1,4 +1,4 @@
-import { Button, Col, Modal, Row, Spin } from "antd";
+import { Button, Col, Modal, Row, Spin, message } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -103,6 +103,10 @@ const viewCart: React.FC = () => {
   };
 
   const handleCheckout = async () => {
+    if(medicines.length == 0){
+      message.error("Your Cart is Empty");
+      return;
+    }
     navigate("/patient/orderConfirmation");
   };
 
