@@ -14,7 +14,7 @@ const orderSchema = new Schema(
           type: Schema.Types.ObjectId,
           ref: "Medicine",
         },
-        Quantity: {
+        quantity: {
           type: Number,
           default: 1,
         },

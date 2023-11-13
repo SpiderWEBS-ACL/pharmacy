@@ -58,7 +58,7 @@ const addMedicineToCart = async (req, res) => {
 
 const updateMedicineQuantity = async (req, res) => {
   try {
-    const patientId = req.user.id;
+    const patientId = req.user;
     const patient = await Patient.findById(patientId);
     const cartId = patient.Cart;
 
@@ -130,7 +130,7 @@ const removeMedicine = async (req, res) => {
     const cart = await Cart.findById(cartId).populate("medicines");
     const medicineId = req.params.medicineId;
 
-    const medicine = await Medicine.findById(medicineId);
+    var medicine = await Medicine.findById(medicineId);
     if (!cart) {
       return res.status(404).json({ error: "Cart not found" });
     }
@@ -342,8 +342,16 @@ const placeOrder = async (req, res) => {
     const cart = await Cart.findById(cartId);
 
     const medicines = cart.medicines;
+    
+    //update sales
+    for (let i = 0; i < medicines.length; i++) {
+      const medicineId = medicines[i].medicine.toString();
+      const medicine = await Medicine.findById(medicineId);
+      await medicine.updateOne( {Sales: medicine.Sales + medicines[i].quantity})
+    }
 
     const total = await getCartTotalHelper(req, res);
+
     
     const order = await Orders.create({
       Patient: patient,

@@ -116,7 +116,8 @@ const viewCart: React.FC = () => {
       await api.delete(`/medicines/${id}`, config);
       console.log("medicine removed:", id);
       setLoading(false);
-      window.location.reload();
+      setRefreshData(!refreshData);
+
     } catch (error) {
       console.log("error removing medicine: ", error);
     }

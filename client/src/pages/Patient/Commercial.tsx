@@ -18,10 +18,10 @@ function Commercial() {
 
       {/* Text content and additional elements for the web application */}
       <div className="webapp-content">
-        <h1 className="welcome">spiderWEBS pharmacy portal</h1>
-        
+        <h1 className="welcome">SpiderWEBS Pharmacy Portal</h1>
+        <br />
         <div className="about-company">
-          <h2>About Us</h2>
+          <h2><b>About Us</b></h2>
           <p>Your Trusted Partner in Healthcare Solutions</p>
           <p>
             SpiderWEBS Medical is dedicated to transforming healthcare through innovation and technology.
@@ -29,8 +29,9 @@ function Commercial() {
           </p>
           <p>Discover our world-class facilities, state-of-the-art equipment, and dedicated healthcare professionals.</p>
         </div>
+        <br />
         <div className="services">
-          <h2>Our Services</h2>
+          <h2><b>Our Services</b></h2>
           <ul>
             <li>Telemedicine and Remote Consultations</li>
             <li>Free Shipping anywhere</li>

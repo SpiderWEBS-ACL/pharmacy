@@ -189,19 +189,41 @@ const addShippingAddress = async (req, res) => {
 
 const cancelOrder = async (req,res) => {
   try {
+    // console.log(req);
+    const patientId = req.user.id;
+    const patient = await Patient.findById(patientId);
+
     const {id} = req.params;
-    const order = await orderModel.findById(id);
-    if(order.Status == "Shipped"){
-      return res.status(400).json({error: "Order is already shipped, you can not cancel"});
+    const order = await orderModel.findById(id).populate("Patient");
+
+    if(!patient){
+      return res.status(404).json("Patient Not Found");
     }
+
+
+    if(order.Status == "Shipped" || order.Status == "Cancelled"){
+      return res.status(400).json({error: "Order is already shipped, you can not cancel it"});
+    }
+    
+    //change status
     await order.updateOne({Status:"Cancelled"},{new:true});
+
+    //return medicines to stock
     const medicines = order.Medicines;
+
     for (let i = 0; i < medicines.length; i++) {
       const medicineId = medicines[i].medicine.toString();
       const medicine = await medicineModel.findById(medicineId);
-      await medicine.updateOne({Quantity: medicine.Quantity + medicines[i].Quantity})
+      await medicine.updateOne({Quantity: medicine.Quantity + medicines[i].quantity, Sales: medicine.Sales - medicines[i].quantity})
     }
-    //refunding in case using card
+
+    //refunding in wallet
+    if(order.PaymentMethod != "Cash On Delivery"){
+      patient = await Patient.findByIdAndUpdate(patientId, {Wallet: patient.Wallet + order.TotalPrice}, {new: true})
+    }
+
+    console.log(patient);
+
     res.status(200).json(order);
   }
 
@@ -209,17 +231,6 @@ const cancelOrder = async (req,res) => {
     res.status(500).json({ error: error.message });
   }
 
-}
-const choosedeliveryaddress = async (req,res) => {
-  try {
-    const {id} = req.body;
-    const order = await orderModel.findById(id);
-    order.updateOne({DeliveryAddress});
-    
-}
-catch (error){
-  res.status(500).json({ error: error.message });
-}
 }
 
 //---------------------------------------EXPORTS-----------------------------------------------

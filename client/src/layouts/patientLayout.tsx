@@ -78,7 +78,8 @@ const PatientLayout: React.FC = () => {
         collapsible
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
-        theme = "light"
+        // style={{background: "#c9c9c9"}}
+        // theme = "light"
       >
         <div className="demo-logo-vertical" />
         <Menu
@@ -91,10 +92,11 @@ const PatientLayout: React.FC = () => {
               navigate(key);
             }
           }}
-          theme="light"
+          theme="dark"
           defaultSelectedKeys={["1"]}
           mode="inline"
           items={items}
+          // style={{background: "#c9c9c9"}}
         ></Menu>
         
       </Sider>
