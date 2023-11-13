@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button, Col, Row } from "react-bootstrap";
 import { format } from "date-fns";
-import { Spin } from "antd";
+import { Spin, message } from "antd";
 import { config } from "../../middleware/tokenMiddleware";
 
 const MedicineDetails: React.FC = () => {
@@ -12,12 +12,12 @@ const MedicineDetails: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   const api = axios.create({
-    baseURL: "http://localhost:5000/medicine",
+    baseURL: "http://localhost:5000/",
   });
 
   useEffect(() => {
     api
-      .get(`/viewMedicineDetails/${id}`,config)
+      .get(`medicine/viewMedicineDetails/${id}`,config)
       .then((response) => {
         setMedicineDetails(response.data);
         setLoading(false);
@@ -34,6 +34,21 @@ const MedicineDetails: React.FC = () => {
     navigate("/patient/viewMedicines");
   };
 
+  const handleAddToCart = async (id: string | undefined) => {
+    try{
+      await api.post(`/cart/medicines/${id}`,{}, config)
+      message.success("Medicine added to cart")
+      console.log("med added to cart", id)
+    }catch(error){
+      console.log("error adding to cart:",error);
+      if (axios.isAxiosError(error) && error.response) {
+        const apiError = error.response.data;
+        message.error(apiError);
+      } else {
+        message.error("An error occurred");
+      }
+    }
+  };
 
   if (loading) {
     return (
@@ -85,8 +100,18 @@ const MedicineDetails: React.FC = () => {
       </Col>
       <Col sm={6}>
         <img src={medicineDetails.imageURL} width={300} height={300}></img>
+        <br /><br />
+        <div style={{display: "flex", justifyContent: "center"}}>
+        <button
+              className="btn btn-success"
+              onClick={() => handleAddToCart(id)}
+            >
+                  Add To Cart
+            </button>
+          </div>
       </Col>
     </Row>
+    <br />
    </div>
   );
 }

@@ -190,23 +190,24 @@ const addShippingAddress = async (req, res) => {
 const cancelOrder = async (req,res) => {
   try {
     // console.log(req);
-    const patientId = req.user.id;
-    const patient = await Patient.findById(patientId);
-
     const {id} = req.params;
     const order = await orderModel.findById(id).populate("Patient");
+
+    const patient = order.Patient;
 
     if(!patient){
       return res.status(404).json("Patient Not Found");
     }
 
 
-    if(order.Status == "Shipped" || order.Status == "Cancelled"){
+    if(order.Status == "Shipped"){
       return res.status(400).json({error: "Order is already shipped, you can not cancel it"});
     }
-    
-    //change status
-    await order.updateOne({Status:"Cancelled"},{new:true});
+
+    if(order.Status == "Cancelled"){
+      return res.status(400).json({error: "Order is already cancelled"});
+
+    }
 
     //return medicines to stock
     const medicines = order.Medicines;
@@ -219,10 +220,12 @@ const cancelOrder = async (req,res) => {
 
     //refunding in wallet
     if(order.PaymentMethod != "Cash On Delivery"){
-      patient = await Patient.findByIdAndUpdate(patientId, {Wallet: patient.Wallet + order.TotalPrice}, {new: true})
+      patient.Wallet += order.TotalPrice;
+      await patient.save();
     }
 
-    console.log(patient);
+      //change status
+      await order.updateOne({Status:"Cancelled"},{new:true});
 
     res.status(200).json(order);
   }
