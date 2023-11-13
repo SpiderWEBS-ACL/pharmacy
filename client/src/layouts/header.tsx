@@ -1,11 +1,20 @@
-
-import "../layouts/footer.css"; 
-const Header = () => {
+import "../layouts/footer.css";
+import { Layout } from "antd";
+const { Header } = Layout;
+const header = () => {
   return (
-    <div className="header">
-        <img src = "/logo.jpeg" alt="logo"/>
-    </div>
+    <Header
+      style={{
+        background: "transparent",
+        height: 100,
+        display: "flex",
+        justifyContent: "center",
+        marginLeft: "17%"
+      }}
+    >
+      <img src="/logo.png" alt="logo" height={100} width={100} />
+    </Header>
   );
 };
 
-export default Header;
+export default header;

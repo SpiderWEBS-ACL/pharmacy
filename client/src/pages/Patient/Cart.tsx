@@ -116,7 +116,8 @@ const viewCart: React.FC = () => {
       await api.delete(`/medicines/${id}`, config);
       console.log("medicine removed:", id);
       setLoading(false);
-      window.location.reload();
+      setFlag(!flag);
+
     } catch (error) {
       console.log("error removing medicine: ", error);
     }
@@ -141,7 +142,7 @@ const viewCart: React.FC = () => {
     <div className="container">
       <h2 className="text-center mt-4 mb-4">
         {" "}
-        <strong>Your cart</strong>{" "}
+        <strong>Your Cart</strong>{" "}
       </h2>
 
       <table className="table">

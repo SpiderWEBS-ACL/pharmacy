@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import ImportedFooter from "../layouts/footer";
+import ImportedHeader from "../layouts/header";
 import {
   BrowserRouter as Router,
   useNavigate,
@@ -50,6 +52,8 @@ const PharmacistLayout: React.FC = () => {
         collapsible
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
+        style={{height: '100vh', position: "fixed"}}
+        theme = "light"
       >
         <div className="demo-logo-vertical" />
         <Menu
@@ -63,16 +67,19 @@ const PharmacistLayout: React.FC = () => {
               navigate(key);
             }
           }}
-          theme="dark"
+          theme="light"
           defaultSelectedKeys={["1"]}
           mode="inline"
           items={items}
         ></Menu>
       </Sider>
-      <Layout>
-        <Content style={{ margin: "0 16px" }}>
+      <Layout style={{height: '100%', overflow: 'scroll'}}>
+        <ImportedHeader />
+        <Content style={{ margin: "0 16px" , marginLeft: "18%", minHeight: "100vh"}}>
           <AppRouter />
         </Content>
+        <br />
+        <ImportedFooter />
       </Layout>
     </Layout>
   );

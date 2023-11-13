@@ -1,5 +1,6 @@
 const patientModel = require("../Models/Patient");
 const orderModel= require("../Models/Orders");
+const medicineModel= require("../Models/Medicine");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -186,6 +187,54 @@ const addShippingAddress = async (req, res) => {
   }
 }
 
+const cancelOrder = async (req,res) => {
+  try {
+    // console.log(req);
+    const {id} = req.params;
+    const order = await orderModel.findById(id).populate("Patient");
+
+    const patient = order.Patient;
+
+    if(!patient){
+      return res.status(404).json("Patient Not Found");
+    }
+
+
+    if(order.Status == "Shipped"){
+      return res.status(400).json({error: "Order is already shipped, you can not cancel it"});
+    }
+
+    if(order.Status == "Cancelled"){
+      return res.status(400).json({error: "Order is already cancelled"});
+
+    }
+
+    //return medicines to stock
+    const medicines = order.Medicines;
+
+    for (let i = 0; i < medicines.length; i++) {
+      const medicineId = medicines[i].medicine.toString();
+      const medicine = await medicineModel.findById(medicineId);
+      await medicine.updateOne({Quantity: medicine.Quantity + medicines[i].quantity, Sales: medicine.Sales - medicines[i].quantity})
+    }
+
+    //refunding in wallet
+    if(order.PaymentMethod != "Cash On Delivery"){
+      patient.Wallet += order.TotalPrice;
+      await patient.save();
+    }
+
+      //change status
+      await order.updateOne({Status:"Cancelled"},{new:true});
+
+    res.status(200).json(order);
+  }
+
+  catch(error) {
+    res.status(500).json({ error: error.message });
+  }
+
+}
 
 //---------------------------------------EXPORTS-----------------------------------------------
 
@@ -198,5 +247,6 @@ module.exports = {
   addShippingAddress,
   changePasswordPatient,
   viewAllOrders,
-  removeAllOrders
+  removeAllOrders,
+  cancelOrder,
 };

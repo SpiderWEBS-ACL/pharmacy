@@ -73,11 +73,13 @@ const PatientLayout: React.FC = () => {
   ];
 
   return (
-    <Layout style={{ minHeight: "100vh" }}>
+    <Layout style={{ minHeight: "100%" }}>
       <Sider
         collapsible
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
+        style={{height: '100vh', position: "fixed"}}
+        // style={{background: "#c9c9c9"}}
         theme = "light"
       >
         <div className="demo-logo-vertical" />
@@ -95,14 +97,16 @@ const PatientLayout: React.FC = () => {
           defaultSelectedKeys={["1"]}
           mode="inline"
           items={items}
+          // style={{background: "#c9c9c9"}}
         ></Menu>
         
       </Sider>
-      <Layout>
+      <Layout style={{height: '100%', overflow: 'scroll'}}>
         <ImportedHeader />
-        <Content style={{ margin: "0 16px" }}>
+        <Content style={{ margin: "0 16px" , marginLeft: "18%", minHeight: "100vh"}}>
           <AppRouter />
         </Content>
+        <br />
         <ImportedFooter />
       </Layout>
     </Layout>

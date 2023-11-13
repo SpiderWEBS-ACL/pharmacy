@@ -3,14 +3,15 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button, Col, Row } from "react-bootstrap";
 import { format } from "date-fns";
-import { Card, Spin } from "antd";
+import { Card, Spin, message } from "antd";
 import { JwtPayload, config, headers } from "../../middleware/tokenMiddleware";
 import Cookies from "js-cookie";
 import jwt_decode from "jwt-decode";
+import { useForceUpdate } from "@chakra-ui/react";
 
 type OrderItem = {
   medicine: string;
-  Quantity: number;
+  quantity: number;
 };
 
 type MedicineItem = {
@@ -22,6 +23,11 @@ type MedicineItem = {
 
 const viewOrder: React.FC = () => {
   const accessToken = Cookies.get("accessToken");
+  let pid = "";
+  if (accessToken) {
+    const decodedToken: JwtPayload = jwt_decode(accessToken);
+    pid = decodedToken.id as string;
+  }
   const { id } = useParams<{ id: string }>();
   const [order, setOrder] = useState<any>();
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
@@ -30,6 +36,7 @@ const viewOrder: React.FC = () => {
   const [total, setTotal] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [alertVisible, setAlertVisibility] = useState(false);
+  const [refreshData, setRefreshData] = useState(false);
 
   const api = axios.create({
     baseURL: "http://localhost:5000/",
@@ -45,9 +52,9 @@ const viewOrder: React.FC = () => {
 
         if (response.data.Medicines.length > 0) {
           const medicineEntries = response.data.Medicines.map(
-            (item: { medicine: any; Quantity: any }) => ({
+            (item: { medicine: any; quantity: any }) => ({
               medicine: item.medicine,
-              quantity: item.Quantity,
+              quantity: item.quantity,
             })
           );
           console.log("MEDS: ", medicineEntries);
@@ -66,10 +73,34 @@ const viewOrder: React.FC = () => {
           setError("An error occurred");
         }
       });
-  }, [orderItems.length]);
+  }, [orderItems.length, refreshData]);
 
   const handleCancel = async () => {
-    //cancel order function
+    try {
+      if (order.Status == "Shipped") {
+        message.error("Order cannot be cancelled after it has shipped.");
+        return;
+      }
+
+      setLoading(true);
+      await api.put(`/patient/cancelOrder/${id}`, {}, config);
+      setRefreshData(!refreshData);
+      message.success(
+        "Order Cancelled! " +
+          (order.PaymentMethod == "Cash On Delivery"
+            ? ""
+            : "Your money has been refunded to your wallet")
+      );
+    } catch (error) {
+      console.error("Error:", error);
+      if (axios.isAxiosError(error) && error.response) {
+        const apiError = error.response.data;
+        setError(apiError);
+      } else {
+        setError("An error occurred");
+      }
+    }
+    setLoading(false);
   };
 
   if (loading) {
