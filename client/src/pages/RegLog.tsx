@@ -119,7 +119,7 @@ const RegLog: React.FC = () => {
     if (item.type == "Patient") {
       navigate(`/patient/commercial`);
     } else if (item.type == "Pharmacist") {
-      navigate(`/pharmacist/PharmaHome`);
+      navigate(`/pharmacist/Home`);
     } else if (item.type == "Admin") {
       navigate(`/admin/Home`);
     }
@@ -182,9 +182,15 @@ const RegLog: React.FC = () => {
           required={true}
           onBlur={() => handleBlur("password")}
         />
-        
-        <Link to= "/forgotPassword"  className="forgot-pass text-right" style={{display: "block", textAlign:"center"}}>Forgot Password?</Link>
-        
+
+        <Link
+          to="/forgotPassword"
+          className="forgot-pass text-right"
+          style={{ display: "block", textAlign: "center" }}
+        >
+          Forgot Password?
+        </Link>
+
         <button onClick={handleSignIn} type="button" className="submit button">
           Sign In
         </button>

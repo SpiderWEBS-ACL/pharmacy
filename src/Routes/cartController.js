@@ -130,7 +130,7 @@ const removeMedicine = async (req, res) => {
     const cart = await Cart.findById(cartId).populate("medicines");
     const medicineId = req.params.medicineId;
 
-    const medicine = await Medicine.findById(medicineId);
+    var medicine = await Medicine.findById(medicineId);
     if (!cart) {
       return res.status(404).json({ error: "Cart not found" });
     }
