@@ -47,7 +47,8 @@ const { registerPatient,
       addShippingAddress,
        changePasswordPatient,
        viewAllOrders,
-       removeAllOrders} = require("./Routes/patientController");
+       removeAllOrders,
+       cancelOrder} = require("./Routes/patientController");
 
 
 const {
@@ -142,15 +143,16 @@ app.get("/pharmacist/getMedicineQuantitySales/:id",PharmacistProtect, getMedicin
 app.post("/pharmacist/uploadDocuments", PharmacistProtect, uploadDocuments);
 
 //------------------Patient Endpoints---------------------
-app.get("/patient/me",PatientProtect, PatientInfo)
+app.get("/patient/me",PatientProtect, PatientInfo);
 app.post("/patient/register", registerPatient);
 app.get("/patient/orders", PatientProtect, viewAllOrders);
 app.get("/patient/removeOrders", removeAllOrders);
 app.get("/patient/viewOrder/:id", PatientProtect, viewPatientOrder);
 app.get("/patient/shippingAddresses", PatientProtect,viewShippingAdresses)
 app.put("/patient/shippingAddress",PatientProtect, addShippingAddress);
-app.get("/patient/wallet",PatientProtect,viewWallet)
+app.get("/patient/wallet",PatientProtect,viewWallet);
 app.put("/patient/changePassword", PatientProtect, changePasswordPatient);
+app.put("/patient/cancelOrder/:id", cancelOrder);
 
 
 //------------------Medicine Endpoints------------------

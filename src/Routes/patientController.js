@@ -1,5 +1,6 @@
 const patientModel = require("../Models/Patient");
 const orderModel= require("../Models/Orders");
+const medicineModel= require("../Models/Medicine");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -186,6 +187,40 @@ const addShippingAddress = async (req, res) => {
   }
 }
 
+const cancelOrder = async (req,res) => {
+  try {
+    const {id} = req.params;
+    const order = await orderModel.findById(id);
+    if(order.Status == "Shipped"){
+      return res.status(400).json({error: "Order is already shipped, you can not cancel"});
+    }
+    await order.updateOne({Status:"Cancelled"},{new:true});
+    const medicines = order.Medicines;
+    for (let i = 0; i < medicines.length; i++) {
+      const medicineId = medicines[i].medicine.toString();
+      const medicine = await medicineModel.findById(medicineId);
+      await medicine.updateOne({Quantity: medicine.Quantity + medicines[i].Quantity})
+    }
+    //refunding in case using card
+    res.status(200).json(order);
+  }
+
+  catch(error) {
+    res.status(500).json({ error: error.message });
+  }
+
+}
+const choosedeliveryaddress = async (req,res) => {
+  try {
+    const {id} = req.body;
+    const order = await orderModel.findById(id);
+    order.updateOne({DeliveryAddress});
+    
+}
+catch (error){
+  res.status(500).json({ error: error.message });
+}
+}
 
 //---------------------------------------EXPORTS-----------------------------------------------
 
@@ -198,5 +233,6 @@ module.exports = {
   addShippingAddress,
   changePasswordPatient,
   viewAllOrders,
-  removeAllOrders
+  removeAllOrders,
+  cancelOrder,
 };
