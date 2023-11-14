@@ -14,6 +14,8 @@ import {
   validatePassword,
   validateUsername,
 } from "../../utils/ValidationUtils";
+import { Layout } from "antd";
+const { Header } = Layout;
 
 const steps = [
   { id: 1, title: "Account Info", fields: ["Username", "Password", "Email"] },
@@ -141,6 +143,17 @@ function RegisterPharmacist() {
   };
 
   return (
+    <div className="container">
+       <Header
+        style={{
+          background: "transparent",
+          height: 100,
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <img src="/logo.png" alt="logo" height={100} width={100} />
+      </Header>
     <div className="wrapper"  style={{
       boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)", // Add shadow
       border: "1px solid #ccc", // Add border
@@ -408,6 +421,7 @@ function RegisterPharmacist() {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 }

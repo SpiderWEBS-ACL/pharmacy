@@ -136,3 +136,4 @@ dist
 
 #uploaded images
 /client/public/images/**
+/client/public/uploads/**
