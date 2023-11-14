@@ -150,7 +150,7 @@ app.post("/pharmacist/addPharmacist", addPharmacist);
 app.post("/pharmacist/register", registerPharmacist);
 app.put("/pharmacist/changePassword", PharmacistProtect, changePasswordPharmacist);
 
-app.post("/pharmacist/addMedicine", addMedicine),
+app.post("/pharmacist/addMedicine", PharmacistProtect, addMedicine),
 app.put("/pharmacist/updateMedicine/:id",PharmacistProtect, updateMedicine),
 // app.get("/pharmacist/getMedicineDetails", getMedicineDetails);
 app.get("/pharmacist/getMedicineQuantitySales/:id",PharmacistProtect, getMedicineQuantitySales);

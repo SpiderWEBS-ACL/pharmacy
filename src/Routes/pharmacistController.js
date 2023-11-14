@@ -425,6 +425,7 @@ const uploadImage = async (req, res) => {
       try {
         const savedFile = await newFile.save();
 
+        // console.log(savedFile._id);
         
         // return savedFile;
         res.status(201).json(savedFile);

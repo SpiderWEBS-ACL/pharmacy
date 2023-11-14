@@ -32,6 +32,9 @@ const addMedicine = () => {
   const [Alert, setAlert] = useState(false);
   const [error, setError] = useState("");
   const [viewMedsHidden, setViewMedsHidden] = useState<boolean>(true);
+  const [imgObj, setImgObj] = useState({});
+
+  var img : {}
 
   const api = axios.create({
     baseURL: "http://localhost:5000",
@@ -60,13 +63,13 @@ const addMedicine = () => {
         })
         .then((response) => {
           console.log("Response:", response.data);
-          // setAddedMedicine(response.data);
+          img = response.data;
           message.success("Image uploaded successfully");
           setAlert(true);
-          return response.data;
         });
     } catch (err) {
       console.error("Error:", err);
+      
       if (axios.isAxiosError(err) && err.response) {
         const apiError = err.response.data.error;
         setError(apiError);
@@ -75,36 +78,38 @@ const addMedicine = () => {
         setError("An error occurred");
       }
     }
+
+    setImgObj(img);
   };
 
-  type data = {
+  type medicineData = {
     Name? : string,
     Description? : string,
     Price? : Number,
     ActiveIngredients? : string[],
     Quantity? : Number,
     MedicinalUse? : string,
-    Image? :  any
+    Image? :  any,
+    imageURL?: string
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
       
-      const data : data = {
+      const data : medicineData = {
         Name,
         Description,
         Price,
         ActiveIngredients,
         Quantity,
         MedicinalUse,
+        imageURL,
       };
 
       if(image) {
-       const image = await uploadImage();
-       console.log(image);
-
-        data.Image = image
+       await uploadImage();
+        data.Image = img
       }
 
       const response = await api.post(`/pharmacist/addMedicine/`, data, {
@@ -114,12 +119,12 @@ const addMedicine = () => {
         },
       });
       console.log("Response:", response.data);
-      // setAddedMedicine(responseJson.data);
+      setAddedMedicine(response.data);
       message.success("Medicine added successfully");
 
       setAlert(true);
-      return;
-      // navigate("/pharmacist/medicineDetails/" + responseJson.data._id);
+      // return;
+      navigate("/pharmacist/medicineDetails/" + response.data._id);
       //   setViewMedsHidden(false);
     } catch (err) {
       console.error("Error:", err);
@@ -273,14 +278,7 @@ const addMedicine = () => {
                 ) : null
               )}{" "}
             </body>{" "}
-            {/* <InputField
-              id="image"
-              label="Image URL"
-              type="text"
-              value={imageURL}
-              onChange={setImageURL}
-              required={false}
-            ></InputField> */}
+      
             <div className="form-group" >
               <label>
                 <strong>Image:</strong>
@@ -299,7 +297,7 @@ const addMedicine = () => {
                     }}
                   ></input>
                 </form>
-
+{/* 
                 <button
                   style={{
                     marginLeft: "auto",
@@ -312,8 +310,9 @@ const addMedicine = () => {
                   onClick={uploadImage}
                 >
                   Upload Image
-                </button>
+                </button> */}
               </div>
+              
               <br />
               
             </div>

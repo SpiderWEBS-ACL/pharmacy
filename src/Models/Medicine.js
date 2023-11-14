@@ -27,6 +27,9 @@ const medicineSchema = new Schema(
       type: String,
       required: false,
     },
+    imageURL: {       //keep both options
+      type: String
+    },
     Image: {
       type: Schema.Types.ObjectId,
       ref: "File",
