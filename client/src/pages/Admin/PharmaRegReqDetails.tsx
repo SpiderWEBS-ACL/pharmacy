@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-import { Spin, message } from "antd";
+import { Avatar, Card, Col, Row, Spin, message } from "antd";
 import { config, headers } from "../../middleware/tokenMiddleware";
+import FolderIcon from "@mui/icons-material/Folder";
+import {
+  CloseOutlined,
+  DeleteOutlined,
+  InfoCircleOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
 
 const RegistrationRequestDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -16,20 +23,24 @@ const RegistrationRequestDetails: React.FC = () => {
 
   const handleAcceptPharmacist = async (id: string) => {
     try {
-      const response = await api.post(`/acceptPharmacist/${id}`,{},{headers:headers});
+      const response = await api.post(
+        `/acceptPharmacist/${id}`,
+        {},
+        { headers: headers }
+      );
       console.log("Pharmacist accepted:", response.data);
       const updatedRegistrationDetails = { ...registrationDetails };
       updatedRegistrationDetails.accepted = true;
       setRegistrationDetails(updatedRegistrationDetails);
       message.success("Registration Request Accepted!");
-      setTimeout(() =>{
+      setTimeout(() => {
         navigate("/admin/registrationRequests");
-      }, 1000)
+      }, 1000);
     } catch (error) {
       console.error("Error accepting pharmacist:", error);
     }
   };
-  
+
   const handleRejectPharmacist = async (id: string) => {
     try {
       const response = await api.delete(`/rejectPharmacist/${id}`, config);
@@ -38,12 +49,18 @@ const RegistrationRequestDetails: React.FC = () => {
       updatedRegistrationDetails.rejected = true;
       setRegistrationDetails(updatedRegistrationDetails);
       message.success("Registration Request Rejected!");
-      setTimeout(() =>{
+      setTimeout(() => {
         navigate("/admin/registrationRequests");
-      }, 1000)
+      }, 1000);
     } catch (error) {
       console.error("Error rejecting pharmacist:", error);
     }
+  };
+
+  const viewFiles = (filename: String) => {
+    const pdfPath = `http://localhost:5000/uploads/${filename}`;
+
+    window.open(pdfPath, "_blank");
   };
 
   useEffect(() => {
@@ -110,7 +127,9 @@ const RegistrationRequestDetails: React.FC = () => {
                   fontSize: "12px",
                   borderRadius: "5px",
                 }}
-                onClick={()=>{handleAcceptPharmacist(registrationDetails._id)}}
+                onClick={() => {
+                  handleAcceptPharmacist(registrationDetails._id);
+                }}
               >
                 <span aria-hidden="true" style={{ color: "white" }}>
                   &#10003;
@@ -126,7 +145,9 @@ const RegistrationRequestDetails: React.FC = () => {
                   fontSize: "12px",
                   borderRadius: "5px",
                 }}
-                onClick={()=>{handleRejectPharmacist(registrationDetails._id)}}
+                onClick={() => {
+                  handleRejectPharmacist(registrationDetails._id);
+                }}
               >
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -134,6 +155,165 @@ const RegistrationRequestDetails: React.FC = () => {
           </tr>
         </tbody>
       </table>
+      <br />
+
+      <div style={{ justifyContent: "center" }}>
+        <Row gutter={16}>
+          <Col span={8}>
+          <h5><b>Personal ID:</b></h5>
+            <Card
+              style={{
+                display: "flex",
+              }}
+              hoverable
+              onClick={() => viewFiles(registrationDetails.PersonalID.filename)}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  borderBottom: "0.5px solid #333",
+                  paddingBottom: "10px",
+                  // marginTop: 10,
+                }}
+              >
+                <Avatar>
+                  <FolderIcon />
+                </Avatar>
+                <div style={{ marginLeft: "20px", flex: 1 }}>
+                  <div
+                    style={{
+                      fontSize: "15px",
+                      lineHeight: "1",
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <div>
+                      <p>
+                        <strong>File Name: </strong>
+                        {registrationDetails.PersonalID.originalname}
+                      </p>
+                      <p>
+                        <strong>Type: </strong>
+                        {registrationDetails.PersonalID.contentType ===
+                        "application/octet-stream"
+                          ? "PDF"
+                          : registrationDetails.PersonalID.contentType}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          </Col>
+          <Col span={8}>
+            <h5>
+              <b>Pharmacy Degree::</b>
+            </h5>{" "}
+            <Card
+              style={{
+                display: "flex",
+              }}
+              hoverable
+              onClick={() =>
+                viewFiles(registrationDetails.PharmacyDegree.filename)
+              }
+            >
+              <div
+                style={{
+                  display: "flex",
+                  borderBottom: "0.5px solid #333",
+                  paddingBottom: "10px",
+                  // marginTop: 10,
+                }}
+              >
+                <Avatar>
+                  <FolderIcon />
+                </Avatar>
+                <div style={{ marginLeft: "20px", flex: 1 }}>
+                  <div
+                    style={{
+                      fontSize: "15px",
+                      lineHeight: "1",
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <div>
+                      <p>
+                        <strong>File Name: </strong>
+                        {registrationDetails.PharmacyDegree.originalname}
+                      </p>
+                      <p>
+                        <strong>Type: </strong>
+                        {registrationDetails.PharmacyDegree.contentType ===
+                        "application/octet-stream"
+                          ? "PDF"
+                          : registrationDetails.PharmacyDegree.contentType}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          </Col>
+        </Row>
+        <br />
+        <br />
+
+        <h5>
+          <b>Working Licenses:</b>
+        </h5>
+        <Row gutter={16}>
+          {registrationDetails.WorkingLicenses.map((file: any) => (
+            <Col span={8}>
+              <Card
+                style={{
+                  display: "flex",
+                }}
+                hoverable
+                onClick={() => viewFiles(file.filename)}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    borderBottom: "0.5px solid #333",
+                    paddingBottom: "10px",
+                    // marginTop: 10,
+                  }}
+                >
+                  <Avatar>
+                    <FolderIcon />
+                  </Avatar>
+                  <div style={{ marginLeft: "20px", flex: 1 }}>
+                    <div
+                      style={{
+                        fontSize: "15px",
+                        lineHeight: "1",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <div>
+                        <p>
+                          <strong>File Name: </strong>
+                          {file.originalname}
+                        </p>
+                        <p>
+                          <strong>Type: </strong>
+                          {file.contentType === "application/octet-stream"
+                            ? "PDF"
+                            : file.contentType}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      </div>
     </div>
   );
 };
