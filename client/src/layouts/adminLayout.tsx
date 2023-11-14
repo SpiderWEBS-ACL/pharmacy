@@ -12,6 +12,8 @@ import {
   AppstoreOutlined 
 } from "@ant-design/icons";
 import AppRouter from "../AppRouter";
+import ImportedFooter from "../layouts/footer";
+import ImportedHeader from "../layouts/header";
 
 const { Content, Sider } = Layout;
 
@@ -100,10 +102,12 @@ const AdminLayout: React.FC = () => {
           items={items}
         ></Menu>
       </Sider>
-      <Layout>
-        <Content style={{ margin: "0 16px" }}>
+      <Layout style={{height: '100%', overflow: 'scroll'}}>
+        <ImportedHeader/>
+        <Content style={{ margin: "0 16px" , marginLeft: "18%", minHeight: "100vh"}}>
           <AppRouter />
         </Content>
+        <ImportedFooter/>
       </Layout>
     </Layout>
   );
