@@ -99,7 +99,7 @@ const MedicineDetails: React.FC = () => {
         </Row>
       </Col>
       <Col sm={6}>
-        <img src={medicineDetails.imageURL} width={300} height={300}></img>
+        <img src={ medicineDetails.Image? `/images/${medicineDetails.Image.filename}` :medicineDetails.imageURL} width={300} height={300}></img>
         <br /><br />
         <div style={{display: "flex", justifyContent: "center"}}>
         <button

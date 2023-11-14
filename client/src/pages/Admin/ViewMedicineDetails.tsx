@@ -92,7 +92,7 @@ const MedicineDetails: React.FC = () => {
         <Col sm={6}>
           <img
             alt={medicineDetails.Name + " Picture"}
-            src={medicineDetails.imageURL}
+            src={ medicineDetails.Image? `/images/${medicineDetails.Image.filename}` :medicineDetails.imageURL}
             width={300}
             height={300}
           ></img>

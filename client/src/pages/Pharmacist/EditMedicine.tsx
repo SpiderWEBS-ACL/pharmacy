@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import InputField from "../../components/InputField";
 import TextArea from "../../components/TextArea";
-import { Spin , Button , Input} from "antd";
+import { Spin, Button, Input } from "antd";
 import { List, Row } from "antd";
 import { message } from "antd";
 import { config, headers } from "../../middleware/tokenMiddleware";
@@ -16,21 +16,22 @@ const EditMedicine = () => {
   const [Price, setPrice] = useState<number>();
   const [ActiveIngredients, setActiveIngredients] = useState([""]);
   const [Ingredient, setIngredient] = useState<string>("");
-  const [Quantity, setQuantity] = useState<number>();``
+  const [Quantity, setQuantity] = useState<number>();
+  ``;
   const [MedicinalUse, setMedicinalUse] = useState<string>("");
   const [imageURL, setImage] = useState<string>("");
   const [Sales, setSales] = useState<number>();
 
   const [Message, setMessage] = useState("");
   const [Alert, setAlert] = useState(false);
-  
+
   const api = axios.create({
     baseURL: "http://localhost:5000",
   });
 
   useEffect(() => {
     api
-      .get(`/medicine/viewMedicineDetails/${id}`,config)
+      .get(`/medicine/viewMedicineDetails/${id}`, config)
       .then((response) => {
         setName(response.data.Name);
         setPrice(response.data.Price);
@@ -55,9 +56,11 @@ const EditMedicine = () => {
         Description,
         Price,
         MedicinalUse,
-        ActiveIngredients
+        ActiveIngredients,
       };
-      const response = await api.put(`/pharmacist/updateMedicine/${id}`, data, {headers: headers});
+      const response = await api.put(`/pharmacist/updateMedicine/${id}`, data, {
+        headers: headers,
+      });
       console.log("Response:", response.data);
       message.success("Medicine updated successfully");
       setAlert(true);
@@ -74,32 +77,29 @@ const EditMedicine = () => {
     navigate("/pharmacist/medicineDetails/" + id);
   };
 
-  const addIngredient = async(ingredient: string) => {
-    if(ingredient == ""){
+  const addIngredient = async (ingredient: string) => {
+    if (ingredient == "") {
       message.error("Please Specify Active Ingredient");
       return;
-   }
-    else if(ActiveIngredients[0] == ""){
-        setActiveIngredients([Ingredient]);
-    }
-    else{
-        setActiveIngredients([...ActiveIngredients, Ingredient]);
+    } else if (ActiveIngredients[0] == "") {
+      setActiveIngredients([Ingredient]);
+    } else {
+      setActiveIngredients([...ActiveIngredients, Ingredient]);
     }
     setIngredient("");
-    return ActiveIngredients
-}
+    return ActiveIngredients;
+  };
 
-  const removeIngredient = async(index: number) => {
-    if(ActiveIngredients.length == 1){
-        message.error("Medicine must have at least 1 active ingredient")
-    }
-    else{
-        const ingredients = ActiveIngredients.filter((_, i) => i !== index);  
-        setActiveIngredients(ingredients);
+  const removeIngredient = async (index: number) => {
+    if (ActiveIngredients.length == 1) {
+      message.error("Medicine must have at least 1 active ingredient");
+    } else {
+      const ingredients = ActiveIngredients.filter((_, i) => i !== index);
+      setActiveIngredients(ingredients);
     }
     // setIngredient("");
     // return ActiveIngredients
-  }
+  };
 
   if (loading) {
     return (
@@ -120,7 +120,9 @@ const EditMedicine = () => {
     <div className="container mt-5">
       <div className="row justify-content-center">
         <div className="col-md-6">
-          <h1 className="mb-4">Edit Medicine</h1>
+          <h2 className="text-center mb-4">
+            <strong>Edit Medicine</strong>
+          </h2>
           <form onSubmit={handleSubmit}>
             <InputField
               id="Name"
@@ -129,16 +131,14 @@ const EditMedicine = () => {
               value={Name}
               onChange={setName}
             ></InputField>
-
             <TextArea
               id="Description"
               label="Description"
               value={Description}
-              onChange={setDescription} 
-              type="text" 
+              onChange={setDescription}
+              type="text"
               isValid={false}
-               />
-
+            />
             <InputField
               id="MedicinalUse"
               label="Medicinal Use"
@@ -146,7 +146,6 @@ const EditMedicine = () => {
               value={MedicinalUse || 0}
               onChange={setMedicinalUse}
             ></InputField>
-
             <InputField
               id="Price"
               label="Price"
@@ -154,37 +153,36 @@ const EditMedicine = () => {
               value={Price}
               onChange={setPrice}
             ></InputField>
+            <Row>
+              <InputField
+                id="activeIngredients"
+                label="Active Ingredients"
+                type="text"
+                value={Ingredient}
+                onChange={setIngredient}
+              ></InputField>
+              <br></br>
 
-            <Row >
-            <InputField
-              id="activeIngredients"
-              label="Active Ingredients"
-              type="text"
-              value={Ingredient}
-              onChange={setIngredient}
-            ></InputField>
-            <br></br>
-            
-
-            <button
-              className="btn btn-danger"
-              style={{ marginLeft: "10px", marginTop: "20px", width: 50, height:35}}
-              type="button"
-              onClick={(e:any) => addIngredient(Ingredient)}
-            >
-              Add
-            </button>
-
+              <button
+                className="btn btn-danger"
+                style={{
+                  marginLeft: "10px",
+                  marginTop: "20px",
+                  width: 50,
+                  height: 35,
+                }}
+                type="button"
+                onClick={(e: any) => addIngredient(Ingredient)}
+              >
+                Add
+              </button>
             </Row>
+            <body style={{ backgroundColor: "transparent" }}>
+              {ActiveIngredients.map((ingredient: any, index) =>
+                ingredient != "" ? (
+                  <Row>
+                    <li>{ingredient}</li>
 
-           
-            <body style={{backgroundColor: "transparent"}}> 
-                {ActiveIngredients.map((ingredient: any, index) => 
-                
-                    (ingredient!= "" ?
-                    <Row>
-                    <li>{ingredient}</li> 
-                
                     <Button
                       className="btn btn-sm btn-danger"
                       // id = {ingredient.name}
@@ -194,26 +192,23 @@ const EditMedicine = () => {
                         paddingTop: 0,
                         marginLeft: 10,
                       }}
-
                       onClick={(e) => removeIngredient(index)}
-                  >
-                    <span aria-hidden="true">&times;</span>
-                  </Button>
-                </Row>
-                :null
-                )
-                  
-             )} </body>  <br></br>
-
+                    >
+                      <span aria-hidden="true">&times;</span>
+                    </Button>
+                  </Row>
+                ) : null
+              )}{" "}
+            </body>{" "}
+            <br></br>
             <InputField
               id="Quantity"
               label="Quantity"
               type="number"
               value={Quantity || 0}
               onChange={setQuantity}
-              disabled={true}
+              // disabled={true}
             ></InputField>
-
             <InputField
               id="Sales"
               label="Sales"
@@ -222,7 +217,6 @@ const EditMedicine = () => {
               onChange={setSales}
               disabled={true}
             ></InputField>
-
             {/* <InputField
               id="imageURL"
               label="imageURL"
@@ -230,7 +224,6 @@ const EditMedicine = () => {
               value={imageURL}
               onChange={setImage}
             ></InputField> */}
-
             <button
               className="btn btn-primary"
               style={{ marginRight: "10px", marginTop: "10px" }}
@@ -238,7 +231,6 @@ const EditMedicine = () => {
             >
               Submit
             </button>
-
             <button
               className="btn btn-danger"
               style={{ marginRight: "10px", marginTop: "10px" }}

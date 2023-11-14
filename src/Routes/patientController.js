@@ -125,15 +125,19 @@ const viewPatientOrder = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const order = await orderModel.findById(id).populate("Medicines.medicine").populate("Patient");
+    console.log(req.user._id);
+    const order = await orderModel.findById(id).populate("Medicines.medicine").populate("Patient").populate({ 
+      path : 'Medicines.medicine',
+      populate : { path : 'Image'}
+  });
 
     if (!order) {
       return res.status(404).json({ error: "Order not found" });
     }
 
-    // if(order.Patient._id !== req.user._id){
-    //   return res.status(400).json({ error: "You are not authorized to view this order" });
-    // }
+    if(!order.Patient._id.equals(req.user._id)){
+      return res.status(400).json({ error: "You are not authorized to view this order" });
+    }
 
     return res.status(200).json(order);
   } catch (error) {

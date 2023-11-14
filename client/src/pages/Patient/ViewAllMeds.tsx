@@ -313,7 +313,7 @@ const AllMedicines = () => {
           ).map((request: any, index) => (
             <tr key={request._id} style={{ verticalAlign: "middle" }}>
               <td>
-                <img src={request.imageURL} width={200} height={200}></img>
+                <img src={ request.Image? `/images/${request.Image.filename}` :request.imageURL} width={200} height={200}></img>
               </td>
               <td width={500}>
                 <strong style={{ fontSize: 20 }}>{request.Name}</strong>

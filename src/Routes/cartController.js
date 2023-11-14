@@ -167,7 +167,7 @@ const viewCart = async (req, res) => {
   try {
     const cartId = req.params.cartId;
 
-    const cart = await Cart.findById(cartId).populate("medicines");
+    const cart = await Cart.findById(cartId).populate("medicines").populate("medicines.medicine.Image");
     if (!cart) {
       return res.status(404).json({ error: "Cart not found" });
     }
@@ -183,7 +183,7 @@ const viewPatientCart = async (req, res) => {
     const patient = await Patient.findById(patientId);
     const cartId = patient.Cart;
 
-    const cart = await Cart.findById(cartId).populate("medicines");
+    const cart = await Cart.findById(cartId).populate("medicines").populate("medicines.medicine.Image");
     if (!cart) {
       return res.status(404).json({ error: "Cart not found" });
     }
@@ -198,7 +198,7 @@ const viewMedicineDetailsInCart = async (req, res) => {
   try {
     const medicineId = req.params.medicineId;
 
-    const medicine = await Medicine.findById(medicineId);
+    const medicine = await Medicine.findById(medicineId).populate("Image");
     if (!medicine) {
       return res.status(404).json({ error: "Medicine not found" });
     }
@@ -342,11 +342,15 @@ const placeOrder = async (req, res) => {
     const cart = await Cart.findById(cartId);
 
     const medicines = cart.medicines;
+
+    console.log(medicines);
     
     //update sales
     for (let i = 0; i < medicines.length; i++) {
       const medicineId = medicines[i].medicine.toString();
       const medicine = await Medicine.findById(medicineId);
+
+      console.log(medicine);
       await medicine.updateOne( {Sales: medicine.Sales + medicines[i].quantity})
     }
 

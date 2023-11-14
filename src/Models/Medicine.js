@@ -36,7 +36,7 @@ const medicineSchema = new Schema(
     },
     Sales: {
       type: Number,
-      required: false,
+      default: 0,
     },
   },
   { timestamps: true }
