@@ -35,6 +35,18 @@ const pharmacistRegisterSchema = new Schema(
       type: String,
       required: true,
     },
+    PersonalID:{
+      type: Schema.Types.ObjectId,
+      ref: "File",
+    },
+    PharmacyDegree:{
+      type: Schema.Types.ObjectId,
+      ref: "File",
+    },
+    WorkingLicenses:[{
+      type: Schema.Types.ObjectId,
+      ref: "File",
+    }],
   },
   { timestamps: true }
 );
