@@ -19,7 +19,8 @@ const EditMedicine = () => {
   const [Quantity, setQuantity] = useState<number>();
   ``;
   const [MedicinalUse, setMedicinalUse] = useState<string>("");
-  const [imageURL, setImage] = useState<string>("");
+  const [imageURL, setImageURL] = useState<string>("");
+  const [image, setImage] = useState<File>();
   const [Sales, setSales] = useState<number>();
 
   const [Message, setMessage] = useState("");
@@ -39,7 +40,7 @@ const EditMedicine = () => {
         setQuantity(response.data.Quantity);
         setActiveIngredients(response.data.ActiveIngredients);
         setMedicinalUse(response.data.MedicinalUse);
-        setImage(response.data.imageURL);
+        setImage(response.data.Image);
         setSales(response.data.Sales);
       })
       .catch((error) => {
@@ -217,6 +218,28 @@ const EditMedicine = () => {
               onChange={setSales}
               disabled={true}
             ></InputField>
+            <div className="form-group">
+              <label>
+                <strong>Image:</strong>
+              </label>
+
+              <div
+                className="input-container"
+                style={{ display: "flex", marginTop: 10 }}
+              >
+                <form>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e: any) => {
+                      setImage(e.target.files[0]);
+                    }}
+                  ></input>
+                </form>
+              </div>
+
+              <br />
+            </div>
             {/* <InputField
               id="imageURL"
               label="imageURL"

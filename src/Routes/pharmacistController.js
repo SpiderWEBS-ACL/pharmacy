@@ -124,13 +124,11 @@ const registerPharmacist = async (req, res) => {
 
 const addMedicine = async (req, res) => {
   try {
-
     const exists = await medicineModel.findOne({
       Name: { $regex: "^" + req.body.Name + "$", $options: "i" },
     });
     if (!exists) {
-  
-    const newMedicine = await medicineModel.create(req.body);
+      const newMedicine = await medicineModel.create(req.body);
 
       res.status(201).json(newMedicine);
     } else {
@@ -198,7 +196,7 @@ const storage = multer.diskStorage({
     cb(null, "./client/public/uploads");
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname + "-" +  Date.now());
+    cb(null, file.originalname + "-" + Date.now());
   },
 });
 
@@ -231,23 +229,25 @@ const uploadDocuments = async (req, res) => {
   });
 };
 
-const storageID = multer.diskStorage({
-  fileName: function (req, file, cb) {
-    cb(null, file.originalname);
+const storageFiles = multer.diskStorage({
+  destination: function (req, file, cb) {
+    // Uploads is the Upload_folder_name
+    cb(null, "./client/public/uploads");
+  },
+  filename: function (req, file, cb) {
+    cb(null, `${Date.now()}-${file.originalname}`);
   },
 });
 
-const uploadID = multer({ storage: storageID });
+const uploads = multer({ storage: storageFiles });
 
 const uploadPersonalID = async (req, res) => {
-
-  uploadID.single("file")(req, res, async (err) => {
+  uploads.single("file")(req, res, async (err) => {
     if (err) {
       console.error(err);
       res.status(500).send("Server Error");
     } else {
-
-      const { id } = req.params;  //get pharmacist id 
+      const { id } = req.params; //get regReq id
 
       if (!id) {
         res.status(400).send("Pharmacist's ID is missing");
@@ -268,16 +268,19 @@ const uploadPersonalID = async (req, res) => {
         originalname: file.originalname,
         path: file.path,
         filedata: file.buffer,
+        contentType: file.mimetype,
         Pharmacist: id,
       };
 
       try {
-        const savedFile = await fileModel.create(newFile);    //save file in db
-        const pharmacist = await pharmacistModel.findByIdAndUpdate(id, {    //add ID to pharm in db
-          PersonalID: savedFile._id,
-        });
+        const savedFile = await fileModel.create(newFile); //save file in db
+        const pharmacistReq =
+          await PharmacistRegisterRequestModel.findByIdAndUpdate(id, {
+            //add ID to pharm in db
+            PersonalID: savedFile._id,
+          });
 
-        await pharmacist.save();
+        await pharmacistReq.save();
 
         res.status(201).json(savedFile);
       } catch (err) {
@@ -288,22 +291,13 @@ const uploadPersonalID = async (req, res) => {
   });
 };
 
-const storageDegree = multer.diskStorage({
-  fileName: function (req, file, cb) {
-    cb(null, file.originalname);
-  },
-});
-
-const uploadDegree = multer({ storage: storageDegree });
-
 const uploadPharmacyDegree = async (req, res) => {
-
-  uploadDegree.single("file")(req, res, async (err) => {
+  uploads.single("file")(req, res, async (err) => {
     if (err) {
       console.error(err);
       res.status(500).send("Server Error");
     } else {
-      const { id } = req.params; 
+      const { id } = req.params;
 
       if (!id) {
         res.status(400).send("Pharmacist's ID is missing");
@@ -322,15 +316,17 @@ const uploadPharmacyDegree = async (req, res) => {
         originalname: file.originalname,
         path: file.path,
         filedata: file.buffer,
+        contentType: file.mimetype,
         Pharmacist: id,
       };
 
       try {
         const savedFile = await fileModel.create(newFile);
-        const pharmacist = await pharmacistModel.findByIdAndUpdate(id, {
-          PharmacyDegree: savedFile._id,
-        });
-        await pharmacist.save();
+        const pharmacistReq =
+          await PharmacistRegisterRequestModel.findByIdAndUpdate(id, {
+            PharmacyDegree: savedFile._id,
+          });
+        await pharmacistReq.save();
         res.status(201).json(savedFile);
       } catch (err) {
         console.error(err);
@@ -340,50 +336,41 @@ const uploadPharmacyDegree = async (req, res) => {
   });
 };
 
-const storageLicense = multer.diskStorage({
-  fileName: function (req, file, cb) {
-    cb(null, file.originalname);
-  },
-});
-
-const uploadLicense = multer({ storage: storageLicense });
-
 const uploadLicenses = async (req, res) => {
-
-  uploadLicense.array("files")(req, res, async (err) => {
+  uploads.array("files")(req, res, async (err) => {
     if (err) {
       console.error(err);
       res.status(500).send("Server Error");
     } else {
+      const { id } = req.params;
 
-      let newFiles = [];
-
-      const { id } = req.params; 
-
-      if (id && req.files) {
-        newFiles = req.files.map((file) => ({
-          filename: file.filename,
-          originalname: file.originalname,
-          path: file.path,
-          filedata: file.buffer,
-          Pharmacist: id,
-        }));
-      } else {
-        res.status(404).json({ error: "No file(s) was selected" });
+      if (!id) {
+        res.status(400).send("Pharmacist's ID is missing");
+        return;
       }
+
+      const newFiles = req.files.map((file) => ({
+        filename: file.filename,
+        originalname: file.originalname,
+        path: file.path,
+        Patient: id,
+        contentType: file.mimetype,
+      }));
 
       try {
         const savedFiles = await fileModel.create(newFiles);
-        const pharmacist = await pharmacistModel.findByIdAndUpdate(
-          id,
-          {
-            $push: {
-              WorkingLicenses: { $each: savedFiles.map((file) => file._id) },
+
+        const pharmacistReq =
+          await PharmacistRegisterRequestModel.findByIdAndUpdate(
+            id,
+            {
+              $push: {
+                WorkingLicenses: { $each: savedFiles.map((file) => file._id) },
+              },
             },
-          },
-          { new: true }
-        );
-        await pharmacist.save();
+            { new: true }
+          );
+        await pharmacistReq.save();
         res.status(201).json(savedFiles);
       } catch (err) {
         console.error(err);
@@ -393,6 +380,21 @@ const uploadLicenses = async (req, res) => {
   });
 };
 
+const getDocuments = async (req, res) => {
+  const id = req.user.id;
+  try {
+    let files = [];
+    files = await fileModel.find({ Pharmacist: id });
+    if (!files) {
+      return res.status(404).json({ error: "No files found" });
+    }
+    if (files) {
+      res.status(200).json(files);
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 //------------------------------------UPLOAD IMAGE--------------------------------------------
 
 const storageImg = multer.diskStorage({
@@ -405,9 +407,7 @@ const storageImg = multer.diskStorage({
   },
 });
 
-
 const uploadImage = async (req, res) => {
-
   const upload = multer({ storage: storageImg });
 
   upload.single("image")(req, res, async (err) => {
@@ -415,23 +415,18 @@ const uploadImage = async (req, res) => {
       console.error(err);
       res.status(500).send("Server Error");
     } else {
-
       const newFile = new fileModel({
         filename: req.file.filename,
         originalname: req.file.originalname,
         path: req.file.path,
+        contentType: req.file.contentType,
       });
 
       try {
         const savedFile = await newFile.save();
-
-        // console.log(savedFile._id);
-        
-        // return savedFile;
         res.status(201).json(savedFile);
       } catch (err) {
         console.error(err);
-        throw err;
         res.status(500).send("Server Error");
       }
     }
@@ -453,5 +448,6 @@ module.exports = {
   changePasswordPharmacist,
   uploadPharmacyDegree,
   uploadPersonalID,
-  uploadLicenses
+  uploadLicenses,
+  getDocuments,
 };

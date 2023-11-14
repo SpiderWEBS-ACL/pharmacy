@@ -40,6 +40,7 @@ import Success from "./pages/Patient/Success";
 import Cancel from "./pages/Patient/Cancel";
 import ViewAllOrders from "./pages/Patient/ViewAllOrders";
 import Commercial from "./pages/Patient/Commercial";
+import UploadDocuments from "./pages/Pharmacist/UploadDocuments";
 
 
 const AppRouter: React.FC = () => {
@@ -148,6 +149,7 @@ const AppRouter: React.FC = () => {
       return (
         <Routes>
           <Route path="/forgotPassword" element={<ForgotPassword />} />
+          <Route path="/uploadDocuments/:id" element={<UploadDocuments />} />
           <Route path="/" element={<RegLog />} />
         </Routes>
       );

@@ -21,6 +21,14 @@ const fileSchema = new Schema(
         type: String,
         required: true
     },
+    path: {
+      type: String,
+      required: true
+    },
+    contentType:{
+      type: String,
+      required: true
+    },
   }
 );
 
