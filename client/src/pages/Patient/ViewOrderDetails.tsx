@@ -155,11 +155,11 @@ const viewOrder: React.FC = () => {
           </thead>
 
           <tbody>
-            {medicines.map((request: any, index) => (
+            {medicines.map((request: any, index) =>{ return (
               <tr key={request._id} style={{ verticalAlign: "middle" }}>
                 <td>
                   <img
-                    src={request.medicine.imageURL}
+                    src={ request.medicine.Image? `/images/${request.medicine.Image.filename}` :request.medicine.imageURL}
                     width={100}
                     height={100}
                   ></img>
@@ -178,7 +178,7 @@ const viewOrder: React.FC = () => {
                   x{request.quantity}
                 </td>
               </tr>
-            ))}
+            )})}
           </tbody>
         </table>
       </Card>

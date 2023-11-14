@@ -160,7 +160,7 @@ const viewCart: React.FC = () => {
           {medicines.map((request: any, index) => (
             <tr key={request._id} style={{ verticalAlign: "middle" }}>
               <td>
-                <img src={request.imageURL} width={100} height={100}></img>
+                <img src={ request.Image? `/images/${request.Image.filename}` :request.imageURL} width={100} height={100}></img>
               </td>
               <td width={500}>
                 <strong style={{ fontSize: 20 }}>{request.Name}</strong>

@@ -242,7 +242,7 @@ const OrderConfirmation: React.FC = () => {
                   <tr key={request._id} style={{ verticalAlign: "middle" }}>
                     <td>
                       <img
-                        src={request.imageURL}
+                        src={ request.Image? `/images/${request.Image.filename}` :request.imageURL}
                         width={100}
                         height={100}
                       ></img>

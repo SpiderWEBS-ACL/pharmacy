@@ -305,7 +305,7 @@ const AllMedicines = () => {
               <td>
                 <img
                   alt={request.Name + " Picture"}
-                  src={request.imageURL}
+                  src={ request.Image? `/images/${request.Image.filename}` :request.imageURL}
                   width={200}
                   height={200}
                 ></img>

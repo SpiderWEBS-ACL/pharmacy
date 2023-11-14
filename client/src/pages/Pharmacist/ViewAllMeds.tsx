@@ -19,8 +19,6 @@ const AllMedicines = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [filteredResults, setfilteredResults] = useState([]);
 
-  var imgPath : string;
-
   const api = axios.create({
     baseURL: "http://localhost:5000",
   });
