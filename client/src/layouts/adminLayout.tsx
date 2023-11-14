@@ -78,6 +78,9 @@ const AdminLayout: React.FC = () => {
         collapsible
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
+        style={{height: '100vh', position: "fixed"}}
+        // style={{background: "#c9c9c9"}}
+        theme = "light"
       >
         <div className="demo-logo-vertical" />
         <Menu
@@ -91,7 +94,7 @@ const AdminLayout: React.FC = () => {
               navigate(key);
             }
           }}
-          theme="dark"
+          theme="light"
           defaultSelectedKeys={["1"]}
           mode="inline"
           items={items}
