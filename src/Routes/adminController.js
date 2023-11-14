@@ -6,6 +6,7 @@ const pharmacistRegisterRequestModel = require("../Models/PharmacistRegisterRequ
 const bcrypt = require("bcrypt");
 
 const { default: mongoose } = require("mongoose");
+const fileModel = require("../Models/File");
 
 //-------------------------------ADMIN-----------------------------
 
@@ -251,7 +252,7 @@ const acceptPharmacistRequest = async (req, res) => {
         .status(404)
         .json({ error: "Pharmacist registration request not found" });
     }
-    const newPharmacist = new pharmacistModel({
+    const newPharmacist = await pharmacistModel.create({
       Username: registrationRequest.Username,
       Name: registrationRequest.Name,
       Email: registrationRequest.Email,
@@ -260,8 +261,15 @@ const acceptPharmacistRequest = async (req, res) => {
       HourlyRate: registrationRequest.HourlyRate,
       Affiliation: registrationRequest.Affiliation,
       EducationalBackground: registrationRequest.EducationalBackground,
+      PersonalID: registrationRequest.PersonalID,
+      PharmacyDegree: registrationRequest.PharmacyDegree,
+      WorkingLicenses: registrationRequest.WorkingLicenses
     });
     await newPharmacist.save();
+
+    //link files to pharmacist
+    const files = await fileModel.updateMany({Pharmacist: id}, {Pharmacist: newPharmacist._id}, {new:true});
+
     await pharmacistRegisterRequestModel.findByIdAndDelete(id);
 
     res.status(200).json({ message: "Pharmacist request accepted" });
@@ -269,6 +277,8 @@ const acceptPharmacistRequest = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+
 const rejectPharmacistRequest = async (req, res) => {
   try {
     const { id } = req.params;
@@ -291,6 +301,18 @@ const rejectPharmacistRequest = async (req, res) => {
   }
 };
 
+
+const deleteFiles= async(req, res) => {
+  try{
+    // const {id} = req.user;
+    await fileModel.deleteMany({});
+
+    res.status(200).json("Files Deleted");
+  }
+  catch(error){
+    res.status(400).json({error: error.message})
+  }}
+
 //---------------------------------------EXPORTS-----------------------------------------------
 
 module.exports = {
@@ -307,4 +329,5 @@ module.exports = {
   acceptPharmacistRequest,
   rejectPharmacistRequest,
   changePasswordAdmin,
+  deleteFiles
 };

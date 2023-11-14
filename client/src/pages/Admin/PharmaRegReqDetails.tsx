@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
-import { Spin } from "antd";
+import { useNavigate, useParams } from "react-router-dom";
+import { Spin, message } from "antd";
 import { config, headers } from "../../middleware/tokenMiddleware";
 
 const RegistrationRequestDetails: React.FC = () => {
@@ -12,6 +12,8 @@ const RegistrationRequestDetails: React.FC = () => {
     baseURL: "http://localhost:5000/admin",
   });
 
+  const navigate = useNavigate();
+
   const handleAcceptPharmacist = async (id: string) => {
     try {
       const response = await api.post(`/acceptPharmacist/${id}`,{},{headers:headers});
@@ -19,6 +21,10 @@ const RegistrationRequestDetails: React.FC = () => {
       const updatedRegistrationDetails = { ...registrationDetails };
       updatedRegistrationDetails.accepted = true;
       setRegistrationDetails(updatedRegistrationDetails);
+      message.success("Registration Request Accepted!");
+      setTimeout(() =>{
+        navigate("/admin/registrationRequests");
+      }, 1000)
     } catch (error) {
       console.error("Error accepting pharmacist:", error);
     }
@@ -31,6 +37,10 @@ const RegistrationRequestDetails: React.FC = () => {
       const updatedRegistrationDetails = { ...registrationDetails };
       updatedRegistrationDetails.rejected = true;
       setRegistrationDetails(updatedRegistrationDetails);
+      message.success("Registration Request Rejected!");
+      setTimeout(() =>{
+        navigate("/admin/registrationRequests");
+      }, 1000)
     } catch (error) {
       console.error("Error rejecting pharmacist:", error);
     }

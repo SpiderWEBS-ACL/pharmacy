@@ -1,4 +1,5 @@
 import React, { useState, useEffect, ChangeEvent } from "react";
+import "../../layouts/footer.css"
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import Cookies from "js-cookie";
@@ -27,7 +28,6 @@ export interface JwtPayload {
 }
 
 const UploadDocuments = () => {
-  const [loading, setLoading] = useState(false);
   const api = axios.create({
     baseURL: "http://localhost:5000/",
   });
@@ -51,6 +51,7 @@ const UploadDocuments = () => {
     contentType: string;
   };
 
+  const [loading, setLoading] = useState(true);
   const [activeTabKey1, setActiveTabKey1] = useState<string>("tab1");
   const [healthRecords, setHealthRecords] = useState<any[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
@@ -59,6 +60,8 @@ const UploadDocuments = () => {
   const [personalID, setPersonalID] = useState<FileObj>();
   const [degree, setDegree] = useState<FileObj>();
   const [licenses, setLicenses] = useState<any[]>([]);
+
+  const navigate = useNavigate();
 
   const tabList = [
     {
@@ -194,6 +197,20 @@ const UploadDocuments = () => {
     }
   };
 
+  const handleSubmit = async() => {
+    if(!personalID || !degree || licenses.length == 0){
+        message.error("Please upload all required documents");
+        return;
+    }
+
+    message.success("Documents Submitted! Please wait while one of our admins reviews your application");
+  
+    setTimeout(() => {
+        navigate('/');
+        window.location.reload();
+    }, 2000);
+  }
+
   const contentList: Record<string, React.ReactNode> = {
     tab1: (
       <p>
@@ -217,7 +234,7 @@ const UploadDocuments = () => {
                   display: "flex",
                   justifyContent: "space-between",
                 }}
-                onClick={() => viewFiles(personalID.originalname)}
+                onClick={() => viewFiles(personalID.filename)}
               >
                 <div>
                   <p>
@@ -283,7 +300,7 @@ const UploadDocuments = () => {
                   display: "flex",
                   justifyContent: "space-between",
                 }}
-                onClick={() => viewFiles(degree.originalname)}
+                onClick={() => viewFiles(degree.filename)}
               >
                 <div>
                   <p>
@@ -351,7 +368,7 @@ const UploadDocuments = () => {
                     display: "flex",
                     justifyContent: "space-between",
                   }}
-                  onClick={() => viewFiles(file.name)}
+                  onClick={() => viewFiles(file.filename)}
                 >
                   <div>
                     <p>
@@ -373,8 +390,8 @@ const UploadDocuments = () => {
                 </div>
               </div>
             </div>
+            
           ))}
-        </div>
 
         <Row
           style={{
@@ -396,11 +413,13 @@ const UploadDocuments = () => {
             Upload!
           </Button>
         </Row>
+        </div>
       </p>
     ),
   };
 
   return (
+    <div>
     <div className="container">
       <Header
         style={{
@@ -435,8 +454,34 @@ const UploadDocuments = () => {
               {contentList[activeTabKey1]}
             </Card>
           </Col>
+<br />
+        <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <button
+              className="btn btn-success"
+              style={{ alignSelf: "flex-start", marginLeft: "auto" }}
+              onClick={handleSubmit}
+            >
+              Submit
+            </button>
+          </div>
         </div>
       </div>
+    </div>
+    <div className="footer" style={{marginTop: "2%", paddingLeft: 30, width: "100%"}}>
+      <p>Contact</p>
+      <p>Socials</p>
+      <p>Legal</p>
+      <p>support@spiderwebs.com</p>
+      <p>pharma_spiderwebs</p>
+      <p>spiderwebs &copy; </p>
+      <p>+9874544569 </p>
+    </div>
     </div>
   );
 };
