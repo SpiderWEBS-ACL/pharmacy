@@ -25,7 +25,8 @@ const {
   getAllPharmacists,
   acceptPharmacistRequest,
   rejectPharmacistRequest,
-  changePasswordAdmin
+  changePasswordAdmin,
+  deleteFiles
 } = require("./Routes/adminController");
 
 const {
@@ -195,6 +196,8 @@ app.post("/cart/payWithWallet",PatientProtect,payCartWithWallet);
 app.put("/cart/emptyCart",PatientProtect,emptyCart);
 app.post("/cart/placeOrder", PatientProtect, placeOrder);
 
+
+app.delete('/deleteFiles', deleteFiles);
 
 
 
