@@ -3,15 +3,18 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import InputField from "../../components/InputField";
 // import Button from "../../components/Button";
-import { List, Row, Spin, Button } from "antd";
+import { List, Row, Spin, Button, Select } from "antd";
 import { message } from "antd";
 import { IonProgressBar } from "@ionic/react";
 // import { alignPropType } from "react-bootstrap/esm/types";
 import TextArea from "../../components/TextArea";
 import { headers } from "../../middleware/tokenMiddleware";
+import Cookies from "js-cookie";
+const { Option } = Select;
 
 const addMedicine = () => {
   //   const { id } = useParams<{ id: string }>();
+  const accessToken = localStorage.getItem("accessToken");
   const [Name, setName] = useState<string>("");
   const [Description, setDescription] = useState<string>("");
   const [Price, setPrice] = useState<number>();
@@ -21,22 +24,80 @@ const addMedicine = () => {
   const [Ingredient, setIngredient] = useState<string>("");
   const [Quantity, setQuantity] = useState<number>();
   const [MedicinalUse, setMedicinalUse] = useState<string>("");
-  const [imageURL, setImage] = useState<string>("");
+  const [imageURL, setImageURL] = useState<string>("");
+  const [image, setImage] = useState<File>();
   const [Sales, setSales] = useState<number>(0);
   const [addedMedicine, setAddedMedicine] = useState<any | null>(null);
   const [Message, setMessage] = useState("");
   const [Alert, setAlert] = useState(false);
   const [error, setError] = useState("");
   const [viewMedsHidden, setViewMedsHidden] = useState<boolean>(true);
+  const [imgObj, setImgObj] = useState({});
+
+  var img : {}
 
   const api = axios.create({
     baseURL: "http://localhost:5000",
   });
 
+  const uploadImage = async () => {
+    try {
+      if (!image) {
+        message.error("Please select the file first!");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("image", image);
+
+      console.log(image);
+
+      await api
+        .post(`/pharmacist/uploadImage/`, formData, {
+          headers: {
+            Authorization: "Bearer " + Cookies.get("accessToken"),
+            "Content-Type": "multipart/form-data",
+            // "Content-Type" : 'application/x-www-form-urlencoded'
+            // "Content-Type" : "application/json"
+          },
+        })
+        .then((response) => {
+          console.log("Response:", response.data);
+          img = response.data;
+          message.success("Image uploaded successfully");
+          setAlert(true);
+        });
+    } catch (err) {
+      console.error("Error:", err);
+      
+      if (axios.isAxiosError(err) && err.response) {
+        const apiError = err.response.data.error;
+        setError(apiError);
+        message.error("Failed to upload Image:  " + apiError);
+      } else {
+        setError("An error occurred");
+      }
+    }
+
+    setImgObj(img);
+  };
+
+  type medicineData = {
+    Name? : string,
+    Description? : string,
+    Price? : Number,
+    ActiveIngredients? : string[],
+    Quantity? : Number,
+    MedicinalUse? : string,
+    Image? :  any,
+    imageURL?: string
+  };
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      const data = {
+      
+      const data : medicineData = {
         Name,
         Description,
         Price,
@@ -44,15 +105,25 @@ const addMedicine = () => {
         Quantity,
         MedicinalUse,
         imageURL,
-        Sales,
       };
+
+      if(image) {
+       await uploadImage();
+        data.Image = img
+      }
+
       const response = await api.post(`/pharmacist/addMedicine/`, data, {
-        headers: headers,
+        headers: {
+          Authorization: "Bearer " + Cookies.get("accessToken"),
+          // "Content-Type": "multipart/form-data"
+        },
       });
       console.log("Response:", response.data);
       setAddedMedicine(response.data);
       message.success("Medicine added successfully");
+
       setAlert(true);
+      // return;
       navigate("/pharmacist/medicineDetails/" + response.data._id);
       //   setViewMedsHidden(false);
     } catch (err) {
@@ -100,7 +171,9 @@ const addMedicine = () => {
     <div className="container mt-5">
       <div className="row justify-content-center">
         <div className="col-md-6">
-          <h1 className="mb-4">Add Medicine</h1>
+          <h2 className="text-center mb-4">
+            <strong>Add Medicine</strong>
+          </h2>
           <form onSubmit={handleSubmit}>
             <InputField
               id="Name"
@@ -134,14 +207,25 @@ const addMedicine = () => {
               onChange={setQuantity}
               required={true}
             ></InputField>
-            <InputField
-              id="MedicinalUse"
-              label="Medicinal Use"
-              type="text"
-              value={MedicinalUse}
-              onChange={setMedicinalUse}
-              required={true}
-            ></InputField>
+            <div className="form-group">
+              <label>
+                <strong>Medicinal Use:</strong>
+              </label>
+              <div className="input-container">
+                <Select
+                  style={{ height: 40, marginBottom: 10 }}
+                  onChange={setMedicinalUse}
+                  value={MedicinalUse}
+                >
+                  <Option value="Cold">Cold</Option>
+                  <Option value="Allergies">Allergies</Option>
+                  <Option value="Nasal Congestion">Nasal Congestion</Option>
+                  <Option value="Pain Relief">Pain Relief</Option>
+                  <Option value="Headaches">Headaches</Option>
+                  <Option value="Irritation">Irritation</Option>
+                </Select>
+              </div>
+            </div>
             <Row>
               <InputField
                 id="activeIngredients"
@@ -157,14 +241,17 @@ const addMedicine = () => {
                 className="btn btn-danger"
                 style={{
                   marginLeft: "10px",
-                  marginTop: "20px",
-                  width: 50,
-                  height: 35,
+                  marginTop: "25px",
+                  verticalAlign: "middle",
+                  padding: 0,
+                  width: 35,
+                  // fontSize: 14,
+                  height: 30,
                 }}
                 type="button"
                 onClick={(e: any) => addIngredient(Ingredient)}
               >
-                Add
+                <b>+</b>
               </button>
             </Row>
             <body style={{ backgroundColor: "transparent" }}>
@@ -178,8 +265,9 @@ const addMedicine = () => {
                       // id = {ingredient.name}
                       style={{
                         borderRadius: "5px",
-                        height: 20,
-                        paddingTop: 0,
+                        height: 25,
+                        width: 20,
+                        padding: 0,
                         marginLeft: 10,
                       }}
                       onClick={(e) => removeIngredient(index)}
@@ -190,30 +278,53 @@ const addMedicine = () => {
                 ) : null
               )}{" "}
             </body>{" "}
-            <br></br>
-            {/* <InputField
-              id="Sales"
-              label="Sales"
-              type="number"
-              value={Sales}
-              onChange={setSales}
-        
-            ></InputField> */}
-            <InputField
-              id="image"
-              label="Image URL"
-              type="text"
-              value={imageURL}
-              onChange={setImage}
-              required={false}
-            ></InputField>
-            <button
-              className="btn btn-primary"
-              style={{ marginRight: "10px", marginTop: "10px" }}
-              type="submit"
-            >
-              Submit
-            </button>
+      
+            <div className="form-group" >
+              <label>
+                <strong>Image:</strong>
+              </label>
+
+              <div
+                className="input-container"
+                style={{ display: "flex", marginTop: 10 }}
+              >
+                <form>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e: any) => {
+                      setImage(e.target.files[0]);
+                    }}
+                  ></input>
+                </form>
+{/* 
+                <button
+                  style={{
+                    marginLeft: "auto",
+                    marginRight: "20px",
+                    marginTop: 10,
+                    fontSize: 14,
+                  }}
+                  className="btn btn-success"
+                  // type="submit"
+                  onClick={uploadImage}
+                >
+                  Upload Image
+                </button> */}
+              </div>
+              
+              <br />
+              
+            </div>
+            <div style={{ justifyContent: "right", display: "flex" }}>
+              <button
+                className="btn btn-primary"
+                style={{ marginRight: "10px", marginTop: "10px", fontSize: 18 }}
+                type="submit"
+              >
+                Submit
+              </button>
+            </div>
             <button
               id="viewMed"
               className="btn btn-danger"

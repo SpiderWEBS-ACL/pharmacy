@@ -1,15 +1,18 @@
 const mongoose = require("mongoose");
-const multer = require('multer');
 
 const Schema = mongoose.Schema;
 
 const fileSchema = new Schema(
   {
+    Patient: {
+      type: Schema.Types.ObjectId,
+      ref: "Patient",
+    },
     Pharmacist: {
       type: Schema.Types.ObjectId,
       ref: "Pharmacist",
-      required: true,
     },
+
     filename:{
         type: String,
         required: true
@@ -18,13 +21,10 @@ const fileSchema = new Schema(
         type: String,
         required: true
     },
-    path:{
-        type: String,
-        required: true
-    }
-  },
-  { timestamps: true }
+  }
 );
 
 const File = mongoose.model("File", fileSchema);
 module.exports = File;
+
+

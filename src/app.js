@@ -5,6 +5,9 @@ mongoose.set('strictQuery', false);
 require("dotenv").config();
 const bcrypt = require("bcrypt");
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const multer = require("multer");
+const upload = multer();
+const bodyParser = require('body-parser')
 
 const MongoURI = process.env.MONGO_URI;
 const PORT = process.env.PORT || "5000";
@@ -36,6 +39,10 @@ const {
   uploadDocuments,
   pharmacistInfo,
   changePasswordPharmacist,
+  uploadImage,
+  uploadPharmacyDegree,
+  uploadPersonalID,
+  uploadLicenses,
 } = require("./Routes/pharmacistController");
 
 
@@ -82,6 +89,7 @@ const { AdminProtect, PharmacistProtect, PatientProtect } = require("./middlewar
 
 const app = express();
 app.use(cors());
+app.use(express.json());
 
 
 // MongoDB Connection
@@ -99,7 +107,14 @@ mongoose
 app.get("/", (req, res) => {
   res.status(200).send("You have everything installed!");
 });
+
+app.use(express.urlencoded({ extended: true }));
+
 app.use(express.json());
+
+
+
+//------------------STORAGE------------------------
 
 
 // console.log(await bcrypt.compare("adminPass234", "$2b$10$GDx2MtOUhksjweB5.BRHA.e6teuzfGVJA5eL3pBomWk1culO4atx2"));
@@ -135,12 +150,16 @@ app.post("/pharmacist/addPharmacist", addPharmacist);
 app.post("/pharmacist/register", registerPharmacist);
 app.put("/pharmacist/changePassword", PharmacistProtect, changePasswordPharmacist);
 
-app.post("/pharmacist/addMedicine",PharmacistProtect, addMedicine),
+app.post("/pharmacist/addMedicine", PharmacistProtect, addMedicine),
 app.put("/pharmacist/updateMedicine/:id",PharmacistProtect, updateMedicine),
 // app.get("/pharmacist/getMedicineDetails", getMedicineDetails);
 app.get("/pharmacist/getMedicineQuantitySales/:id",PharmacistProtect, getMedicineQuantitySales);
 
 app.post("/pharmacist/uploadDocuments", PharmacistProtect, uploadDocuments);
+app.post("/pharmacist/uploadImage", PharmacistProtect, uploadImage);
+app.post("/pharmacist/uploadPersonalID/:id", uploadPersonalID);
+app.post("/pharmacist/uploadDegree/:id", uploadPharmacyDegree);
+app.post("/pharmacist/uploadLicense/:id", uploadLicenses);
 
 //------------------Patient Endpoints---------------------
 app.get("/patient/me",PatientProtect, PatientInfo);

@@ -2,7 +2,7 @@ const medicineModel = require("../Models/Medicine");
 
 const getAllMedicines = async (req, res) => {
   try {
-    const medicines = await medicineModel.find({});
+    const medicines = await medicineModel.find({}).populate("Image");
     res.status(201).json(medicines);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -17,7 +17,7 @@ const searchForMedicine = async (req, res) => {
   try {
     const medicine = await medicineModel.find({
       Name: { $regex: Name, $options: "i" },
-    });
+    }).populate("Image");
 
     // if (medicine.length == 0) {
     //   return res.status(404).json({ error: "Medicine Not Found" });
@@ -65,7 +65,7 @@ const viewMedicineDetails = async(req, res) => {
         return res.status(404).json({ error: "ID parameter required" });
         }
     
-        const medicine = await medicineModel.findById(id);
+        const medicine = await medicineModel.findById(id).populate("Image");
     
         if (!medicine) {
         return res.status(404).json({ error: "Medicine Not Found" });
