@@ -419,7 +419,7 @@ const uploadImage = async (req, res) => {
         filename: req.file.filename,
         originalname: req.file.originalname,
         path: req.file.path,
-        contentType: req.file.contentType,
+        contentType: req.file.mimetype,
       });
 
       try {

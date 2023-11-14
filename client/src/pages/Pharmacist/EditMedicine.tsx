@@ -30,6 +30,8 @@ const EditMedicine = () => {
     baseURL: "http://localhost:5000",
   });
 
+  var img : {}
+
   useEffect(() => {
     api
       .get(`/medicine/viewMedicineDetails/${id}`, config)
@@ -49,16 +51,35 @@ const EditMedicine = () => {
     setLoading(false);
   }, [id]);
 
+  type medicineData = {
+    Name? : string,
+    Description? : string,
+    Price? : Number,
+    ActiveIngredients? : string[],
+    Quantity? : Number,
+    MedicinalUse? : string,
+    Image? :  any,
+    imageURL?: string
+  };
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      const data = {
+      const data : medicineData = {
         Name,
         Description,
         Price,
-        MedicinalUse,
         ActiveIngredients,
+        Quantity,
+        MedicinalUse,
+        imageURL,
       };
+
+      if(image) {
+       await uploadImage();
+        data.Image = img
+      }
+      
       const response = await api.put(`/pharmacist/updateMedicine/${id}`, data, {
         headers: headers,
       });
@@ -70,6 +91,44 @@ const EditMedicine = () => {
       console.error("Error:", error);
       message.error("Failed to update medicine");
     }
+  };
+
+
+  const uploadImage = async () => {
+    try {
+      if (!image) {
+        message.error("Please select the file first!");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("image", image);
+
+      console.log(image);
+
+      await api
+        .post(`/pharmacist/uploadImage/`, formData, {
+          headers: headers,
+        })
+        .then((response) => {
+          console.log("Response:", response.data);
+          img = response.data;
+          message.success("Image uploaded successfully");
+          setAlert(true);
+        });
+    } catch (err) {
+      console.error("Error:", err);
+      
+      if (axios.isAxiosError(err) && err.response) {
+        const apiError = err.response.data.error;
+        // setError(apiError);
+        message.error("Failed to upload Image:  " + apiError);
+      } else {
+        // setError("An error occurred");
+      }
+    }
+
+    // setImgObj(img);
   };
 
   const navigate = useNavigate();
