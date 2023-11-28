@@ -78,7 +78,7 @@ const viewOrder: React.FC = () => {
   const handleCancel = async () => {
     try {
       if (order.Status == "Shipped") {
-        message.error("Order cannot be cancelled after it has shipped.");
+        message.error("Order cannot be cancelled after it has been shipped.");
         return;
       }
 
