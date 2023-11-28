@@ -8,12 +8,17 @@ import {
   } from '@ant-design/icons';
 import './Home.css';
 
+import { useNavigate } from "react-router-dom";
 const color = 'rgb(57, 132, 237)'
 setTwoToneColor(color)
 
 const { Header, Content , Footer } = Layout;
 
 function Home() {
+  const navigate = useNavigate();
+  const handlePharmacy = async ()=>{
+    navigate("/");
+  }
   return (
     <Layout>
         <Header style={{ display: 'flex', alignItems: 'center', background: "white" }}>
@@ -23,8 +28,8 @@ function Home() {
         </div>
         <div><h2 className='header'>spiderwebs</h2></div>
         <div className="header-buttons">
-          <button>Sign up</button>
-          <button>Login</button>
+          <button onClick={handlePharmacy}>Sign up</button>
+          <button onClick={handlePharmacy}>Login</button>
           <button>Doctor Portal</button>
         </div>
     </Header>
@@ -43,7 +48,7 @@ function Home() {
           {/* Pharmacy Card */}
           <Card title="Pharmacy" style={{ width: '60%', marginBottom: '16px' }}>
             <p>Get your medicine and all your pharmacy needs.</p>
-            <Button type="primary" style={{backgroundColor: color}}>Go to Pharmacy</Button>
+            <Button type="primary" style={{backgroundColor: color}} onClick={handlePharmacy}>Go to Pharmacy</Button>
           </Card>
           <div className="card-container">
             
