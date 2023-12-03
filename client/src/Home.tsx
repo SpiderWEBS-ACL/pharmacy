@@ -19,8 +19,7 @@ function Home() {
   const handlePharmacy = async ()=>{
     navigate("/reglog");
   }
-  const handleDoctorPortal = () => {
-    // Redirect to the doctor portal on a different port (e.g., port 8000)
+  const handleClinic = () => {
     window.location.href = 'http://127.0.0.1:5174/';
   };
 
@@ -33,7 +32,7 @@ function Home() {
         </div>
         <div><h2 className='header'>spiderwebs</h2></div>
         <div className="header-buttons">
-          <button onClick={handleDoctorPortal}>Clinic Portal</button>
+          <button onClick={handleClinic}>Clinic Portal</button>
           <button onClick={handlePharmacy}>Pharmacy Portal</button>
         </div>
     </Header>
@@ -46,7 +45,7 @@ function Home() {
       
       <Card title="Have a Medical Question?" style={{ width: '60%', marginBottom: '16px' }}>
             <p>Chat with your personal doctor and receive an answer right away.</p>
-            <Button type="primary" style={{backgroundColor: color}} >Ask Now</Button>
+            <Button type="primary" style={{backgroundColor: color}} onClick={handleClinic} >Ask Now</Button>
           </Card>
 
           {/* Pharmacy Card */}
@@ -62,7 +61,7 @@ function Home() {
             style={{ width: 'auto', marginBottom: '16px', marginRight: '20px' }}
             >
             <p>Schedule a video call with a specialized doctor.</p>
-        <Button type="primary"style={{backgroundColor: color}}>Book a Call</Button>
+        <Button type="primary"style={{backgroundColor: color}} onClick={handleClinic}>Book a Call</Button>
             </Card>
           
        
@@ -73,7 +72,7 @@ function Home() {
         style={{ width: 'auto', marginBottom: '16px',marginRight: '20px'}}
         >
         <p>Subscribe to a package and get your money's worth</p>
-        <Button type="primary"style={{backgroundColor: color}}>Packages</Button>
+        <Button type="primary"style={{backgroundColor: color}} onClick={handleClinic}>Packages</Button>
         </Card>
         <Card
         cover={<img alt="Health Packages" src="/health-packages.jpeg" />}
