@@ -109,7 +109,7 @@ const AppRouter: React.FC = () => {
     } else if (role === "Patient") {
       return (
         <Routes>
-          <Route path="/" element={<RegLog />} />
+          <Route path="/reglog" element={<RegLog />} />
           <Route
             path="/patient/commercial"
             element = {<Commercial/>}/>
@@ -152,7 +152,7 @@ const AppRouter: React.FC = () => {
           <Route path="/home" element={<Home />} />
           <Route path="/forgotPassword" element={<ForgotPassword />} />
           <Route path="/uploadDocuments/:id" element={<UploadDocuments />} />
-          <Route path="/" element={<RegLog />} />
+          <Route path="/reglog" element={<RegLog />} />
         </Routes>
       );
     }

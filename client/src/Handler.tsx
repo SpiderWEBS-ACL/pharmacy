@@ -23,7 +23,9 @@ const Handler: React.FC = () => {
     return <UploadDocuments   />;
   else if (currentPath.includes("/home"))
     return <Home />;
-  else return <RegLog />;
+    else if (currentPath.includes("/reglog"))
+    return <RegLog />;
+  else return <Home />;
 };
 export default Handler;
 

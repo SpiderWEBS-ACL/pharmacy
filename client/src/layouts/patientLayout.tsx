@@ -21,6 +21,7 @@ import {
 
 } from "@ant-design/icons";
 import AppRouter from "../AppRouter";
+import { FloatButton } from 'antd';
 
 const { Header, Content, Footer, Sider } = Layout;
 const id = localStorage.getItem("id");
@@ -101,6 +102,8 @@ const PatientLayout: React.FC = () => {
         <Content style={{ margin: "0 16px" , marginLeft: "18%", minHeight: "100vh"}}>
           <AppRouter />
         </Content>
+        <FloatButton shape="circle" badge={{ dot: true }} style={{ right: 24 + 70 + 70 }} tooltip={<div>Chat</div>} />
+ 
         <br />
         <ImportedFooter />
       </Layout>

@@ -17,8 +17,13 @@ const { Header, Content , Footer } = Layout;
 function Home() {
   const navigate = useNavigate();
   const handlePharmacy = async ()=>{
-    navigate("/");
+    navigate("/reglog");
   }
+  const handleDoctorPortal = () => {
+    // Redirect to the doctor portal on a different port (e.g., port 8000)
+    window.location.href = 'http://127.0.0.1:5174/';
+  };
+
   return (
     <Layout>
         <Header style={{ display: 'flex', alignItems: 'center', background: "white" }}>
@@ -28,9 +33,8 @@ function Home() {
         </div>
         <div><h2 className='header'>spiderwebs</h2></div>
         <div className="header-buttons">
-          <button onClick={handlePharmacy}>Sign up</button>
-          <button onClick={handlePharmacy}>Login</button>
-          <button>Doctor Portal</button>
+          <button onClick={handleDoctorPortal}>Clinic Portal</button>
+          <button onClick={handlePharmacy}>Pharmacy Portal</button>
         </div>
     </Header>
     <Content>
