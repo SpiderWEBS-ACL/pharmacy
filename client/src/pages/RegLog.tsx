@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./style.css";
 import { Link, useNavigate } from "react-router-dom";
-import { message } from "antd";
+import { Layout, message ,Button , Row, Col} from "antd";
 import {
   validateMobile,
   validatePassword,
@@ -151,8 +151,21 @@ const RegLog: React.FC = () => {
   const closeModal = () => {
     setModalActive(false);
   };
-
+  const color = 'rgb(57, 132, 237)'
+  const { Header, Content, Footer} = Layout;
   return (
+    <Layout>
+        <Header style={{ display: 'flex', alignItems: 'center', background: "white" }}>
+        {/* Logo */}
+        <div className="logo" id="head-section">
+          <img src="/logo.png" alt="Logo" style={{ height: '50px', marginRight: '16px' }} />
+        </div>
+        <div><h2 className='header'>spiderwebs</h2></div>
+        <div className="header-buttons">
+        
+        </div>
+    </Header>
+    <Content>
     <div
       style={{
         boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)", // Add shadow
@@ -405,6 +418,29 @@ const RegLog: React.FC = () => {
         </div>
       </div>
     </div>
+    </Content>
+    <Footer style={{ backgroundColor: color, color: 'white', padding: '20px', textAlign: 'center' }}>
+       <br></br>
+        <Row gutter={16}>
+          <Col span={8}>
+            <h4>Company</h4>
+            <p>spiderwebs</p>
+            <p>Cairo, Egypt</p>
+          </Col>
+          <Col span={8}>
+            <h4>Contact</h4>
+            <p>spiderwebs@gmail.com</p>
+            <p>+9984685456</p>
+            {/* Add more contact information if needed */}
+          </Col>
+          <Col span={8}>
+            <h4>Socials</h4>
+            <p>spiderwebs_insta</p>
+            <p>spiderwebs_facebook</p>
+          </Col>
+        </Row>
+      </Footer>
+    </Layout>
   );
 };
 

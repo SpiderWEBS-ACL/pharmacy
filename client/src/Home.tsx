@@ -1,4 +1,4 @@
-import { Layout, Card, Button , Row, Col,  BackTop} from 'antd';
+import { Layout, Card, Button , Row, Col} from 'antd';
 import {
     SmileTwoTone,
     StarTwoTone,
@@ -143,7 +143,7 @@ function Home() {
         <Button type="primary"style={{backgroundColor: color}}>Packages</Button>
         </Card>
         </div>
-        <br />
+        
         <div className= "about-company-container" id = "bottom-section">
         <div className="about-company">
             {/* First Row */}
@@ -173,6 +173,7 @@ function Home() {
             </div>
           </div>
           </div>
+          <br></br>
       </div>
     </Content>
     <Footer style={{ backgroundColor: color, color: 'white', padding: '20px', textAlign: 'center' }}>
