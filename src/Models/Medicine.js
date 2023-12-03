@@ -38,6 +38,10 @@ const medicineSchema = new Schema(
       type: Number,
       default: 0,
     },
+    Archived:{
+      type: Boolean,
+      default: false
+    }
   },
   { timestamps: true }
 );
