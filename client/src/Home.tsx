@@ -72,7 +72,7 @@ function Home() {
     navigate("/reglog");
   }
   const handleClinic = () => {
-    window.location.href = 'http://127.0.0.1:5174/';
+    window.location.href = 'http://localhost:5174/';
   };
 
   return (
