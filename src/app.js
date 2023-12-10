@@ -45,6 +45,7 @@ const {
   getDocuments,
   getRegFiles,
   getLicenses,
+  viewPharmaWallet
 } = require("./Routes/pharmacistController");
 
 
@@ -161,6 +162,7 @@ app.post("/pharmacist/uploadPersonalID/:id", uploadPersonalID);
 app.post("/pharmacist/uploadDegree/:id", uploadPharmacyDegree);
 app.post("/pharmacist/uploadLicenses/:id", uploadLicenses);
 
+app.get("/pharmacist/wallet",PharmacistProtect,viewPharmaWallet);
 //------------------Patient Endpoints---------------------
 app.get("/patient/me",PatientProtect, PatientInfo);
 app.post("/patient/register", registerPatient);
