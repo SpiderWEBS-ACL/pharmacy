@@ -39,8 +39,9 @@ const medicineSchema = new Schema(
       default: 0,
     },
     Archived:{
-      type: Boolean,
-      default: false
+      type: String,
+      enum: ["Archive", "Unarchive"],
+      default: "Archive ",
     }
   },
   { timestamps: true }

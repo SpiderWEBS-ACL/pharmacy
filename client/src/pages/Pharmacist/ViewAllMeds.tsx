@@ -24,12 +24,11 @@ const AllMedicines = () => {
   });
 
   useEffect(() => {
-    //send http request to backend
     api
-      .get(`medicine/viewMedicines`, config) //get request
+      .get(`medicine/viewMedicines`, config) 
       .then((response) => {
-        setMedicines(response.data); //store response (medicines) in variable
-        setLoading(false); //loading screen --> off
+        setMedicines(response.data); 
+        setLoading(false); 
         setSearching(false);
         setFiltering(false);
         console.log(response.data);
@@ -48,7 +47,13 @@ const AllMedicines = () => {
   const handleEditDetails = async (id: string) => {
     navigate("/pharmacist/editMedicine/" + id);
   };
-
+  const handleArchive = async (id: string, arch: string) =>{
+    if(arch === "Archive")
+      await api.put(`pharmacist/archiveMed/${id}`,{}, {headers: headers})
+    else
+      await api.put(`pharmacist/unarchiveMed/${id}`,{}, {headers: headers})
+    window.location.reload()
+  }
   const handleSearch = async () => {
     setSearching(true);
     setLoading(true);
@@ -333,6 +338,15 @@ const AllMedicines = () => {
                   style={{ width: 107 }}
                 >
                   Edit Details
+                </button>
+                <br></br>
+                <br></br>
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => handleArchive(request._id,request.Archived)}
+                  style={{ width: 107 }}
+                >
+                  {request.Archived}
                 </button>
               </td>
             </tr>

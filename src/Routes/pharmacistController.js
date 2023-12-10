@@ -448,6 +448,35 @@ const viewPharmaWallet = async (req,res) => {
   
 }
 
+const archiveMedicine = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const Medicine = await medicineModel.findById(id);
+    if (!Medicine) {
+      return res.status(404).json({ error: "Medicine not found" });
+    }
+    Medicine.Archived = "Unarchive";
+    await Medicine.save();
+    res.status(200).json(Medicine);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+const unarchiveMedicine = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const Medicine = await medicineModel.findById(id);
+    if (!Medicine) {
+      return res.status(404).json({ error: "Medicine not found" });
+    }
+    Medicine.Archived = "Archive";
+    await Medicine.save();
+    res.status(200).json(Medicine);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 //---------------------------------------EXPORTS-----------------------------------------------
 
 module.exports = {
@@ -465,5 +494,7 @@ module.exports = {
   uploadPersonalID,
   uploadLicenses,
   getDocuments,
-  viewPharmaWallet
+  viewPharmaWallet,
+  archiveMedicine,
+  unarchiveMedicine
 };

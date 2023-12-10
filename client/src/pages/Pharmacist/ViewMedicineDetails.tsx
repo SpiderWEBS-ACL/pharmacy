@@ -36,7 +36,7 @@ const MedicineDetails: React.FC = () => {
   const handleEditDetails = async (id: string) => {
     navigate("/pharmacist/editMedicine/" + id);
   };
-
+  
 
   if (loading) {
     return (
