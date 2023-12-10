@@ -25,7 +25,7 @@ const AllMedicines = () => {
   useEffect(() => {
     //send http request to backend
     api
-      .get(`medicine/viewMedicines`, config) //get request
+      .get(`medicine/viewActiveMedicines`, config) //get request
       .then((response) => {
         setMedicines(response.data); //store response (medicines) in variable
         setLoading(false); //loading screen --> off

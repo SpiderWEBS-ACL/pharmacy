@@ -42,6 +42,7 @@ import ViewAllOrders from "./pages/Patient/ViewAllOrders";
 import Commercial from "./pages/Patient/Commercial";
 import UploadDocuments from "./pages/Pharmacist/UploadDocuments";
 import Home from "./Home";
+import PharmaWallet from "./pages/Pharmacist/PharmaWallet";
 
 
 const AppRouter: React.FC = () => {
@@ -85,6 +86,7 @@ const AppRouter: React.FC = () => {
         <Routes>
           <Route path="/" element={<RegLog />} />
           <Route path="/pharmacist/register" element={<RegisterPharmacist />} />
+          <Route path="/pharmacist/wallet" element={<PharmaWallet />} />
           <Route
             path="/pharmacist/viewMedicines"
             element={<AllMedicinesPharm />}

@@ -8,6 +8,15 @@ const getAllMedicines = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+const getActiveMedicines = async (req, res) => {
+  try {
+    const activeMedicines = await medicineModel.find({ Archived: "Archive" }).populate("Image");
+    res.status(200).json(activeMedicines);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 
 const searchForMedicine = async (req, res) => {
   const Name = req.query.Name;
@@ -84,4 +93,5 @@ module.exports = {
   searchForMedicine,
   filterMedicineByMedicinalUse,
   viewMedicineDetails,
+  getActiveMedicines
 };
