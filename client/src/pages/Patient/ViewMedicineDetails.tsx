@@ -105,8 +105,9 @@ const MedicineDetails: React.FC = () => {
         <button
               className="btn btn-success"
               onClick={() => handleAddToCart(id)}
+              disabled={medicineDetails.Quantity === 0}
             >
-                  Add To Cart
+                 {medicineDetails.Quantity === 0 ? "Out of Stock" : "Add to Cart"}
             </button>
           </div>
       </Col>

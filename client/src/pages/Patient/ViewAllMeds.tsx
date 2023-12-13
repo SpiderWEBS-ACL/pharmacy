@@ -318,6 +318,10 @@ const AllMedicines = () => {
               <td width={500}>
                 <strong style={{ fontSize: 20 }}>{request.Name}</strong>
                 <br></br>
+                {request.Quantity === 0 && (
+                  <span style={{ color: "red" }}>Out of Stock</span>
+                )}
+                <br></br>
                 <br></br>
                 {request.Description}
               </td>
@@ -336,8 +340,9 @@ const AllMedicines = () => {
                 <button
                   className="btn btn-success"
                   onClick={() => handleAddToCart(request._id)}
+                  disabled={request.Quantity === 0}
                 >
-                  Add to Cart
+                  {request.Quantity === 0 ? "Out of Stock" : "Add to Cart"}
                 </button>
               </td>
             </tr>
