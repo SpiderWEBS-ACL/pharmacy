@@ -69,6 +69,7 @@ const {
   filterMedicineByMedicinalUse,
   viewMedicineDetails,
   getActiveMedicines,
+  viewAlternatives,
 } = require("./Routes/medicineController");
 
 const {
@@ -190,7 +191,7 @@ app.get("/medicine/viewActiveMedicines",PharmacistProtect || PatientProtect || A
 app.get("/medicine/searchForMedicine",PharmacistProtect || PatientProtect || AdminProtect, searchForMedicine);
 app.post("/medicine/filterMedicineByMedicinalUse",PharmacistProtect || PatientProtect || AdminProtect, filterMedicineByMedicinalUse);
 
-
+app.get("/medicine/viewAlternatives/:medicineId",PatientProtect, viewAlternatives);
 //-----------------Cart Endpoints---------------------
 app.post("/cart/createCart",createCart);
 app.post("/cart/medicines/:medicineId",PatientProtect, addMedicineToCart);

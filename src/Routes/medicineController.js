@@ -86,6 +86,29 @@ const viewMedicineDetails = async(req, res) => {
     }
 }
 
+const viewAlternatives = async (req, res) => {
+  const { medicineId } = req.params;
+
+  try {
+    // Find the medicine by ID to get its active ingredient
+    const currentMedicine = await medicineModel.findById(medicineId);
+    if (!currentMedicine) {
+      return res.status(404).json({ message: 'Medicine not found' });
+    }
+
+    const activeIngredient = currentMedicine.ActiveIngredients[0];
+    const alternatives = await medicineModel.find({
+      _id: { $ne: medicineId }, 
+      ActiveIngredients: activeIngredient,
+    });
+
+    res.json(alternatives);
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
 
 
 module.exports = {
@@ -93,5 +116,6 @@ module.exports = {
   searchForMedicine,
   filterMedicineByMedicinalUse,
   viewMedicineDetails,
-  getActiveMedicines
+  getActiveMedicines,
+  viewAlternatives
 };
