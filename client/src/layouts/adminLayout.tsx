@@ -1,15 +1,12 @@
 import React, { useState } from "react";
-import {
-  BrowserRouter as Router,
-  useNavigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, useNavigate } from "react-router-dom";
 import { Layout, Menu } from "antd";
 import {
   UserOutlined,
   PoweroffOutlined,
   IdcardOutlined,
   TeamOutlined,
-  AppstoreOutlined 
+  AppstoreOutlined,
 } from "@ant-design/icons";
 import AppRouter from "../AppRouter";
 import ImportedFooter from "../layouts/footer";
@@ -24,7 +21,7 @@ const AdminLayout: React.FC = () => {
     {
       label: "Account info",
       key: "/admin/Home",
-      icon: <IdcardOutlined />
+      icon: <IdcardOutlined />,
     },
     {
       label: "Admin",
@@ -77,12 +74,10 @@ const AdminLayout: React.FC = () => {
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sider
+        theme="light"
         collapsible
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
-        style={{height: '100vh', position: "fixed"}}
-        // style={{background: "#c9c9c9"}}
-        theme = "light"
       >
         <div className="demo-logo-vertical" />
         <Menu
@@ -102,12 +97,20 @@ const AdminLayout: React.FC = () => {
           items={items}
         ></Menu>
       </Sider>
-      <Layout style={{height: '100%', overflow: 'scroll'}}>
-        <ImportedHeader/>
-        <Content style={{ margin: "0 16px" , marginLeft: "18%", minHeight: "100vh"}}>
-          <AppRouter />
+      <Layout>
+        <ImportedHeader />
+        <Content style={{}}>
+          <div
+            style={{
+              overflowY: "auto",
+              minHeight: "86.5vh",
+              maxHeight: "100vh",
+            }}
+          >
+            <AppRouter />
+          </div>
         </Content>
-        <ImportedFooter/>
+        <ImportedFooter />
       </Layout>
     </Layout>
   );

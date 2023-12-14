@@ -43,7 +43,10 @@ import Commercial from "./pages/Patient/Commercial";
 import UploadDocuments from "./pages/Pharmacist/UploadDocuments";
 import Home from "./Home";
 import PharmaWallet from "./pages/Pharmacist/PharmaWallet";
-
+import ChatPharmacist from "./pages/Pharmacist/ChatPharmacist";
+import ViewAllDoctors from "./pages/Patient/ViewAllDoctors";
+import ChatPatient from "./pages/Patient/ChatPatient";
+import ViewAllPharmacists from "./pages/Patient/ViewAllPharmacists";
 
 const AppRouter: React.FC = () => {
   const navigate = useNavigate();
@@ -105,6 +108,8 @@ const AppRouter: React.FC = () => {
             path="/pharmacist/changePassword"
             element={<ChangePasswordPharm />}
           />
+          <Route path="/pharmacist/chat/:id" element={<ChatPharmacist />} />
+          <Route path="/pharmacist/doctors/" element={<ViewAllDoctors />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       );
@@ -112,9 +117,7 @@ const AppRouter: React.FC = () => {
       return (
         <Routes>
           <Route path="/reglog" element={<RegLog />} />
-          <Route
-            path="/patient/commercial"
-            element = {<Commercial/>}/>
+          <Route path="/patient/commercial" element={<Commercial />} />
           <Route
             path="/patient/viewMedicines"
             element={<AllMedicinesPatient />}
@@ -136,13 +139,12 @@ const AppRouter: React.FC = () => {
             path="/patient/orderConfirmation"
             element={<OrderConfirmation />}
           />
-          <Route      
-          path = "/patient/success"
-          element= {<Success/>}
-          />
-          <Route      
-          path = "/patient/cancel"
-          element= {<Cancel/>}
+          <Route path="/patient/success" element={<Success />} />
+          <Route path="/patient/cancel" element={<Cancel />} />
+          <Route path="/patient/chat/:id" element={<ChatPatient />} />
+          <Route
+            path="/patient/pharmacists/"
+            element={<ViewAllPharmacists />}
           />
           <Route path="*" element={<NotFound />} />
         </Routes>
