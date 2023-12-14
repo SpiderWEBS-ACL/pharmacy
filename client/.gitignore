@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+
+#uploaded images
+/public/images/**
+/public/uploads/**

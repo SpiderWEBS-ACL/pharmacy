@@ -107,6 +107,7 @@ const AdminLayout: React.FC = () => {
         <Content style={{ margin: "0 16px" , marginLeft: "18%", minHeight: "100vh"}}>
           <AppRouter />
         </Content>
+        <br />
         <ImportedFooter/>
       </Layout>
     </Layout>
