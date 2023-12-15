@@ -1,4 +1,5 @@
 const medicineModel = require("../Models/Medicine");
+const prescriptionModel = require("../Models/Prescription");
 
 const getAllMedicines = async (req, res) => {
   try {
@@ -10,13 +11,15 @@ const getAllMedicines = async (req, res) => {
 };
 const getActiveMedicines = async (req, res) => {
   try {
-    const activeMedicines = await medicineModel.find({ Archived: "Archive" }).populate("Image");
+    const activeMedicines = await medicineModel
+      .find({ Archived: "Archive" })
+      .populate("Image");
+
     res.status(200).json(activeMedicines);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
-
 
 const searchForMedicine = async (req, res) => {
   const Name = req.query.Name;
@@ -24,9 +27,11 @@ const searchForMedicine = async (req, res) => {
     return res.status(400).json({ error: "Name parameter is required" });
   }
   try {
-    const medicine = await medicineModel.find({
-      Name: { $regex: Name, $options: "i" },
-    }).populate("Image");
+    const medicine = await medicineModel
+      .find({
+        Name: { $regex: Name, $options: "i" },
+      })
+      .populate("Image");
 
     // if (medicine.length == 0) {
     //   return res.status(404).json({ error: "Medicine Not Found" });
@@ -37,7 +42,6 @@ const searchForMedicine = async (req, res) => {
     res.status(500).json({ error: "An error occurred while searching" });
   }
 };
-
 
 const filterMedicineByMedicinalUse = async (req, res) => {
   const medicinalUse = req.query.MedicinalUse;
@@ -66,25 +70,25 @@ const filterMedicineByMedicinalUse = async (req, res) => {
   }
 };
 
-const viewMedicineDetails = async(req, res) => {
-    try {
-        const { id } = req.params;
-    
-        if(!id){
-        return res.status(404).json({ error: "ID parameter required" });
-        }
-    
-        const medicine = await medicineModel.findById(id).populate("Image");
-    
-        if (!medicine) {
-        return res.status(404).json({ error: "Medicine Not Found" });
-        }
+const viewMedicineDetails = async (req, res) => {
+  try {
+    const { id } = req.params;
 
-        res.status(200).json(medicine);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+    if (!id) {
+      return res.status(404).json({ error: "ID parameter required" });
     }
-}
+
+    const medicine = await medicineModel.findById(id).populate("Image");
+
+    if (!medicine) {
+      return res.status(404).json({ error: "Medicine Not Found" });
+    }
+
+    res.status(200).json(medicine);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
 const viewAlternatives = async (req, res) => {
   const { medicineId } = req.params;
@@ -93,23 +97,38 @@ const viewAlternatives = async (req, res) => {
     // Find the medicine by ID to get its active ingredient
     const currentMedicine = await medicineModel.findById(medicineId);
     if (!currentMedicine) {
-      return res.status(404).json({ message: 'Medicine not found' });
+      return res.status(404).json({ message: "Medicine not found" });
     }
 
     const activeIngredient = currentMedicine.ActiveIngredients[0];
     const alternatives = await medicineModel.find({
-      _id: { $ne: medicineId }, 
+      _id: { $ne: medicineId },
       ActiveIngredients: activeIngredient,
     });
 
     res.json(alternatives);
   } catch (error) {
-    console.error('Error:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    console.error("Error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
-
-
+const checkIfPrescribed = async (req, res) => {
+  const userId = req.user.id;
+  const id = req.params.id;
+  const otherMed = await medicineModel.findById(id);
+  const myPresc = await prescriptionModel
+    .find({ Patient: userId, Filled: "Unfilled" })
+    .populate("Medicines")
+    .exec();
+  const mappedMeds = myPresc.map((myPresc) => myPresc.Medicines);
+  const allMeds = mappedMeds.flat();
+  for (const med of allMeds) {
+    if (med.MedicineId == otherMed.id) {
+      return res.status(200).json(true);
+    }
+  }
+  return res.status(200).json(false);
+};
 
 module.exports = {
   getAllMedicines,
@@ -117,5 +136,6 @@ module.exports = {
   filterMedicineByMedicinalUse,
   viewMedicineDetails,
   getActiveMedicines,
-  viewAlternatives
+  viewAlternatives,
+  checkIfPrescribed,
 };

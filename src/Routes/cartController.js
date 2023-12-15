@@ -3,6 +3,7 @@ const Cart = require("../Models/Cart");
 const Medicine = require("../Models/Medicine");
 const Patient = require("../Models/Patient");
 const Orders = require("../Models/Orders");
+const prescriptionModel = require("../Models/Prescription");
 require("dotenv").config();
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
@@ -21,10 +22,10 @@ const addMedicineToCart = async (req, res) => {
   try {
     const patientId = req.user.id;
     const patient = await Patient.findById(patientId);
-    const cartId = patient.Cart;
+      const cartId = patient.Cart;
 
-    const cart = await Cart.findById(cartId).populate("medicines");
-    const medicineId = req.params.medicineId;
+      const cart = await Cart.findById(cartId).populate("medicines");
+      const medicineId = req.params.medicineId;
 
     if (!cart) {
       return res.status(404).json({ error: "Cart not found" });
@@ -380,6 +381,20 @@ const placeOrder = async (req, res) => {
       throw error;
   }
 };
+const checkIfPrescribed = async(req, res) =>{
+  const userId = req.user.id;
+  const id = req.params.id;
+  const otherMed = await Medicine.findById(id)
+  const myPresc = await prescriptionModel.find({ Patient: userId, Filled: 'Unfilled'}).populate('Medicines').exec();
+  const mappedMeds = myPresc.map(myPresc => myPresc.Medicines);
+  const allMeds = mappedMeds.flat();
+  let prescribed = false;
+  for(const med of allMeds){
+    if(med.MedicineId==otherMed.id)
+      prescribed=true;
+  }
+  res.status(200).json(prescribed);
+}
 
 module.exports = {
   createCart,
@@ -394,4 +409,5 @@ module.exports = {
   emptyCart,
   payCartWithWallet,
   placeOrder,
+  checkIfPrescribed
 };

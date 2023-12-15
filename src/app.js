@@ -70,6 +70,7 @@ const {
   viewMedicineDetails,
   getActiveMedicines,
   viewAlternatives,
+  checkIfPrescribed,
 } = require("./Routes/medicineController");
 
 const {
@@ -79,9 +80,9 @@ const {
   viewCart,
   viewMedicineDetailsInCart,
   updateMedicineQuantity,
-viewPatientCart,
-getCartTotal,
-payCartWithStripe, emptyCart, payCartWithWallet, placeOrder} = require("./Routes/cartController");
+  viewPatientCart,
+  getCartTotal,
+  payCartWithStripe, emptyCart, payCartWithWallet, placeOrder} = require("./Routes/cartController");
 const { AdminProtect, PharmacistProtect, PatientProtect } = require("./middleware/authMiddleware");
 
  const {
@@ -183,10 +184,12 @@ app.put("/patient/changePassword", PatientProtect, changePasswordPatient);
 app.put("/patient/cancelOrder/:id", cancelOrder);
 
 
+
 //------------------Medicine Endpoints------------------
 app.get("/medicine/viewMedicines",PharmacistProtect || PatientProtect || AdminProtect, getAllMedicines);
 app.get("/medicine/viewMedicineDetails/:id",PharmacistProtect || PatientProtect || AdminProtect, viewMedicineDetails);
 app.get("/medicine/viewActiveMedicines",PharmacistProtect || PatientProtect || AdminProtect, getActiveMedicines);
+app.get("/medicine/checkIfPrescribed/:id", PatientProtect,checkIfPrescribed)
 
 app.get("/medicine/searchForMedicine",PharmacistProtect || PatientProtect || AdminProtect, searchForMedicine);
 app.post("/medicine/filterMedicineByMedicinalUse",PharmacistProtect || PatientProtect || AdminProtect, filterMedicineByMedicinalUse);
@@ -205,9 +208,8 @@ app.post("/cart/payWithStripe/",PatientProtect,payCartWithStripe);
 app.post("/cart/payWithWallet",PatientProtect,payCartWithWallet);
 app.put("/cart/emptyCart",PatientProtect,emptyCart);
 app.post("/cart/placeOrder", PatientProtect, placeOrder);
-
-
 app.delete('/deleteFiles', deleteFiles);
+
 
 
 
