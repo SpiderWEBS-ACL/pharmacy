@@ -47,7 +47,8 @@ const {
   getLicenses,
   viewPharmaWallet,
   archiveMedicine,
-  unarchiveMedicine
+  unarchiveMedicine,
+  viewAllNotifications
 } = require("./Routes/pharmacistController");
 
 
@@ -81,7 +82,7 @@ const {
   updateMedicineQuantity,
 viewPatientCart,
 getCartTotal,
-payCartWithStripe, emptyCart, payCartWithWallet, placeOrder} = require("./Routes/cartController");
+payCartWithStripe, emptyCart, payCartWithWallet, placeOrder, sendNotification} = require("./Routes/cartController");
 const { AdminProtect, PharmacistProtect, PatientProtect } = require("./middleware/authMiddleware");
 
  const {
@@ -170,6 +171,8 @@ app.get("/pharmacist/wallet",PharmacistProtect,viewPharmaWallet);
 app.put("/pharmacist/archiveMed/:id", PharmacistProtect, archiveMedicine);
 app.put("/pharmacist/unarchiveMed/:id", PharmacistProtect, unarchiveMedicine);
 
+app.get("/pharmacist/notifications", PharmacistProtect, viewAllNotifications);
+
 //------------------Patient Endpoints---------------------
 app.get("/patient/me",PatientProtect, PatientInfo);
 app.post("/patient/register", registerPatient);
@@ -205,6 +208,8 @@ app.post("/cart/payWithStripe/",PatientProtect,payCartWithStripe);
 app.post("/cart/payWithWallet",PatientProtect,payCartWithWallet);
 app.put("/cart/emptyCart",PatientProtect,emptyCart);
 app.post("/cart/placeOrder", PatientProtect, placeOrder);
+
+app.post("/cart/notify", sendNotification);
 
 
 app.delete('/deleteFiles', deleteFiles);

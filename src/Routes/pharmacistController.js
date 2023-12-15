@@ -6,6 +6,7 @@ const multer = require("multer");
 const bcrypt = require("bcrypt");
 const express = require("express");
 const Pharmacist = require("../Models/Pharmacist");
+const Notification = require("../Models/Notification");
 
 // FOR TESTING
 const addPharmacist = async (req, res) => {
@@ -477,6 +478,26 @@ const unarchiveMedicine = async (req, res) => {
   }
 };
 
+const viewAllNotifications = async (req, res) => {
+
+  try{
+    const pharmacistId = req.user.id;
+    const pharmacist = await Pharmacist.findById(pharmacistId);
+    if (!pharmacist) {
+      return res.status(404).json({ error: "Pharmacist Not Found" });
+    }
+    
+    const notifications = await Notification.find({Pharmacist: pharmacistId});
+
+    res.status(200).json(notifications);
+
+  }catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+
+};
+
+
 //---------------------------------------EXPORTS-----------------------------------------------
 
 module.exports = {
@@ -496,5 +517,6 @@ module.exports = {
   getDocuments,
   viewPharmaWallet,
   archiveMedicine,
-  unarchiveMedicine
+  unarchiveMedicine,
+  viewAllNotifications,
 };
