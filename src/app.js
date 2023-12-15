@@ -110,7 +110,7 @@ const {
   emptyCart,
   payCartWithWallet,
   placeOrder,
-  sendNotification
+  sendNotification,
 } = require("./Routes/cartController");
 
 const {
@@ -236,7 +236,6 @@ app.put("/patient/changePassword", PatientProtect, changePasswordPatient);
 app.put("/patient/cancelOrder/:id", cancelOrder);
 app.get("/patient/allPharmacists/", PatientProtect, getAllPharmacists);
 
-
 //------------------Medicine Endpoints------------------
 
 app.get(
@@ -244,7 +243,7 @@ app.get(
   PharmacistProtect || PatientProtect || AdminProtect,
   getAllMedicines
 );
-app.get("/medicine/checkIfPrescribed/:id", PatientProtect,checkIfPrescribed);
+app.get("/medicine/checkIfPrescribed/:id", PatientProtect, checkIfPrescribed);
 app.get(
   "/medicine/viewMedicineDetails/:id",
   PharmacistProtect || PatientProtect || AdminProtect,
@@ -288,5 +287,4 @@ app.post("/cart/placeOrder", PatientProtect, placeOrder);
 
 app.post("/cart/notify", sendNotification);
 
-app.delete('/deleteFiles', deleteFiles);
-
+app.delete("/deleteFiles", deleteFiles);
