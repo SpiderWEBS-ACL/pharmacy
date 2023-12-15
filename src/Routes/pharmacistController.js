@@ -496,6 +496,46 @@ const viewAllNotifications = async (req, res) => {
 
 };
 
+const openNotification = async(req, res) => {
+
+  try{
+    const { id } = req.params;
+    const notification = await Notification.findById(id);
+
+    if (!notification) {
+      return res.status(404).json({ error: "Notification Not Found" });
+    }
+    
+    notification.opened = true;
+    notification.save();
+
+    res.status(200).json(notification);
+
+  }catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+
+}
+
+const getUnreadNotifs = async (req, res) => {
+
+  try{
+    const pharmId = req.user.id;
+    const pharmacist = await pharmacistModel.findById(pharmId);
+
+    if (!pharmacist) {
+      return res.status(404).json({ error: "Pharmacist Not Found" });
+    }
+    
+    const notifications = await Notification.find({Pharmacist: pharmacist, opened: false});
+
+    res.status(200).json(notifications);
+
+  }catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 const getAllDoctors = async (req, res) => {
   try {
     const Doctors = await doctorModel.find({});
@@ -526,4 +566,6 @@ module.exports = {
   unarchiveMedicine,
   viewAllNotifications,
   getAllDoctors,
+  openNotification, 
+  getUnreadNotifs,
 };
