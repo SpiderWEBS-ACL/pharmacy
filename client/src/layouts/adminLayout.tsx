@@ -110,7 +110,8 @@ const AdminLayout: React.FC = () => {
             <AppRouter />
           </div>
         </Content>
-        <ImportedFooter />
+        <br />
+        <ImportedFooter/>
       </Layout>
     </Layout>
   );

@@ -3,8 +3,12 @@ const Cart = require("../Models/Cart");
 const Medicine = require("../Models/Medicine");
 const Patient = require("../Models/Patient");
 const Orders = require("../Models/Orders");
+const Notification = require("../Models/Notification");
+const Pharmacist = require("../Models/Pharmacist");
 require("dotenv").config();
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const nodemailer = require("nodemailer");
+
 
 const createCart = async (req, res) => {
   try {
@@ -352,6 +356,18 @@ const placeOrder = async (req, res) => {
 
       console.log(medicine);
       await medicine.updateOne( {Sales: medicine.Sales + medicines[i].quantity})
+
+      //out of stock
+      if (medicine.Quantity == 0){
+
+        const pharmacists = await Pharmacist.find({});
+
+        for(let i = 0; i < pharmacists.length; i++){
+
+          await sendNotification(pharmacists[i].Email, medicine);
+        
+        }
+      }
     }
 
     const total = await getCartTotalHelper(req, res);
@@ -381,6 +397,57 @@ const placeOrder = async (req, res) => {
   }
 };
 
+
+const sendNotification = async (pharmacist, medicine) => {
+// const sendNotification = async (req, res) => {
+  // const {pharmacistId, medicineId} = req.body;
+  try {
+
+    // const pharmacist = await Pharmacist.findById(pharmacistId);
+    // const medicine = await Medicine.findById(medicineId);
+
+    const viewMedicinePage = `http://localhost:5173/pharmacist/medicineDetails/${medicine._id}`;
+
+
+    //set up source email
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "spiderwebsacl@gmail.com",
+        pass: "vngs gkzg otrz vzbg",
+      },
+    });
+
+//<img src= ${ medicine.Image? `/images/${medicine.Image.filename}` :medicine.imageURL} width={100} height={100}/>
+
+    //format email details
+    const mailOptions = {
+      from: "spiderwebsacl@gmail.com",
+      to: pharmacist.Email,
+      subject: "New Notification",
+      html: ` <img src= ${ medicine.Image? `/images/${medicine.Image.filename}` :medicine.imageURL} width="50" height="50"/> <a style="font-size:20px; letter-spacing:2px;" href= ${viewMedicinePage}> <b><i> ${medicine.Name}</i></b></a>
+              <p>is out of stock and needs to be refilled.</p>`,
+    };
+
+    //send email
+    transporter.sendMail(mailOptions);
+
+    const notif = await Notification.create({
+      Pharmacist: pharmacist,
+      Medicine: medicine,
+      message: `${medicine.Name} is out of stock!`,
+      date: Date.now()
+    });
+
+    return notif;
+
+    // res.status(200).json(notif);
+  
+  } catch (err) {
+    throw err;
+  }
+};
+
 module.exports = {
   createCart,
   addMedicineToCart,
@@ -394,4 +461,5 @@ module.exports = {
   emptyCart,
   payCartWithWallet,
   placeOrder,
+  sendNotification,
 };

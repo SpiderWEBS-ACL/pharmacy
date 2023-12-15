@@ -70,6 +70,7 @@ const {
   viewPharmaWallet,
   archiveMedicine,
   unarchiveMedicine,
+  viewAllNotifications,
   getAllDoctors,
 } = require("./Routes/pharmacistController");
 
@@ -108,7 +109,9 @@ const {
   emptyCart,
   payCartWithWallet,
   placeOrder,
+  sendNotification
 } = require("./Routes/cartController");
+
 const {
   AdminProtect,
   PharmacistProtect,
@@ -217,6 +220,8 @@ app.put("/pharmacist/archiveMed/:id", PharmacistProtect, archiveMedicine);
 app.put("/pharmacist/unarchiveMed/:id", PharmacistProtect, unarchiveMedicine);
 app.get("/pharmacist/allDoctors/", PharmacistProtect, getAllDoctors);
 
+app.get("/pharmacist/notifications", PharmacistProtect, viewAllNotifications);
+
 //------------------Patient Endpoints---------------------
 app.get("/patient/me", PatientProtect, PatientInfo);
 app.post("/patient/register", registerPatient);
@@ -277,4 +282,7 @@ app.post("/cart/payWithWallet", PatientProtect, payCartWithWallet);
 app.put("/cart/emptyCart", PatientProtect, emptyCart);
 app.post("/cart/placeOrder", PatientProtect, placeOrder);
 
-app.delete("/deleteFiles", deleteFiles);
+app.post("/cart/notify", sendNotification);
+
+app.delete('/deleteFiles', deleteFiles);
+
