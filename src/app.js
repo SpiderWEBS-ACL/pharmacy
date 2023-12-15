@@ -94,6 +94,7 @@ const {
   viewMedicineDetails,
   getActiveMedicines,
   viewAlternatives,
+  checkIfPrescribed,
 } = require("./Routes/medicineController");
 
 const {
@@ -235,12 +236,15 @@ app.put("/patient/changePassword", PatientProtect, changePasswordPatient);
 app.put("/patient/cancelOrder/:id", cancelOrder);
 app.get("/patient/allPharmacists/", PatientProtect, getAllPharmacists);
 
+
 //------------------Medicine Endpoints------------------
+
 app.get(
   "/medicine/viewMedicines",
   PharmacistProtect || PatientProtect || AdminProtect,
   getAllMedicines
 );
+app.get("/medicine/checkIfPrescribed/:id", PatientProtect,checkIfPrescribed);
 app.get(
   "/medicine/viewMedicineDetails/:id",
   PharmacistProtect || PatientProtect || AdminProtect,

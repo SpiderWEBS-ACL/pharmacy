@@ -20,6 +20,7 @@ interface Medicine {
   };
   Sales: number;
   Archived: "Archive" | "Unarchive";
+  Type: "Prescription" | "OTC";
   createdAt: string;
   updatedAt: string;
 }
@@ -36,7 +37,8 @@ const AllMedicines = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [filteredResults, setfilteredResults] = useState([]);
   const [alternatives, setAlternatives] = useState<Medicine[]>([]);
-
+  const [prescribed, setPrescribed] = useState<boolean>();
+  const [requestProcessed, setRequestProcessed] = useState(false);
 
   const api = axios.create({
     baseURL: "http://localhost:5000",
@@ -63,13 +65,32 @@ const AllMedicines = () => {
   const handleViewDetails = async (id: string) => {
     navigate("/patient/medicineDetails/" + id);
   };
+  const findMedicineById = (id: string): Medicine | undefined => {
+    return medicines.find((medicine) => medicine._id === id);
+  };
+  const checkIfPrescription = (id: string): Boolean => {
+    const foundMedicine = findMedicineById(id);
+    if (foundMedicine?.Type === "Prescription") return true;
+    return false;
+  };
   const handleAddToCart = async (id: string) => {
-    try{
-      await api.post(`/cart/medicines/${id}`,{}, config)
-      message.success("Medicine added to cart")
-      console.log("med added to cart", id)
-    }catch(error){
-      console.log("error adding to cart:",error);
+    const response = await api.get(`/medicine/checkIfPrescribed/${id}`, config);
+    if (response.data && checkIfPrescription(id)) {
+      addToCart(id);
+    } else if (checkIfPrescription(id) && !response.data) {
+      message.error("You need a prescription for this to add it to the cart!");
+    } else if (!response.data && !checkIfPrescription(id)) {
+      addToCart(id);
+    }
+  };
+  const addToCart = async (id: string) => {
+    try {
+      await api.post(`/cart/medicines/${id}`, {}, config);
+      message.success("Medicine added to cart");
+      console.log("med added to cart", id);
+      console.log(findMedicineById(id));
+    } catch (error) {
+      console.log("error adding to cart:", error);
       if (axios.isAxiosError(error) && error.response) {
         const apiError = error.response.data;
         message.error(apiError);
@@ -79,9 +100,12 @@ const AllMedicines = () => {
     }
   };
 
-   const handleViewAlternatives = async (id: string) => {
+  const handleViewAlternatives = async (id: string) => {
     try {
-      const response = await api.get(`/medicine/viewAlternatives/${id}`, config);
+      const response = await api.get(
+        `/medicine/viewAlternatives/${id}`,
+        config
+      );
       const alternatives = response.data;
 
       setAlternatives(alternatives);
@@ -347,7 +371,15 @@ const AllMedicines = () => {
           ).map((request: any, index) => (
             <tr key={request._id} style={{ verticalAlign: "middle" }}>
               <td>
-                <img src={ request.Image? `/images/${request.Image.filename}` :request.imageURL} width={200} height={200}></img>
+                <img
+                  src={
+                    request.Image
+                      ? `/images/${request.Image.filename}`
+                      : request.imageURL
+                  }
+                  width={200}
+                  height={200}
+                ></img>
               </td>
               <td width={500}>
                 <strong style={{ fontSize: 20 }}>{request.Name}</strong>
@@ -372,8 +404,16 @@ const AllMedicines = () => {
                 <br></br>
                 <br></br>
                 <button
-                  className= {request.Quantity === 0 ? "btn btn-danger" : "btn btn-success"}
-                  onClick={() => request.Quantity === 0 ? handleViewAlternatives(request._id) : handleAddToCart(request._id)}
+                  className={
+                    request.Quantity === 0
+                      ? "btn btn-danger"
+                      : "btn btn-success"
+                  }
+                  onClick={() =>
+                    request.Quantity === 0
+                      ? handleViewAlternatives(request._id)
+                      : handleAddToCart(request._id)
+                  }
                 >
                   {request.Quantity === 0 ? "View Alternatives" : "Add to Cart"}
                 </button>

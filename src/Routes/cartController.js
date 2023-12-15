@@ -3,6 +3,7 @@ const Cart = require("../Models/Cart");
 const Medicine = require("../Models/Medicine");
 const Patient = require("../Models/Patient");
 const Orders = require("../Models/Orders");
+const prescriptionModel = require("../Models/Prescription");
 const Notification = require("../Models/Notification");
 const Pharmacist = require("../Models/Pharmacist");
 require("dotenv").config();
@@ -119,8 +120,7 @@ const emptyCart = async (req, res) => {
 
     await cart.save();
 
-    return  "Cart Emptied" ;
-
+    return "Cart Emptied";
   } catch (error) {
     throw error;
   }
@@ -171,7 +171,9 @@ const viewCart = async (req, res) => {
   try {
     const cartId = req.params.cartId;
 
-    const cart = await Cart.findById(cartId).populate("medicines").populate("medicines.medicine.Image");
+    const cart = await Cart.findById(cartId)
+      .populate("medicines")
+      .populate("medicines.medicine.Image");
     if (!cart) {
       return res.status(404).json({ error: "Cart not found" });
     }
@@ -187,7 +189,9 @@ const viewPatientCart = async (req, res) => {
     const patient = await Patient.findById(patientId);
     const cartId = patient.Cart;
 
-    const cart = await Cart.findById(cartId).populate("medicines").populate("medicines.medicine.Image");
+    const cart = await Cart.findById(cartId)
+      .populate("medicines")
+      .populate("medicines.medicine.Image");
     if (!cart) {
       return res.status(404).json({ error: "Cart not found" });
     }
@@ -300,9 +304,8 @@ const payCartWithWallet = async (req, res) => {
     await patient.save();
 
     const order = await placeOrder(req, res);
-   
-  } catch (error){
-     res.status(500).json({error: error.message});
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -337,8 +340,8 @@ const payCartWithStripe = async (req, res) => {
 
 const placeOrder = async (req, res) => {
   try {
-    const{id} = req.user;
-    const {shipping, paymentMethod} = req.body;
+    const { id } = req.user;
+    const { shipping, paymentMethod } = req.body;
 
     const patient = await Patient.findById(id);
 
@@ -348,13 +351,14 @@ const placeOrder = async (req, res) => {
     const medicines = cart.medicines;
 
     console.log(medicines);
-    
+
     //update sales
     for (let i = 0; i < medicines.length; i++) {
       const medicineId = medicines[i].medicine.toString();
       const medicine = await Medicine.findById(medicineId);
 
       console.log(medicine);
+
       await medicine.updateOne( {Sales: medicine.Sales + medicines[i].quantity})
 
       //out of stock
@@ -372,7 +376,6 @@ const placeOrder = async (req, res) => {
 
     const total = await getCartTotalHelper(req, res);
 
-    
     const order = await Orders.create({
       Patient: patient,
       Medicines: medicines,
@@ -380,7 +383,7 @@ const placeOrder = async (req, res) => {
       Status: "Processing",
       DeliveryAddress: shipping,
       PaymentMethod: paymentMethod,
-      Date: Date.now()
+      Date: Date.now(),
     });
 
     console.log("Order Placed");
@@ -388,12 +391,15 @@ const placeOrder = async (req, res) => {
 
     console.log("Cart Emptied");
 
-    res.status(200).json({url: `${process.env.SERVER_URL}/patient/viewOrder/${order._id}`});
+    res
+      .status(200)
+      .json({
+        url: `${process.env.SERVER_URL}/patient/viewOrder/${order._id}`,
+      });
 
     console.log("returned");
-
   } catch (error) {
-      throw error;
+    throw error;
   }
 };
 

@@ -252,6 +252,9 @@ const cancelOrder = async (req, res) => {
   }
 };
 
+}
+
+
 const getAllPharmacists = async (req, res) => {
   try {
     const Doctors = await pharmacistModel.find({});

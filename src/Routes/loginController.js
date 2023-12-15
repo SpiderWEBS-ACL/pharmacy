@@ -1,5 +1,7 @@
 const patientModel = require("../Models/Patient");
 const pharmacistModel = require("../Models/Pharmacist");
+const prescriptionModel = require("../Models/Prescription");
+
 const adminModel = require("../Models/Admin");
 const OTP = require("../Models/OTP");
 const bcrypt = require("bcrypt");
