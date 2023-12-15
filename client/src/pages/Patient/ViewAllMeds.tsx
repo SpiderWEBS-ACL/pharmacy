@@ -6,8 +6,26 @@ import { Input, Select, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import { config, headers } from "../../middleware/tokenMiddleware";
 
+interface Medicine {
+  _id: string;
+  Name: string;
+  Description: string;
+  Price: number;
+  ActiveIngredients: string[];
+  Quantity: number;
+  MedicinalUse: string;
+  imageURL: string;
+  Image: {
+    _id: string;
+  };
+  Sales: number;
+  Archived: "Archive" | "Unarchive";
+  createdAt: string;
+  updatedAt: string;
+}
+
 const AllMedicines = () => {
-  const [medicines, setMedicines] = useState([]);
+  const [medicines, setMedicines] = useState<Medicine[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchValue, setSearchValue] = useState<string>("");
   const [error, setError] = useState<string>("");
@@ -17,6 +35,8 @@ const AllMedicines = () => {
   const [searching, setSearching] = useState<boolean>(false);
   const [searchResults, setSearchResults] = useState([]);
   const [filteredResults, setfilteredResults] = useState([]);
+  const [alternatives, setAlternatives] = useState<Medicine[]>([]);
+
 
   const api = axios.create({
     baseURL: "http://localhost:5000",
@@ -25,7 +45,7 @@ const AllMedicines = () => {
   useEffect(() => {
     //send http request to backend
     api
-      .get(`medicine/viewMedicines`, config) //get request
+      .get(`medicine/viewActiveMedicines`, config) //get request
       .then((response) => {
         setMedicines(response.data); //store response (medicines) in variable
         setLoading(false); //loading screen --> off
@@ -56,6 +76,20 @@ const AllMedicines = () => {
       } else {
         message.error("An error occurred");
       }
+    }
+  };
+
+   const handleViewAlternatives = async (id: string) => {
+    try {
+      const response = await api.get(`/medicine/viewAlternatives/${id}`, config);
+      const alternatives = response.data;
+
+      setAlternatives(alternatives);
+      setFiltering(true); // Set filtering to true to display alternatives
+      setSearching(false); // Set searching to false
+      setfilteredResults(alternatives);
+    } catch (error) {
+      console.error("Error fetching alternatives:", error);
     }
   };
 
@@ -318,6 +352,10 @@ const AllMedicines = () => {
               <td width={500}>
                 <strong style={{ fontSize: 20 }}>{request.Name}</strong>
                 <br></br>
+                {request.Quantity === 0 && (
+                  <span style={{ color: "red" }}>Out of Stock</span>
+                )}
+                <br></br>
                 <br></br>
                 {request.Description}
               </td>
@@ -334,10 +372,10 @@ const AllMedicines = () => {
                 <br></br>
                 <br></br>
                 <button
-                  className="btn btn-success"
-                  onClick={() => handleAddToCart(request._id)}
+                  className= {request.Quantity === 0 ? "btn btn-danger" : "btn btn-success"}
+                  onClick={() => request.Quantity === 0 ? handleViewAlternatives(request._id) : handleAddToCart(request._id)}
                 >
-                  Add to Cart
+                  {request.Quantity === 0 ? "View Alternatives" : "Add to Cart"}
                 </button>
               </td>
             </tr>

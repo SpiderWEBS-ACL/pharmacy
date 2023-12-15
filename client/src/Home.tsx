@@ -96,6 +96,7 @@ function Home() {
       <div className="gradient-container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }} id="top-section">
         <br></br>
       <br></br>
+      <br></br>
         <Card title="Have a Medical Question?" style={{ width: '60%', marginBottom: '16px' }}>
             <p>Chat with your personal doctor and receive an answer right away.</p>
             <Button type="primary" style={{backgroundColor: color}} onClick={handleClinic} >Ask Now</Button>
@@ -113,8 +114,6 @@ function Home() {
           </Card>
           <div id="middle-section" ></div>
           <div className="card-container" >
-          <br></br>
-          <br></br>
           <Card
             cover={<img alt="Teleconsultation" src="/teleconsultation.jpeg" />}
             title="Teleconsultation"
@@ -173,6 +172,8 @@ function Home() {
             </div>
           </div>
           </div>
+          <br></br>
+          <br></br>
           <br></br>
       </div>
     </Content>

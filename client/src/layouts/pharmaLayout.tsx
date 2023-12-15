@@ -9,7 +9,8 @@ import { Layout, Menu } from "antd";
 import {
   UserOutlined,
   PoweroffOutlined,
-  AppstoreOutlined
+  AppstoreOutlined,
+  WalletOutlined
 } from "@ant-design/icons";
 import AppRouter from "../AppRouter";
 
@@ -37,6 +38,10 @@ const PharmacistLayout: React.FC = () => {
           key: "/pharmacist/addMedicine",
         },
       ],
+    }, {
+      label: "Wallet",
+      key: "/pharmacist/wallet",
+      icon: <WalletOutlined />,
     },
     {
       label: "Logout",

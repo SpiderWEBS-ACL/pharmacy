@@ -46,7 +46,11 @@ const pharmacistSchema = new Schema(
     WorkingLicenses:[{
       type: Schema.Types.ObjectId,
       ref: "File",
-    }],
+    }], 
+    Wallet: {
+      type: Number,
+      default: 0
+    },
   },
   { timestamps: true }
 );

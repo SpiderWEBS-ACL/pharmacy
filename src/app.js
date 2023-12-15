@@ -45,6 +45,9 @@ const {
   getDocuments,
   getRegFiles,
   getLicenses,
+  viewPharmaWallet,
+  archiveMedicine,
+  unarchiveMedicine
 } = require("./Routes/pharmacistController");
 
 
@@ -65,6 +68,8 @@ const {
   searchForMedicine,
   filterMedicineByMedicinalUse,
   viewMedicineDetails,
+  getActiveMedicines,
+  viewAlternatives,
 } = require("./Routes/medicineController");
 
 const {
@@ -161,6 +166,10 @@ app.post("/pharmacist/uploadPersonalID/:id", uploadPersonalID);
 app.post("/pharmacist/uploadDegree/:id", uploadPharmacyDegree);
 app.post("/pharmacist/uploadLicenses/:id", uploadLicenses);
 
+app.get("/pharmacist/wallet",PharmacistProtect,viewPharmaWallet);
+app.put("/pharmacist/archiveMed/:id", PharmacistProtect, archiveMedicine);
+app.put("/pharmacist/unarchiveMed/:id", PharmacistProtect, unarchiveMedicine);
+
 //------------------Patient Endpoints---------------------
 app.get("/patient/me",PatientProtect, PatientInfo);
 app.post("/patient/register", registerPatient);
@@ -177,11 +186,12 @@ app.put("/patient/cancelOrder/:id", cancelOrder);
 //------------------Medicine Endpoints------------------
 app.get("/medicine/viewMedicines",PharmacistProtect || PatientProtect || AdminProtect, getAllMedicines);
 app.get("/medicine/viewMedicineDetails/:id",PharmacistProtect || PatientProtect || AdminProtect, viewMedicineDetails);
+app.get("/medicine/viewActiveMedicines",PharmacistProtect || PatientProtect || AdminProtect, getActiveMedicines);
 
 app.get("/medicine/searchForMedicine",PharmacistProtect || PatientProtect || AdminProtect, searchForMedicine);
 app.post("/medicine/filterMedicineByMedicinalUse",PharmacistProtect || PatientProtect || AdminProtect, filterMedicineByMedicinalUse);
 
-
+app.get("/medicine/viewAlternatives/:medicineId",PatientProtect, viewAlternatives);
 //-----------------Cart Endpoints---------------------
 app.post("/cart/createCart",createCart);
 app.post("/cart/medicines/:medicineId",PatientProtect, addMedicineToCart);

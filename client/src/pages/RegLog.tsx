@@ -154,26 +154,19 @@ const RegLog: React.FC = () => {
   const color = 'rgb(57, 132, 237)'
   const { Header, Content, Footer} = Layout;
   return (
-    <Layout>
-        <Header style={{ display: 'flex', alignItems: 'center', background: "transparent" }}>
-        {/* Logo */}
-        <div className="logo" id="head-section">
-          <img src="/logo.png" alt="Logo" style={{ height: '50px', marginRight: '16px' }} />
-        </div>
-        <div><h2 className='header' style={{background: "transparent"}}>SpiderWEBS</h2></div>
-        <div className="header-buttons">
-        
-        </div>
-    </Header>
-    <Content>
     <div
       style={{
-        boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)", // Add shadow
-        border: "1px solid #ccc", // Add border
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        fontFamily: "'Roboto', sans-serif",
       }}
       className={`cont ${isSignUp ? "s--signup" : ""}`}
     >
       <div className="form sign-in ">
+
+        
         <h2 className="h2">Welcome Back</h2>
 
         <InputField2
@@ -418,31 +411,7 @@ const RegLog: React.FC = () => {
         </div>
       </div>
     </div>
-    </Content>
-    <br /><br />
-    <Footer style={{ backgroundColor: color, color: 'white', padding: '10px', textAlign: 'center', lineHeight: 0.5 }}>
-       <br></br>
-        <Row gutter={16}>
-          <Col span={8}>
-            <h4>Company</h4><br />
-            <p>SpiderWEBS</p>
-            <p>Cairo, Egypt</p>
-          </Col>
-          <Col span={8}>
-            <h4>Contact</h4><br />
-            <p>spiderwebs@gmail.com</p>
-            <p>+9984685456</p>
-            {/* Add more contact information if needed */}
-          </Col>
-          <Col span={8}>
-            <h4>Socials</h4><br />
-            <p>spiderwebs_insta</p>
-            <p>spiderwebs_facebook</p>
-          </Col>
-        </Row>
-      </Footer>
-    </Layout>
-  );
+      );
 };
 
 export default RegLog;
