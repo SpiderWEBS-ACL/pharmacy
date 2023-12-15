@@ -161,6 +161,7 @@ const RegistrationRequestDetails: React.FC = () => {
         <Row gutter={16}>
           <Col span={8}>
           <h5><b>Personal ID:</b></h5>
+          {registrationDetails.PersonalID && (
             <Card
               style={{
                 display: "flex",
@@ -204,12 +205,13 @@ const RegistrationRequestDetails: React.FC = () => {
                   </div>
                 </div>
               </div>
-            </Card>
+            </Card>)}
           </Col>
           <Col span={8}>
             <h5>
               <b>Pharmacy Degree::</b>
             </h5>{" "}
+            {registrationDetails.PharmacyDegree && (
             <Card
               style={{
                 display: "flex",
@@ -255,7 +257,7 @@ const RegistrationRequestDetails: React.FC = () => {
                   </div>
                 </div>
               </div>
-            </Card>
+            </Card>)}
           </Col>
         </Row>
         <br />
@@ -264,7 +266,8 @@ const RegistrationRequestDetails: React.FC = () => {
         <h5>
           <b>Working Licenses:</b>
         </h5>
-        <Row gutter={16}>
+        {registrationDetails.WorkingLicenses.length>0 && (
+        <Row gutter={[16,8]}>
           {registrationDetails.WorkingLicenses.map((file: any) => (
             <Col span={8}>
               <Card
@@ -312,7 +315,7 @@ const RegistrationRequestDetails: React.FC = () => {
               </Card>
             </Col>
           ))}
-        </Row>
+        </Row>)}
       </div>
     </div>
   );

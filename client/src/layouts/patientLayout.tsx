@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import ImportedFooter from "../layouts/footer";
+import React, { useEffect, useState } from "react";
 import ImportedHeader from "../layouts/header";
 import {
   BrowserRouter as Router,
@@ -18,16 +17,37 @@ import {
   SettingOutlined,
   WalletOutlined,
   HistoryOutlined,
-  CommentOutlined
-
+  CommentOutlined,
+  BellOutlined,
 } from "@ant-design/icons";
 import AppRouter from "../AppRouter";
-import { FloatButton } from 'antd';
-
+import { FloatButton } from "antd";
+import { Socket, io } from "socket.io-client";
+import Cookies from "js-cookie";
+import { ChatBubbleOutline } from "@material-ui/icons";
+export const socket: Socket = io("http://localhost:5000", {
+  auth: {
+    token: Cookies.get("accessToken"),
+  },
+});
 const { Header, Content, Footer, Sider } = Layout;
 const id = localStorage.getItem("id");
 const PatientLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const [MessageCount, setMessageCount] = useState(0);
+  const [AuthorId, setAuthorId] = useState("");
+
+  useEffect(() => {
+    socket.emit("me");
+    socket.on("me", (id: string) => {
+      localStorage.setItem("socketId", id);
+    });
+  }, []);
+  socket.on("direct-message", (data: any) => {
+    console.log(data);
+    setAuthorId(data.newMessage.author._id);
+    setMessageCount(MessageCount + 1);
+  });
   const navigate = useNavigate();
   const items = [
     {
@@ -52,6 +72,17 @@ const PatientLayout: React.FC = () => {
       icon: <ShoppingCartOutlined />,
     },
     {
+      label: "Chat",
+      icon: <ChatBubbleOutline />,
+      key: "parentChat",
+      children: [
+        {
+          label: "Pharmacists",
+          key: "/patient/pharmacists",
+        },
+      ],
+    },
+    {
       label: "Wallet",
       key: "/patient/wallet",
       icon: <WalletOutlined />,
@@ -59,13 +90,9 @@ const PatientLayout: React.FC = () => {
     {
       label: "Orders",
       key: "/patient/orders",
-      icon: <HistoryOutlined /> ,
+      icon: <HistoryOutlined />,
     },
-    {
-      label: "Live Chat",
-      key: "/patient/chats",
-      icon: <CommentOutlined /> ,
-    },
+
     {
       label: "Logout",
       key: "/",
@@ -77,12 +104,10 @@ const PatientLayout: React.FC = () => {
   return (
     <Layout style={{ minHeight: "100%" }}>
       <Sider
+        theme="light"
         collapsible
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
-        style={{height: '100vh', position: "fixed"}}
-        // style={{background: "#c9c9c9"}}
-        theme = "light"
       >
         <div className="demo-logo-vertical" />
         <Menu
@@ -99,19 +124,44 @@ const PatientLayout: React.FC = () => {
           defaultSelectedKeys={["1"]}
           mode="inline"
           items={items}
-          // style={{background: "#c9c9c9"}}
         ></Menu>
-        
       </Sider>
-      <Layout style={{height: '100%', overflow: 'scroll'}}>
+      <Layout>
         <ImportedHeader />
-        <Content style={{ margin: "0 16px" , marginLeft: "18%", minHeight: "100vh"}}>
-          <AppRouter />
+        <Content style={{ margin: "0 16px", overflow: "hidden" }}>
+          <div
+            style={{
+              overflowY: "auto",
+              minHeight: "86.5vh",
+              maxHeight: "100vh",
+            }}
+          >
+            <AppRouter />
+          </div>
+          <div>
+            <FloatButton
+              style={{
+                right: "4vh",
+                bottom: "94vh",
+              }}
+              icon={<BellOutlined />}
+            />
+            <FloatButton
+              onClick={() => {
+                if (MessageCount > 0) navigate("/pharmacist/chat/" + AuthorId);
+                setMessageCount(0);
+              }}
+              style={{
+                right: "10vh",
+                bottom: "94vh",
+              }}
+              badge={{ count: MessageCount }}
+              icon={<CommentOutlined />}
+            />
+          </div>
         </Content>
-        
- 
         <br />
-        <ImportedFooter />
+        {/* <ImportedFooter /> */}
       </Layout>
     </Layout>
   );

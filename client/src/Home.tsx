@@ -102,9 +102,9 @@ function Home() {
             <Button type="primary" style={{backgroundColor: color}} onClick={handleClinic} >Ask Now</Button>
           </Card>
 
-      <Card title="Have a Medical Question?" style={{ width: '60%', marginBottom: '16px' }}>
-            <p>Chat with your personal doctor and receive an answer right away.</p>
-            <Button type="primary" style={{backgroundColor: color}} onClick={handleClinic} >Ask Now</Button>
+      <Card title="Medicine out of stock?" style={{ width: '60%', marginBottom: '16px' }}>
+            <p>Easily get suggestions for alternative medicines.</p>
+            <Button type="primary" style={{backgroundColor: color}} onClick={handleClinic} >Browse Now</Button>
           </Card>
 
           {/* Pharmacy Card */}
@@ -134,12 +134,12 @@ function Home() {
         <Button type="primary"style={{backgroundColor: color}} onClick={handleClinic}>Packages</Button>
         </Card>
         <Card
-        cover={<img alt="Health Packages" src="/health-packages.jpeg" />}
-        title="Health Packages"
+        cover={<img alt="Book Appointments" src="/book.jpeg" />}
+        title="Book Appointments"
         style={{ width: 'auto', marginBottom: '16px'}}
         >
-        <p>Subscribe to a package and get your money's worth</p>
-        <Button type="primary"style={{backgroundColor: color}}>Packages</Button>
+        <p>Easily book appointments with your personal doctor</p>
+        <Button type="primary"style={{backgroundColor: color}}>Book Appointment</Button>
         </Card>
         </div>
         

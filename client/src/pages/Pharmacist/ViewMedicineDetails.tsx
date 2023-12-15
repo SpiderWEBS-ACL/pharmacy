@@ -73,7 +73,7 @@ const MedicineDetails: React.FC = () => {
         )} </body>  <br></br>
         </Col>
         <Col style={{textAlign: "right"}}>
-        <h6><strong>Quantity:</strong> {medicineDetails.Quantity}</h6>
+        <h6><strong>Quantity:</strong> <span style={{color: medicineDetails.Quantity == 0? "red" : "black"}}>{medicineDetails.Quantity} </span></h6>
         <h6><strong>Sales:</strong> {medicineDetails.Sales}</h6><br></br>
         </Col>
 
