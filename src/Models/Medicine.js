@@ -42,6 +42,11 @@ const medicineSchema = new Schema(
       type: String,
       enum: ["Archive", "Unarchive"],
       default: "Archive ",
+    },
+    Type:{
+      type: String,
+      enum: ["Prescription", "OTC"],
+      default: "OTC ",
     }
   },
   { timestamps: true }

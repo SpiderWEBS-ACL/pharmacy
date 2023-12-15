@@ -1,22 +1,38 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ImportedFooter from "../layouts/footer";
 import ImportedHeader from "../layouts/header";
-import {
-  BrowserRouter as Router,
-  useNavigate,
-} from "react-router-dom";
-import { Layout, Menu } from "antd";
+import { BrowserRouter as Router, useNavigate } from "react-router-dom";
+import { FloatButton, Layout, Menu } from "antd";
 import {
   UserOutlined,
   PoweroffOutlined,
   AppstoreOutlined,
-  WalletOutlined
+  WalletOutlined,
+  BellOutlined,
+  CommentOutlined,
+  VideoCameraOutlined,
 } from "@ant-design/icons";
 import AppRouter from "../AppRouter";
+import { Chat, ChatBubbleOutline } from "@material-ui/icons";
+import { socket } from "./patientLayout";
 
 const { Content, Sider } = Layout;
 const PharmacistLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const [MessageCount, setMessageCount] = useState(0);
+  const [AuthorId, setAuthorId] = useState("");
+
+  useEffect(() => {
+    socket.emit("me");
+    socket.on("me", (id: string) => {
+      localStorage.setItem("socketId", id);
+    });
+  }, []);
+  socket.on("direct-message", (data: any) => {
+    console.log(data);
+    setAuthorId(data.newMessage.author._id);
+    setMessageCount(MessageCount + 1);
+  });
   const navigate = useNavigate();
   const items = [
     {
@@ -38,7 +54,19 @@ const PharmacistLayout: React.FC = () => {
           key: "/pharmacist/addMedicine",
         },
       ],
-    }, {
+    },
+    {
+      label: "Chat",
+      icon: <ChatBubbleOutline />,
+      key: "parentChat",
+      children: [
+        {
+          label: "Doctors",
+          key: "/pharmacist/doctors ",
+        },
+      ],
+    },
+    {
       label: "Wallet",
       key: "/pharmacist/wallet",
       icon: <WalletOutlined />,
@@ -54,11 +82,10 @@ const PharmacistLayout: React.FC = () => {
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sider
+        theme="light"
         collapsible
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
-        style={{height: '100vh', position: "fixed"}}
-        theme = "light"
       >
         <div className="demo-logo-vertical" />
         <Menu
@@ -78,13 +105,42 @@ const PharmacistLayout: React.FC = () => {
           items={items}
         ></Menu>
       </Sider>
-      <Layout style={{height: '100%', overflow: 'scroll'}}>
+      <Layout>
         <ImportedHeader />
-        <Content style={{ margin: "0 16px" , marginLeft: "18%", minHeight: "100vh"}}>
-          <AppRouter />
+        <Content style={{ margin: "0 16px", overflow: "hidden" }}>
+          <div
+            style={{
+              overflowY: "auto",
+              minHeight: "86.5vh",
+              maxHeight: "100vh",
+            }}
+          >
+            <AppRouter />
+            <div>
+              <FloatButton
+                style={{
+                  right: "4vh",
+                  bottom: "94vh",
+                }}
+                icon={<BellOutlined />}
+              />
+              <FloatButton
+                onClick={() => {
+                  if (MessageCount > 0) navigate("/pharmacist/chat/" + AuthorId);
+                  setMessageCount(0);
+                }}
+                style={{
+                  right: "10vh",
+                  bottom: "94vh",
+                }}
+                badge={{ count: MessageCount }}
+                icon={<CommentOutlined />}
+              />
+            </div>
+          </div>
         </Content>
         <br />
-        <ImportedFooter />
+        {/* <ImportedFooter /> */}
       </Layout>
     </Layout>
   );
