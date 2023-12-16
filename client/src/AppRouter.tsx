@@ -47,6 +47,7 @@ import ChatPharmacist from "./pages/Pharmacist/ChatPharmacist";
 import ViewAllDoctors from "./pages/Patient/ViewAllDoctors";
 import ChatPatient from "./pages/Patient/ChatPatient";
 import ViewAllPharmacists from "./pages/Patient/ViewAllPharmacists";
+import Register from "./pages/Register"
 
 const AppRouter: React.FC = () => {
   const navigate = useNavigate();
@@ -88,6 +89,7 @@ const AppRouter: React.FC = () => {
       return (
         <Routes>
           <Route path="/" element={<RegLog />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/pharmacist/register" element={<RegisterPharmacist />} />
           <Route path="/pharmacist/wallet" element={<PharmaWallet />} />
           <Route
@@ -117,6 +119,7 @@ const AppRouter: React.FC = () => {
       return (
         <Routes>
           <Route path="/reglog" element={<RegLog />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/patient/commercial" element={<Commercial />} />
           <Route
             path="/patient/viewMedicines"
@@ -157,6 +160,7 @@ const AppRouter: React.FC = () => {
           <Route path="/forgotPassword" element={<ForgotPassword />} />
           <Route path="/uploadDocuments/:id" element={<UploadDocuments />} />
           <Route path="/reglog" element={<RegLog />} />
+          <Route path="/register" element={<Register />} />
         </Routes>
       );
     }

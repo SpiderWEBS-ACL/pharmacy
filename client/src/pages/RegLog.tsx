@@ -15,6 +15,18 @@ import {
   IoClose,
 } from "react-icons/io5";
 import Cookies from "js-cookie";
+import {
+  MDBBtn,
+  MDBContainer,
+  MDBCard,
+  MDBCardBody,
+  MDBCol,
+  MDBRow,
+  MDBInput,
+  MDBCheckbox,
+  MDBIcon
+}
+from 'mdb-react-ui-kit';
 
 const RegLog: React.FC = () => {
   const [modalActive, setModalActive] = useState(false);
@@ -108,6 +120,11 @@ const RegLog: React.FC = () => {
     }
   };
 
+  const handleRegister = () =>{
+    navigate("/register");
+    window.location.reload();
+    
+  }
   const handleRegAsPharm = () => {
     navigate("/pharmacist/register");
     window.location.reload();
@@ -148,270 +165,58 @@ const RegLog: React.FC = () => {
     setIsSignUp(!isSignUp);
   };
 
-  const closeModal = () => {
-    setModalActive(false);
-  };
   const color = 'rgb(57, 132, 237)'
   const { Header, Content, Footer} = Layout;
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-        fontFamily: "'Roboto', sans-serif",
-      }}
-      className={`cont ${isSignUp ? "s--signup" : ""}`}
-    >
-      <div className="form sign-in ">
+    <MDBContainer className="my-5 gradient-form">
 
-        
-        <h2 className="h2">Welcome Back</h2>
+      <MDBRow>
 
-        <InputField2
-          id="Username"
-          label="Username"
-          type="text"
-          value={Username}
-          onChange={setUsername}
-          onBlur={() => handleBlur("username")}
-          required={true}
-        />
+        <MDBCol col='6' className="mb-5">
+          <div className="d-flex flex-column ms-5">
 
-        <InputField2
-          id="Password"
-          label="Password"
-          type="password"
-          value={Password}
-          onChange={setPassword}
-          required={true}
-          onBlur={() => handleBlur("password")}
-        />
-
-        <Link
-          to="/forgotPassword"
-          className="forgot-pass text-right"
-          style={{ display: "block", textAlign: "center" }}
-        >
-          Forgot Password?
-        </Link>
-
-        <button onClick={handleSignIn} type="button" className="submit button">
-          Sign In
-        </button>
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <button
-          onClick={handleRegAsPharm}
-          type="button"
-          className="submit button"
-        >
-          Register As Pharmacist
-        </button>
-      </div>
-
-      <div className="sub-cont">
-        <div className="img">
-          <div className={`img__text m--up ${isSignUp ? "" : ""}`}>
-            <h2 className="h2">New here?</h2>
-            <p>Sign up and discover a great amount of new opportunities!</p>
-          </div>
-
-          <div className={`img__text m--in ${isSignUp ? "" : "m--up"}`}>
-            <h2 className="h2">One of us?</h2>
-            <p className="p">
-              If you already have an account, just sign in. We've missed you!
-            </p>
-          </div>
-
-          <div className="img__btn" onClick={toggleSignUp}>
-            <span className={`span m--up ${isSignUp ? "m--in" : ""}`}>
-              Sign Up
-            </span>
-            <span className={`span m--in ${isSignUp ? "" : "m--up"}`}>
-              Sign In
-            </span>
-          </div>
-        </div>
-
-        <div
-          className="form sign-up"
-          style={{ overflow: "auto", display: "block" }}
-        >
-          <h2 className="h2">Time to feel like home</h2>
-
-          <div className="input_wrap">
-            <InputField2
-              id="Username"
-              label="Username"
-              type="text"
-              value={Username}
-              onChange={setUsername}
-              onBlur={() => handleBlur("username")}
-              isValid={validateUsername(Username)}
-              errorMessage="Username must be at least 3 characters long."
-              touched={touchedFields.username}
-              required={true}
-            />
-          </div>
-
-          <div className="input_wrap">
-            <InputField2
-              id="Password"
-              label="Password"
-              type="password"
-              value={Password}
-              onChange={setPassword}
-              onBlur={() => handleBlur("password")}
-              isValid={validatePassword(Password)}
-              errorMessage="Password must be at least 6 characters long and contain at least one uppercase letter, one lowercase letter, and one digit."
-              touched={touchedFields.password}
-              required={true}
-            />
-          </div>
-
-          <div className="input_wrap">
-            <InputField2
-              id="Email"
-              label="Email"
-              type="text"
-              value={Email}
-              onChange={setEmail}
-              required={true}
-            />
-          </div>
-
-          <div className="input_wrap">
-            <InputField2
-              id="Name"
-              label="Name"
-              type="text"
-              value={Name}
-              onChange={setName}
-              required={true}
-            />
-          </div>
-
-          <div className="input_wrap">
-            <label className="label">
-              <span className="span">Date Of Birth</span>
-              <input
-                className="input"
-                value={Dob !== undefined ? Dob.toISOString().split("T")[0] : ""}
-                onChange={handleDobChange}
-                type="date"
-              />
-            </label>
-          </div>
-
-          <div className="input_wrap">
-            <InputField2
-              id="Gender"
-              label="Gender"
-              type="select"
-              options={["Male", "Female"]}
-              value={Gender}
-              onChange={setGender}
-              required={true}
-            />
-          </div>
-
-          <div className="input_wrap">
-            <InputField2
-              id="MobileNo"
-              label="Mobile Number"
-              type="tel"
-              value={Mobile !== undefined ? Mobile.toString() : ""}
-              onChange={setMobile}
-              isValid={Mobile !== undefined ? validateMobile(Mobile) : true}
-              errorMessage="Invalid Mobile Number! Accepted Format: +201234567890 OR 0123456789"
-              touched={true}
-              required={true}
-            />
-          </div>
-
-          <div className="input_wrap">
-            <InputField2
-              id="EmergencyContName"
-              label="Emergency Contact Name"
-              type="text"
-              value={EmergencyContactName}
-              onChange={setEmergencyContactName}
-              required={true}
-            />
-          </div>
-
-          <div className="input_wrap">
-            <InputField2
-              id="EmergencyContMobile"
-              label="Emergency Contact Mobile"
-              type="tel"
-              value={
-                EmergencyContactMobile !== undefined
-                  ? EmergencyContactMobile.toString()
-                  : ""
-              }
-              onChange={setEmergencyContactMobile}
-              isValid={validateMobile(EmergencyContactMobile)}
-              errorMessage="Invalid Mobile Number! Accepted Format: +201234567890 OR 0123456789"
-              touched={true}
-              required={true}
-            />
-          </div>
-
-          <div className="input_wrap">
-            <InputField2
-              id="relation"
-              label="Emergency Contact Relation"
-              type="text"
-              value={EmergencyContactRelation}
-              onChange={setEmergencyContactRelation}
-              required={true}
-            />
-          </div>
-
-          <button
-            onClick={handleSignUp}
-            type="button"
-            className=" button submit"
-          >
-            Sign Up
-          </button>
-        </div>
-
-        <div
-          className={`modal_wrapper ${modalActive ? "active" : ""}`}
-          style={{ color: error ? "red" : "green" }}
-        >
-          <div className="shadow"></div>
-          <div className="success_wrap" style={{ position: "absolute" }}>
-            <div style={{ position: "absolute", top: 10, right: 20 }}>
-              <IoClose
-                name="close-outline"
-                style={{ fontSize: 20, color: "black" }}
-                onClick={closeModal}
-              ></IoClose>
+            <div className="text-center">
+              <img src="/logo.png"
+                style={{width: '150px'}} alt="logo" />
             </div>
 
-            <span
-              className="modal_icon"
-              style={{ backgroundColor: "transparent", marginBottom: 10 }}
-            >
-              {!error && (
-                <IoCheckmarkDoneCircleSharp style={{ color: "green" }} />
-              )}
-              {error && <IoAlertCircle style={{ color: "red" }} />}
-            </span>
-            <h6>{error ? error : "You are Now Registered Successfully!"}</h6>
+            <h3 style={{alignSelf: "center"}}>Login to your account</h3>
+            <br></br>
+
+            <MDBInput wrapperClass='mb-4' label='Username' id='form1' type='username'/>
+            <MDBInput wrapperClass='mb-4' label='Password' id='form2' type='password'/>
+
+
+            <div className="text-center pt-1 mb-5 pb-1">
+              <Button className="mb-4 w-100" onClick={handleSignIn} type= "primary">Sign in</Button>
+              <a className="text-muted" href="/forgotPassword">Forgot password?</a>
+            </div>
+
+            <div className="d-flex flex-row align-items-center justify-content-center pb-4 mb-4">
+              <p className="mb-0">Don't have an account?</p>
+              <Button type="dashed" danger style={{marginLeft: '10px'}} onClick={handleRegister}>
+                 Register
+             </Button>
+            </div>
+
           </div>
-        </div>
-      </div>
-    </div>
-      );
+
+        </MDBCol>
+
+        <MDBCol col='6' className="mb-5">
+          <div className="d-flex flex-column  justify-content-center gradient-custom-2 h-100 mb-4">
+          <img src="/ren.jpg"
+               alt="ren" width='800vh' />
+           
+
+          </div>
+
+        </MDBCol>
+
+      </MDBRow>
+
+    </MDBContainer>
+  );
 };
 
 export default RegLog;
