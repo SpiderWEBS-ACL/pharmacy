@@ -160,11 +160,14 @@ const RegLog: React.FC = () => {
     }
   };
 
-  const toggleSignUp = () => {
-    setModalActive(false);
-    setIsSignUp(!isSignUp);
+
+  const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUsername(event.target.value);
   };
 
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(event.target.value);
+  };
   const color = 'rgb(57, 132, 237)'
   const { Header, Content, Footer} = Layout;
   return (
@@ -183,9 +186,22 @@ const RegLog: React.FC = () => {
             <h3 style={{alignSelf: "center"}}>Login to your account</h3>
             <br></br>
 
-            <MDBInput wrapperClass='mb-4' label='Username' id='form1' type='username'/>
-            <MDBInput wrapperClass='mb-4' label='Password' id='form2' type='password'/>
-
+            <MDBInput
+              wrapperClass='mb-4'
+              label='Username'
+              id='form1'
+              type='username'
+              onChange={handleUsernameChange}
+              value={Username} 
+            />
+            <MDBInput
+            wrapperClass='mb-4'
+            label='Password'
+            id='form2'
+            type='password'
+            onChange={handlePasswordChange}
+            value={Password}
+          />
 
             <div className="text-center pt-1 mb-5 pb-1">
               <Button className="mb-4 w-100" onClick={handleSignIn} type= "primary">Sign in</Button>
