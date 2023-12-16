@@ -3,12 +3,12 @@ const Cart = require("../Models/Cart");
 const Medicine = require("../Models/Medicine");
 const Patient = require("../Models/Patient");
 const Orders = require("../Models/Orders");
+const prescriptionModel = require("../Models/Prescription");
 const Notification = require("../Models/Notification");
 const Pharmacist = require("../Models/Pharmacist");
 require("dotenv").config();
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const nodemailer = require("nodemailer");
-
 
 const createCart = async (req, res) => {
   try {
@@ -119,8 +119,7 @@ const emptyCart = async (req, res) => {
 
     await cart.save();
 
-    return  "Cart Emptied" ;
-
+    return "Cart Emptied";
   } catch (error) {
     throw error;
   }
@@ -171,7 +170,9 @@ const viewCart = async (req, res) => {
   try {
     const cartId = req.params.cartId;
 
-    const cart = await Cart.findById(cartId).populate("medicines").populate("medicines.medicine.Image");
+    const cart = await Cart.findById(cartId)
+      .populate("medicines")
+      .populate("medicines.medicine.Image");
     if (!cart) {
       return res.status(404).json({ error: "Cart not found" });
     }
@@ -187,7 +188,9 @@ const viewPatientCart = async (req, res) => {
     const patient = await Patient.findById(patientId);
     const cartId = patient.Cart;
 
-    const cart = await Cart.findById(cartId).populate("medicines").populate("medicines.medicine.Image");
+    const cart = await Cart.findById(cartId)
+      .populate("medicines")
+      .populate("medicines.medicine.Image");
     if (!cart) {
       return res.status(404).json({ error: "Cart not found" });
     }
@@ -292,17 +295,19 @@ const getCartTotalHelper2 = async (req, res) => {
 
 const payCartWithWallet = async (req, res) => {
   try {
+    console.log("BODYYYYYYYYYYYYYYYYYYYYYY", req.body);
     const patientId = req.user.id;
     const patient = await Patient.findById(patientId);
     total = await getCartTotalHelper2({ id: patientId });
     console.log("TOTAL:", total);
     patient.Wallet -= total;
+    patient.WalletBalance -= total;
     await patient.save();
-
+    console.log("PATIENTTTT", patient);
     const order = await placeOrder(req, res);
-   
-  } catch (error){
-     res.status(500).json({error: error.message});
+    return;
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -337,42 +342,44 @@ const payCartWithStripe = async (req, res) => {
 
 const placeOrder = async (req, res) => {
   try {
-    const{id} = req.user;
-    const {shipping, paymentMethod} = req.body;
+    console.log("IN PLACEORDER");
+    const { id } = req.user;
+    const { shipping, paymentMethod } = req.body;
 
     const patient = await Patient.findById(id);
 
     const cartId = patient.Cart;
+    console.log("cartId", cartId);
     const cart = await Cart.findById(cartId);
+    console.log(cart);
 
     const medicines = cart.medicines;
 
     console.log(medicines);
-    
+
     //update sales
     for (let i = 0; i < medicines.length; i++) {
       const medicineId = medicines[i].medicine.toString();
       const medicine = await Medicine.findById(medicineId);
 
       console.log(medicine);
-      await medicine.updateOne( {Sales: medicine.Sales + medicines[i].quantity})
+
+      await medicine.updateOne({
+        Sales: medicine.Sales + medicines[i].quantity,
+      });
 
       //out of stock
-      if (medicine.Quantity == 0){
-
+      if (medicine.Quantity == 0) {
         const pharmacists = await Pharmacist.find({});
 
         for(let i = 0; i < pharmacists.length; i++){
-
-          await sendNotification(pharmacists[i].Email, medicine);
-        
+          await sendNotification(pharmacists[i], medicine);
         }
       }
     }
 
     const total = await getCartTotalHelper(req, res);
 
-    
     const order = await Orders.create({
       Patient: patient,
       Medicines: medicines,
@@ -380,34 +387,29 @@ const placeOrder = async (req, res) => {
       Status: "Processing",
       DeliveryAddress: shipping,
       PaymentMethod: paymentMethod,
-      Date: Date.now()
+      Date: Date.now(),
     });
+    console.log("order", order);
 
     console.log("Order Placed");
     await emptyCart(req, res);
 
     console.log("Cart Emptied");
 
-    res.status(200).json({url: `${process.env.SERVER_URL}/patient/viewOrder/${order._id}`});
+    return res.status(200).json({
+      url: `${process.env.SERVER_URL}/patient/viewOrder/${order._id}`,
+      _id: order._id,
+    });
 
     console.log("returned");
-
   } catch (error) {
-      throw error;
+    throw error;
   }
 };
 
-
 const sendNotification = async (pharmacist, medicine) => {
-// const sendNotification = async (req, res) => {
-  // const {pharmacistId, medicineId} = req.body;
   try {
-
-    // const pharmacist = await Pharmacist.findById(pharmacistId);
-    // const medicine = await Medicine.findById(medicineId);
-
     const viewMedicinePage = `http://localhost:5173/pharmacist/medicineDetails/${medicine._id}`;
-
 
     //set up source email
     const transporter = nodemailer.createTransport({
@@ -418,14 +420,18 @@ const sendNotification = async (pharmacist, medicine) => {
       },
     });
 
-//<img src= ${ medicine.Image? `/images/${medicine.Image.filename}` :medicine.imageURL} width={100} height={100}/>
-
     //format email details
     const mailOptions = {
       from: "spiderwebsacl@gmail.com",
       to: pharmacist.Email,
       subject: "New Notification",
-      html: ` <img src= ${ medicine.Image? `/images/${medicine.Image.filename}` :medicine.imageURL} width="50" height="50"/> <a style="font-size:20px; letter-spacing:2px;" href= ${viewMedicinePage}> <b><i> ${medicine.Name}</i></b></a>
+      html: ` <img src= ${
+        medicine.Image
+          ? `/images/${medicine.Image.filename}`
+          : medicine.imageURL
+      } width="50" height="50"/> <a style="font-size:20px; letter-spacing:2px;" href= ${viewMedicinePage}> <b><i> ${
+        medicine.Name
+      }</i></b></a>
               <p>is out of stock and needs to be refilled.</p>`,
     };
 
@@ -436,13 +442,10 @@ const sendNotification = async (pharmacist, medicine) => {
       Pharmacist: pharmacist,
       Medicine: medicine,
       message: `${medicine.Name} is out of stock!`,
-      date: Date.now()
+      date: Date.now(),
     });
 
     return notif;
-
-    // res.status(200).json(notif);
-  
   } catch (err) {
     throw err;
   }

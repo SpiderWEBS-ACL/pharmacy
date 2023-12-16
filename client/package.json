@@ -5,7 +5,7 @@
   "type": "module",
   "proxy": "http://localhost:8000",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite  --port 5173",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
@@ -29,6 +29,7 @@
     "framer-motion": "^10.16.4",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^3.1.2",
+    "moment": "^2.29.4",
     "mdb-react-ui-kit": "^7.0.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.9.1",

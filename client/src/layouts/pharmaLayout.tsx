@@ -15,18 +15,35 @@ import {
 import AppRouter from "../AppRouter";
 import { Chat, ChatBubbleOutline } from "@material-ui/icons";
 import { socket } from "./patientLayout";
+import axios from "axios";
+import { config } from "../middleware/tokenMiddleware";
 
 const { Content, Sider } = Layout;
 const PharmacistLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [MessageCount, setMessageCount] = useState(0);
   const [AuthorId, setAuthorId] = useState("");
+  const [notificationCount, setNotificationCount] = useState(0);
+
+  const api = axios.create({
+    baseURL: "http://localhost:5000/",
+  });
 
   useEffect(() => {
     socket.emit("me");
     socket.on("me", (id: string) => {
       localStorage.setItem("socketId", id);
     });
+
+    api.get("/pharmacist/unreadNotifications", config)
+    .then((response) => {
+      console.log(response.data);
+      setNotificationCount(response.data.length);
+    })
+    .catch((error) => {
+      console.log("Error: " + error);
+    });
+
   }, []);
   socket.on("direct-message", (data: any) => {
     console.log(data);
@@ -117,21 +134,28 @@ const PharmacistLayout: React.FC = () => {
           >
             <AppRouter />
             <div>
-              <FloatButton
-                style={{
-                  right: "4vh",
-                  bottom: "94vh",
-                }}
-                icon={<BellOutlined />}
-              />
+            <FloatButton
+              onClick={() => {
+                navigate("/pharmacist/notifications");
+              }}
+              style={{
+                right: "4vh",
+                bottom: "94vh",
+                top: "4vh",
+              }}
+              badge={{ count: notificationCount }}
+              icon={<BellOutlined />}
+            />
               <FloatButton
                 onClick={() => {
                   if (MessageCount > 0) navigate("/pharmacist/chat/" + AuthorId);
                   setMessageCount(0);
                 }}
                 style={{
-                  right: "10vh",
+                  right: "12vh",
                   bottom: "94vh",
+                  top: "4vh",
+
                 }}
                 badge={{ count: MessageCount }}
                 icon={<CommentOutlined />}
