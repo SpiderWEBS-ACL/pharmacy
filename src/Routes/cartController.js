@@ -373,9 +373,7 @@ const placeOrder = async (req, res) => {
         const pharmacists = await Pharmacist.find({});
 
         for(let i = 0; i < pharmacists.length; i++){
-
           await sendNotification(pharmacists[i], medicine);
-        
         }
       }
     }
@@ -448,7 +446,6 @@ const sendNotification = async (pharmacist, medicine) => {
     });
 
     return notif;
-
   } catch (err) {
     throw err;
   }
