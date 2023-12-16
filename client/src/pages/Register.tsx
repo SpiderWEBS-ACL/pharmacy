@@ -127,60 +127,70 @@ const Register: React.FC = () => {
         <MDBCol col='6' className="mb-5">
           {/* Left Column */}
           <div className="d-flex flex-column justify-content-center gradient-custom-2 h-100 mb-4">
-            <img src="/ren.jpg" alt="ren" width='300vh' />
+            <img src="/monanurse.jpeg" alt="ren" width='400vh' style={{marginLeft: '60px'}} />
           </div>
         </MDBCol>
-        <MDBCol col='6' className="mb-5 h-100">
+        <MDBCol col='6' className="mb-5">
           {/* Right Column */}
-          <div className="d-flex flex-column ms-5">
+          <div className="d-flex flex-column ms-4" style={{ width: '80%' }}>
             <div className="text-center">
-              <img src="/logo.png" style={{ width: '150px' }} alt="logo" />
+              <img src="/logo.png" style={{ width: '90px' }} alt="logo" />
             </div>
             <h3 style={{ alignSelf: "center" }}>Time to feel like home</h3>
-            <br></br>
+            <br />
 
             {/* Input Fields */}
             <div className="d-flex flex-row flex-wrap">
-              <div className="mb-4 w-50">
-                <MDBInput label='Name' id='name' type='text' onBlur={() => handleBlur('name')} onChange={(e) => setName(e.target.value)} />
+              <div className="mb-3 w-50 pe-2">
+                <label htmlFor='name' className="form-label" style={{ fontSize: '14px' }}>Name</label>
+                <MDBInput id='name' type='text' onBlur={() => handleBlur('name')} onChange={(e) => setName(e.target.value)} />
               </div>
-              <div className="mb-4 w-50">
-                <MDBInput label='Email' id='email' type='email' onBlur={() => handleBlur('email')} onChange={(e) => setEmail(e.target.value)} />
+              <div className="mb-3 w-50">
+                <label htmlFor='email' className="form-label" style={{ fontSize: '14px' }}>Email</label>
+                <MDBInput id='email' type='email' onBlur={() => handleBlur('email')} onChange={(e) => setEmail(e.target.value)} />
               </div>
-              <div className="mb-4 w-50">
-                <MDBInput label='Password' id='password' type='password' onBlur={() => handleBlur('password')} onChange={(e) => setPassword(e.target.value)} />
+              <div className="mb-3 w-50 pe-2">
+                <label htmlFor='password' className="form-label" style={{ fontSize: '14px' }}>Password</label>
+                <MDBInput id='password' type='password' onBlur={() => handleBlur('password')} onChange={(e) => setPassword(e.target.value)} />
               </div>
-              <div className="mb-4 w-50">
-                <MDBInput label='Username' id='username' type='text' onBlur={() => handleBlur('username')} onChange={(e) => setUsername(e.target.value)} />
+              <div className="mb-3 w-50">
+                <label htmlFor='username' className="form-label" style={{ fontSize: '14px' }}>Username</label>
+                <MDBInput id='username' type='text' onBlur={() => handleBlur('username')} onChange={(e) => setUsername(e.target.value)} />
               </div>
-              <div className="mb-4 w-50">
-                <MDBInput label='Gender' id='gender' type='text' onBlur={() => handleBlur('gender')} onChange={(e) => setGender(e.target.value)} />
+              <div className="mb-3 w-50 pe-2">
+                <label htmlFor='gender' className="form-label" style={{ fontSize: '14px' }}>Gender</label>
+                <MDBInput id='gender' type='text' onBlur={() => handleBlur('gender')} onChange={(e) => setGender(e.target.value)} />
               </div>
-              <div className="mb-4 w-50">
-                <MDBInput label='Date of Birth' id='dob' type='date' onBlur={() => handleBlur('dob')} onChange={handleDobChange} />
+              <div className="mb-3 w-50">
+                <label htmlFor='dob' className="form-label" style={{ fontSize: '14px' }}>Date of Birth</label>
+                <MDBInput id='dob' type='date' onBlur={() => handleBlur('dob')} onChange={handleDobChange} />
               </div>
-              <div className="mb-4 w-50">
-                <MDBInput label='Mobile' id='mobile' type='text' onBlur={() => handleBlur('mobile')} onChange={(e) => setMobile(e.target.value)} />
+              <div className="mb-3 w-50 pe-2">
+                <label htmlFor='mobile' className="form-label" style={{ fontSize: '14px' }}>Mobile</label>
+                <MDBInput id='mobile' type='text' onBlur={() => handleBlur('mobile')} onChange={(e) => setMobile(e.target.value)} />
               </div>
-              <div className="mb-4 w-50">
-                <MDBInput label='Emergency Contact Name' id='emergencyContactName' type='text' onBlur={() => handleBlur('emergencyContactName')} onChange={(e) => setEmergencyContactName(e.target.value)} />
+              <div className="mb-3 w-50">
+                <label htmlFor='emergencyContactName' className="form-label" style={{ fontSize: '14px' }}>Emergency Contact Name</label>
+                <MDBInput id='emergencyContactName' type='text' onBlur={() => handleBlur('emergencyContactName')} onChange={(e) => setEmergencyContactName(e.target.value)} />
               </div>
-              <div className="mb-4 w-50">
-                <MDBInput label='Emergency Contact Mobile' id='emergencyContactMobile' type='text' onBlur={() => handleBlur('emergencyContactMobile')} onChange={(e) => setEmergencyContactMobile(e.target.value)} />
+              <div className="mb-3 w-50 pe-2">
+                <label htmlFor='emergencyContactMobile' className="form-label" style={{ fontSize: '14px' }}>Emergency Contact Mobile</label>
+                <MDBInput id='emergencyContactMobile' type='text' onBlur={() => handleBlur('emergencyContactMobile')} onChange={(e) => setEmergencyContactMobile(e.target.value)} />
               </div>
-              <div className="mb-4 w-50">
-                <MDBInput label='Emergency Contact Relation' id='emergencyContactRelation' type='text' onBlur={() => handleBlur('emergencyContactRelation')} onChange={(e) => setEmergencyContactRelation(e.target.value)} />
+              <div className="mb-3 w-50">
+                <label htmlFor='emergencyContactRelation' className="form-label" style={{ fontSize: '14px' }}>Emergency Contact Relation</label>
+                <MDBInput id='emergencyContactRelation' type='text' onBlur={() => handleBlur('emergencyContactRelation')} onChange={(e) => setEmergencyContactRelation(e.target.value)} />
               </div>
             </div>
 
             {/* Buttons */}
-            <div className="text-center pt-1 mb-5 pb-1">
-              <Button className="mb-4 w-100" onClick={handleSignUp} type="primary">
+            <div className="text-center pt-1 mb-1 pb-1">
+              <Button className="mb-3 w-100" onClick={handleSignUp} type="primary">
                 Register
               </Button>
             </div>
 
-            <div className="d-flex flex-row align-items-center justify-content-center pb-4 mb-4">
+            <div className="d-flex flex-row align-items-center justify-content-center pb-3 mb-3">
               <p className="mb-0">Pharmacist?</p>
               <Button type="dashed" danger style={{ marginLeft: '10px' }} onClick={handleRegisterPharmacist}>
                 Register as Pharmacist
