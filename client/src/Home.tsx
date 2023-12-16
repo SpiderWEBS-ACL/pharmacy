@@ -75,6 +75,8 @@ function Home() {
     window.location.href = 'http://localhost:5174/';
   };
 
+
+
   return (
     <Layout>
         <Header style={{ display: 'flex', alignItems: 'center', background: "white" }}>
@@ -99,18 +101,18 @@ function Home() {
       <br></br>
         <Card title="Have a Medical Question?" style={{ width: '60%', marginBottom: '16px' }}>
             <p>Chat with your personal doctor and receive an answer right away.</p>
-            <Button type="primary" style={{backgroundColor: color}} onClick={handleClinic} >Ask Now</Button>
+            {/* <Button type="primary" style={{backgroundColor: color}} onClick={handleClinic} >Ask Now</Button> */}
           </Card>
 
       <Card title="Medicine out of stock?" style={{ width: '60%', marginBottom: '16px' }}>
             <p>Easily get suggestions for alternative medicines.</p>
-            <Button type="primary" style={{backgroundColor: color}} onClick={handleClinic} >Browse Now</Button>
+            {/* <Button type="primary" style={{backgroundColor: color}} onClick={handleClinic} >Browse Now</Button> */}
           </Card>
 
           {/* Pharmacy Card */}
           <Card title="Pharmacy" style={{ width: '60%', marginBottom: '16px' }}>
             <p>Get your medicine and all your pharmacy needs.</p>
-            <Button type="primary" style={{backgroundColor: color}} onClick={handlePharmacy}>Go to Pharmacy</Button>
+            {/* <Button type="primary" style={{backgroundColor: color}} onClick={handlePharmacy}>Go to Pharmacy</Button> */}
           </Card>
           <div id="middle-section" ></div>
           <div className="card-container" >
@@ -120,7 +122,7 @@ function Home() {
             style={{ width: 'auto', marginBottom: '16px', marginRight: '20px' }}
             >
             <p>Schedule a video call with a specialized doctor.</p>
-        <Button type="primary"style={{backgroundColor: color}} onClick={handleClinic}>Book a Call</Button>
+        {/* <Button type="primary"style={{backgroundColor: color}} onClick={handleClinic}>Book a Call</Button> */}
             </Card>
           
        
@@ -131,7 +133,7 @@ function Home() {
         style={{ width: 'auto', marginBottom: '16px',marginRight: '20px'}}
         >
         <p>Subscribe to a package and get your money's worth</p>
-        <Button type="primary"style={{backgroundColor: color}} onClick={handleClinic}>Packages</Button>
+        {/* <Button type="primary"style={{backgroundColor: color}} onClick={handleHealthPackages}>Packages</Button> */}
         </Card>
         <Card
         cover={<img alt="Book Appointments" src="/book.jpeg" />}
@@ -139,7 +141,7 @@ function Home() {
         style={{ width: 'auto', marginBottom: '16px'}}
         >
         <p>Easily book appointments with your personal doctor</p>
-        <Button type="primary"style={{backgroundColor: color}}>Book Appointment</Button>
+        {/* <Button type="primary"style={{backgroundColor: color}}>Book Appointment</Button> */}
         </Card>
         </div>
         

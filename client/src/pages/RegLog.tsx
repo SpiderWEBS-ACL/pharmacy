@@ -3,46 +3,19 @@ import axios from "axios";
 import "./style.css";
 import { Link, useNavigate } from "react-router-dom";
 import { Layout, message ,Button , Row, Col} from "antd";
-import {
-  validateMobile,
-  validatePassword,
-  validateUsername,
-} from "../utils/ValidationUtils";
-import InputField2 from "../components/InputField2";
-import {
-  IoAlertCircle,
-  IoCheckmarkDoneCircleSharp,
-  IoClose,
-} from "react-icons/io5";
+
 import Cookies from "js-cookie";
 import {
-  MDBBtn,
   MDBContainer,
-  MDBCard,
-  MDBCardBody,
   MDBCol,
   MDBRow,
-  MDBInput,
-  MDBCheckbox,
-  MDBIcon
+  MDBInput
 }
 from 'mdb-react-ui-kit';
 
 const RegLog: React.FC = () => {
-  const [modalActive, setModalActive] = useState(false);
-  const [isSignUp, setIsSignUp] = useState<boolean>(false);
-  const [Name, setName] = useState<string>("");
-  const [Email, setEmail] = useState<string>("");
   const [Password, setPassword] = useState<string>("");
   const [Username, setUsername] = useState<string>("");
-  const [Gender, setGender] = useState<string>();
-  const [Dob, setDob] = useState<Date>();
-  const [Mobile, setMobile] = useState<number>();
-  const [EmergencyContactName, setEmergencyContactName] = useState<string>();
-  const [EmergencyContactMobile, setEmergencyContactMobile] =
-    useState<number>();
-  const [EmergencyContactRelation, setEmergencyContactRelation] =
-    useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [touchedFields, setTouchedFields] = useState({
     username: false,
@@ -53,48 +26,7 @@ const RegLog: React.FC = () => {
     baseURL: "http://localhost:5000/",
   });
 
-  const handleSignUp = async () => {
-    if (
-      !Name ||
-      !Email ||
-      !Password ||
-      !Username ||
-      !Gender ||
-      !Dob ||
-      !Mobile ||
-      !EmergencyContactMobile ||
-      !EmergencyContactName ||
-      !EmergencyContactRelation
-    ) {
-      message.error("Please Fill In All Requirements");
-      return;
-    }
-
-    try {
-      const data = {
-        Name,
-        Email,
-        Password,
-        Username,
-        Dob,
-        Gender,
-        Mobile,
-        EmergencyContact: {
-          Name: EmergencyContactName,
-          Mobile: EmergencyContactMobile,
-          relationToPatient: EmergencyContactRelation,
-        },
-      };
-
-      const response = await api.post(`/patient/register`, data);
-      console.log("Response:", response.data);
-      message.success("Congrats, you are in!");
-
-    } catch (error: any) {
-      console.error("Error:", error);
-      message.error(`${error.response.data.error}`);
-    }
-  };
+ 
   const handleSignIn = async () => {
     if (!Username || !Password) {
       message.warning("Please Fill In All Fields");
@@ -125,11 +57,6 @@ const RegLog: React.FC = () => {
     window.location.reload();
     
   }
-  const handleRegAsPharm = () => {
-    navigate("/pharmacist/register");
-    window.location.reload();
-  };
-
   const navigate = useNavigate();
 
   const handleRedirection = (item: any) => {
@@ -149,18 +76,6 @@ const RegLog: React.FC = () => {
     });
   };
 
-  const handleDobChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = event.target.value; // Assuming the input format is "YYYY-MM-DD"
-    const date = new Date(inputValue);
-
-    if (!isNaN(date.getTime())) {
-      setDob(date);
-    } else {
-      setDob(undefined); // Invalid input, clear the date
-    }
-  };
-
-
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(event.target.value);
   };
@@ -168,8 +83,6 @@ const RegLog: React.FC = () => {
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
   };
-  const color = 'rgb(57, 132, 237)'
-  const { Header, Content, Footer} = Layout;
   return (
     <MDBContainer className="my-5 gradient-form">
 
