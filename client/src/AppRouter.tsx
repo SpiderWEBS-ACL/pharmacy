@@ -42,6 +42,7 @@ import ViewAllOrders from "./pages/Patient/ViewAllOrders";
 import Commercial from "./pages/Patient/Commercial";
 import UploadDocuments from "./pages/Pharmacist/UploadDocuments";
 import Home from "./Home";
+import Sales from "./pages/Admin/Sales";
 
 
 const AppRouter: React.FC = () => {
@@ -54,6 +55,7 @@ const AppRouter: React.FC = () => {
     if (role === "Admin") {
       return (
         <Routes>
+            <Route path="/admin/sales" element={<Sales />} />
           <Route path="/" element={<RegLog />} />
           <Route path="/admin/add" element={<AddAdminForm />} />
           <Route path="/admin/allPharmacists" element={<Pharmacists />} />
