@@ -205,8 +205,8 @@ const RegLog: React.FC = () => {
 
         <MDBCol col='6' className="mb-5">
           <div className="d-flex flex-column  justify-content-center gradient-custom-2 h-100 mb-4">
-          <img src="/ren.jpg"
-               alt="ren" width='800vh' />
+          <img src="/bg.webp"
+               alt="ren" width='800vh'/>
            
 
           </div>
