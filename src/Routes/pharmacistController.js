@@ -8,6 +8,7 @@ const express = require("express");
 const Pharmacist = require("../Models/Pharmacist");
 const Notification = require("../Models/Notification");
 const doctorModel = require("../Models/Doctor");
+const Orders = require("../Models/Orders");
 
 // FOR TESTING
 const addPharmacist = async (req, res) => {
@@ -478,67 +479,57 @@ const unarchiveMedicine = async (req, res) => {
 };
 
 const viewAllNotifications = async (req, res) => {
-
-  try{
+  try {
     const pharmacistId = req.user.id;
     const pharmacist = await Pharmacist.findById(pharmacistId);
     if (!pharmacist) {
       return res.status(404).json({ error: "Pharmacist Not Found" });
     }
-    
-    const notifications = await Notification.find({Pharmacist: pharmacistId}).populate("Medicine");
 
-    // res.status(200).json("Notifications");
-
-    // const notifications = await Notification.find().populate("Medicine");
-
+    const notifications = await Notification.find({
+      Pharmacist: pharmacistId,
+    }).populate("Medicine");
 
     res.status(200).json(notifications);
-
-  }catch (error) {
+  } catch (error) {
     res.status(500).json({ error: error.message });
   }
-
 };
 
-const openNotification = async(req, res) => {
-
-  try{
+const openNotification = async (req, res) => {
+  try {
     const { id } = req.params;
     const notification = await Notification.findById(id);
 
     if (!notification) {
       return res.status(404).json({ error: "Notification Not Found" });
     }
-    
+
     notification.opened = true;
     notification.save();
 
     res.status(200).json(notification);
-
-  }catch (error) {
+  } catch (error) {
     res.status(500).json({ error: error.message });
   }
-
-}
+};
 
 const getUnreadNotifs = async (req, res) => {
-
-  try{
+  try {
     const pharmId = req.user.id;
     const pharmacist = await pharmacistModel.findById(pharmId);
 
     if (!pharmacist) {
       return res.status(404).json({ error: "Pharmacist Not Found" });
     }
-    
-    // const notifications = await Notification.find().populate("Medicine");
 
-    const notifications = await Notification.find({Pharmacist: pharmacist, opened: false});
+    const notifications = await Notification.find({
+      Pharmacist: pharmacist,
+      opened: false,
+    }).populate("Medicine");
 
     res.status(200).json(notifications);
-
-  }catch (error) {
+  } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
@@ -552,19 +543,62 @@ const getAllDoctors = async (req, res) => {
   }
 };
 
+const deleteNotifs = async (req, res) => {
+  try {
+    // const {id} = req.user;
+    await Notification.deleteMany({});
+    res.status(200).json("Notifications Deleted");
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
 
-const deleteNotifs = async(req, res) => {
+const findMedIndex = (medicines, medicineId) => {
 
-  try{
-      // const {id} = req.user;
-      await Notification.deleteMany({});
-      res.status(200).json("Notifications Deleted");
+  for(let i = 0; i < medicines.length; i++){
 
+    if(medicines[i]._id.toString() == medicineId.toString()){
+      return i;
     }
-    catch(error){
-      res.status(400).json({error: error.message})
-    }
+  }
 }
+
+const viewSalesReport = async (req, res) => {
+  try {
+
+    const {startDate, endDate} = req.body;
+
+    // Find all orders where the orderDate is within date range
+    const orders = await Orders.find({Date: {$gte: startDate, $lte: endDate}});
+
+    const medicines = await medicineModel.find().populate("Image");
+
+    var salesByMedicine = [{}];
+
+    for(let i = 0; i < medicines.length; i++ ){
+
+      const medicine = medicines[i];
+
+      const salesPerMed = {"Medicine": medicine, "Sales" : 0};
+
+      salesByMedicine[i] = salesPerMed;
+    }
+
+    for (const order of orders) {
+        for (const medicine of order.Medicines) {
+
+          const medicineIndex = findMedIndex(medicines, medicine.medicine._id);
+
+          salesByMedicine[medicineIndex].Sales += medicine.quantity;
+        }
+    }
+
+    res.status(200).json(salesByMedicine);
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
 //---------------------------------------EXPORTS-----------------------------------------------
 
@@ -588,7 +622,9 @@ module.exports = {
   unarchiveMedicine,
   viewAllNotifications,
   getAllDoctors,
-  openNotification, 
+  openNotification,
   getUnreadNotifs,
   deleteNotifs,
+  viewSalesReport,
 };
+

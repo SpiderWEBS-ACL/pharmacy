@@ -75,6 +75,7 @@ const {
   getUnreadNotifs,
   openNotification,
   deleteNotifs,
+  viewSalesReport,
 } = require("./Routes/pharmacistController");
 
 const {
@@ -227,6 +228,7 @@ app.get("/pharmacist/allDoctors/", PharmacistProtect, getAllDoctors);
 app.get("/pharmacist/notifications", PharmacistProtect, viewAllNotifications);
 app.get("/pharmacist/unreadNotifications", PharmacistProtect, getUnreadNotifs);
 app.put("/pharmacist/openNotification/:id", openNotification);
+app.get("/pharmacist/salesReport", PharmacistProtect, viewSalesReport);
 
 //------------------Patient Endpoints---------------------
 app.get("/patient/me", PatientProtect, PatientInfo);
