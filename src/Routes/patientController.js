@@ -240,6 +240,7 @@ const cancelOrder = async (req, res) => {
     //refunding in wallet
     if (order.PaymentMethod != "Cash On Delivery") {
       patient.Wallet += order.TotalPrice;
+      patient.WalletBalance += order.TotalPrice;
       await patient.save();
     }
 
