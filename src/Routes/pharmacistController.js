@@ -488,6 +488,11 @@ const viewAllNotifications = async (req, res) => {
     
     const notifications = await Notification.find({Pharmacist: pharmacistId});
 
+    // res.status(200).json("Notifications");
+
+    // const notifications = await Notification.find().populate("Medicine");
+
+
     res.status(200).json(notifications);
 
   }catch (error) {
@@ -527,6 +532,8 @@ const getUnreadNotifs = async (req, res) => {
       return res.status(404).json({ error: "Pharmacist Not Found" });
     }
     
+    // const notifications = await Notification.find().populate("Medicine");
+
     const notifications = await Notification.find({Pharmacist: pharmacist, opened: false});
 
     res.status(200).json(notifications);
@@ -544,6 +551,21 @@ const getAllDoctors = async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 };
+
+
+const deleteNotifs = async(req, res) => {
+
+  try{
+      // const {id} = req.user;
+      await Notification.deleteMany({});
+      res.status(200).json("Notifications Deleted");
+
+    }
+    catch(error){
+      res.status(400).json({error: error.message})
+    }
+}
+
 //---------------------------------------EXPORTS-----------------------------------------------
 
 module.exports = {
@@ -568,4 +590,5 @@ module.exports = {
   getAllDoctors,
   openNotification, 
   getUnreadNotifs,
+  deleteNotifs,
 };
