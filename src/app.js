@@ -26,7 +26,8 @@ const {
   acceptPharmacistRequest,
   rejectPharmacistRequest,
   changePasswordAdmin,
-  deleteFiles
+  deleteFiles,
+  fetchSalesReport
 } = require("./Routes/adminController");
 
 const {
@@ -139,6 +140,7 @@ app.get("/admin/getPatient/:id",AdminProtect, getPatient);
 app.get("/admin/getPharmacist/:id",AdminProtect, getPharmacist);
 app.post("/admin/acceptPharmacist/:id",AdminProtect,acceptPharmacistRequest);
 app.delete("/admin/rejectPharmacist/:id",AdminProtect, rejectPharmacistRequest);
+app.get("/admin/sales",fetchSalesReport);
 
 //-------------------Pharmacist Endpoints--------------------
 app.get("/pharmacist/me",PharmacistProtect, pharmacistInfo)
