@@ -47,6 +47,7 @@ import ChatPharmacist from "./pages/Pharmacist/ChatPharmacist";
 import ViewAllDoctors from "./pages/Patient/ViewAllDoctors";
 import ChatPatient from "./pages/Patient/ChatPatient";
 import ViewAllPharmacists from "./pages/Patient/ViewAllPharmacists";
+import Notifications from "./pages/Pharmacist/Notifications";
 
 const AppRouter: React.FC = () => {
   const navigate = useNavigate();
@@ -110,6 +111,7 @@ const AppRouter: React.FC = () => {
           />
           <Route path="/pharmacist/chat/:id" element={<ChatPharmacist />} />
           <Route path="/pharmacist/doctors/" element={<ViewAllDoctors />} />
+          <Route path="/pharmacist/notifications" element={<Notifications />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       );

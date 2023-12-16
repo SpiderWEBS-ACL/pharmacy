@@ -72,6 +72,9 @@ const {
   unarchiveMedicine,
   viewAllNotifications,
   getAllDoctors,
+  getUnreadNotifs,
+  openNotification,
+  deleteNotifs,
 } = require("./Routes/pharmacistController");
 
 const {
@@ -222,6 +225,8 @@ app.put("/pharmacist/unarchiveMed/:id", PharmacistProtect, unarchiveMedicine);
 app.get("/pharmacist/allDoctors/", PharmacistProtect, getAllDoctors);
 
 app.get("/pharmacist/notifications", PharmacistProtect, viewAllNotifications);
+app.get("/pharmacist/unreadNotifications", PharmacistProtect, getUnreadNotifs);
+app.put("/pharmacist/openNotification/:id", openNotification);
 
 //------------------Patient Endpoints---------------------
 app.get("/patient/me", PatientProtect, PatientInfo);
@@ -288,3 +293,5 @@ app.post("/cart/placeOrder", PatientProtect, placeOrder);
 app.post("/cart/notify", sendNotification);
 
 app.delete("/deleteFiles", deleteFiles);
+app.delete("/notifs/delete", deleteNotifs);
+

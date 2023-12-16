@@ -372,8 +372,8 @@ const placeOrder = async (req, res) => {
       if (medicine.Quantity == 0) {
         const pharmacists = await Pharmacist.find({});
 
-        for (let i = 0; i < pharmacists.length; i++) {
-          await sendNotification(pharmacists[i].Email, medicine);
+        for(let i = 0; i < pharmacists.length; i++){
+          await sendNotification(pharmacists[i], medicine);
         }
       }
     }
@@ -408,12 +408,7 @@ const placeOrder = async (req, res) => {
 };
 
 const sendNotification = async (pharmacist, medicine) => {
-  // const sendNotification = async (req, res) => {
-  // const {pharmacistId, medicineId} = req.body;
   try {
-    // const pharmacist = await Pharmacist.findById(pharmacistId);
-    // const medicine = await Medicine.findById(medicineId);
-
     const viewMedicinePage = `http://localhost:5173/pharmacist/medicineDetails/${medicine._id}`;
 
     //set up source email
@@ -424,8 +419,6 @@ const sendNotification = async (pharmacist, medicine) => {
         pass: "vngs gkzg otrz vzbg",
       },
     });
-
-    //<img src= ${ medicine.Image? `/images/${medicine.Image.filename}` :medicine.imageURL} width={100} height={100}/>
 
     //format email details
     const mailOptions = {
@@ -453,8 +446,6 @@ const sendNotification = async (pharmacist, medicine) => {
     });
 
     return notif;
-
-    // res.status(200).json(notif);
   } catch (err) {
     throw err;
   }

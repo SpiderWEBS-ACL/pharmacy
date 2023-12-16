@@ -488,12 +488,59 @@ const viewAllNotifications = async (req, res) => {
     
     const notifications = await Notification.find({Pharmacist: pharmacistId});
 
+    // res.status(200).json("Notifications");
+
+    // const notifications = await Notification.find().populate("Medicine");
+
+
     res.status(200).json(notifications);
 
   }catch (error) {
     res.status(500).json({ error: error.message });
   }
 
+};
+
+const openNotification = async(req, res) => {
+
+  try{
+    const { id } = req.params;
+    const notification = await Notification.findById(id);
+
+    if (!notification) {
+      return res.status(404).json({ error: "Notification Not Found" });
+    }
+    
+    notification.opened = true;
+    notification.save();
+
+    res.status(200).json(notification);
+
+  }catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+
+}
+
+const getUnreadNotifs = async (req, res) => {
+
+  try{
+    const pharmId = req.user.id;
+    const pharmacist = await pharmacistModel.findById(pharmId);
+
+    if (!pharmacist) {
+      return res.status(404).json({ error: "Pharmacist Not Found" });
+    }
+    
+    // const notifications = await Notification.find().populate("Medicine");
+
+    const notifications = await Notification.find({Pharmacist: pharmacist, opened: false});
+
+    res.status(200).json(notifications);
+
+  }catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
 
 const getAllDoctors = async (req, res) => {
@@ -504,6 +551,21 @@ const getAllDoctors = async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 };
+
+
+const deleteNotifs = async(req, res) => {
+
+  try{
+      // const {id} = req.user;
+      await Notification.deleteMany({});
+      res.status(200).json("Notifications Deleted");
+
+    }
+    catch(error){
+      res.status(400).json({error: error.message})
+    }
+}
+
 //---------------------------------------EXPORTS-----------------------------------------------
 
 module.exports = {
@@ -526,4 +588,7 @@ module.exports = {
   unarchiveMedicine,
   viewAllNotifications,
   getAllDoctors,
+  openNotification, 
+  getUnreadNotifs,
+  deleteNotifs,
 };
