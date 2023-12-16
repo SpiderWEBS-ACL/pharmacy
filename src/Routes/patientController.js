@@ -12,6 +12,7 @@ const Patient = require("../Models/Patient");
 const Medicine = require("../Models/Medicine");
 
 
+
 const registerPatient = async (req, res) => {
   try {
     const exists = await Patient.findOne({
