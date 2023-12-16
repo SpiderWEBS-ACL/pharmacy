@@ -89,7 +89,7 @@ const RegLog: React.FC = () => {
       const response = await api.post(`/patient/register`, data);
       console.log("Response:", response.data);
       message.success("Congrats, you are in!");
-      setTimeout(toggleSignUp, 1500);
+
     } catch (error: any) {
       console.error("Error:", error);
       message.error(`${error.response.data.error}`);
