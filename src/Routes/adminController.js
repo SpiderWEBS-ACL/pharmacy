@@ -4,11 +4,32 @@ const pharmacistModel = require("../Models/Pharmacist");
 const patientModel = require("../Models/Patient");
 const pharmacistRegisterRequestModel = require("../Models/PharmacistRegisterRequest");
 const bcrypt = require("bcrypt");
+const orderModel =  require("../Models/Orders");
 
 const { default: mongoose } = require("mongoose");
 const fileModel = require("../Models/File");
 
 //-------------------------------ADMIN-----------------------------
+async function fetchSalesReport() {
+  try {
+    // Find all orders with the 'Shipped' status
+    const shippedOrders = await orderModel.find({ Status: 'Shipped' })
+     
+
+    // Display sales report to the admin
+    console.log("Sales Report:");
+    shippedOrders.forEach(order => {
+      console.log(`Date: ${order.Date}`);
+      order.Medicines.forEach(medicine => {
+        console.log(`Medicine: ${medicine.medicine.medicine_name}, Quantity: ${medicine.quantity}`);
+      });
+      console.log("--------------");
+    });
+
+  } catch (error) {
+    console.error('Error fetching sales report:', error);
+  }
+}
 
 const getAllAdmins = async (req, res) => {
   try {
@@ -329,5 +350,6 @@ module.exports = {
   acceptPharmacistRequest,
   rejectPharmacistRequest,
   changePasswordAdmin,
-  deleteFiles
+  deleteFiles,
+  fetchSalesReport
 };

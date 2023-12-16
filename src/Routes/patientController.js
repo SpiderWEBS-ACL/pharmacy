@@ -1,15 +1,17 @@
 const patientModel = require("../Models/Patient");
-const orderModel = require("../Models/Orders");
-const medicineModel = require("../Models/Medicine");
-const pharmacistModel = require("../Models/Pharmacist");
+const orderModel= require("../Models/Orders");
+const medicineModel= require("../Models/Medicine");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+
 
 //---------------------------------------REGISTRATION-----------------------------------------------
 
 const Cart = require("../Models/Cart");
 const Patient = require("../Models/Patient");
 const Medicine = require("../Models/Medicine");
+
+
 
 const registerPatient = async (req, res) => {
   try {
@@ -57,15 +59,14 @@ const PatientInfo = async (req, res) => {
   }
 };
 
+
 const changePasswordPatient = async (req, res) => {
   try {
     const { id } = req.user;
     const { currPass, newPass, newPassConfirm } = req.body;
 
     if (!(currPass && newPass && newPassConfirm)) {
-      return res
-        .status(404)
-        .json({ error: "Please fill out all required fields" });
+      return res.status(404).json({ error: "Please fill out all required fields" });
     }
 
     //find patient to update password
@@ -81,22 +82,16 @@ const changePasswordPatient = async (req, res) => {
       return res.status(400).json("The passwords do not match.");
     }
 
-    //new password same as old
-    if (await bcrypt.compare(newPass, patient.Password)) {
-      return res
-        .status(400)
-        .json("New password cannot be the same as your current password.");
+     //new password same as old
+     if(await bcrypt.compare(newPass, patient.Password)){
+      return res.status(400).json("New password cannot be the same as your current password.");
     }
 
     //hash new Password
     const hashedPass = await bcrypt.hash(newPass, 10);
 
     //update password
-    const newPatient = await patientModel.findByIdAndUpdate(
-      id,
-      { Password: hashedPass },
-      { new: true }
-    );
+    const newPatient = await patientModel.findByIdAndUpdate(id, { Password: hashedPass }, {new:true});
 
     res.status(200).json(newPatient);
   } catch (error) {
@@ -104,84 +99,79 @@ const changePasswordPatient = async (req, res) => {
   }
 };
 
-const viewAllOrders = async (req, res) => {
+const viewAllOrders = async(req, res) => {
   try {
     const { id } = req.user;
-
-    const orders = await orderModel
-      .find({ Patient: id })
-      .populate("Medicines.medicine");
+ 
+    const orders = await orderModel.find({Patient: id}).populate("Medicines.medicine");
 
     res.status(200).json(orders);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({error: error.message});
   }
-};
+}
 
-const removeAllOrders = async (req, res) => {
-  try {
+const removeAllOrders = async(req, res) => {
+  try{
     // const {id} = req.user;
     await orderModel.deleteMany({});
     res.status(200).json("Orders Deleted");
-  } catch (error) {
-    res.status(400).json({ error: error.message });
   }
-};
+  catch(error){
+    res.status(400).json({error: error.message})
+  }
+}
 
 const viewPatientOrder = async (req, res) => {
   try {
     const { id } = req.params;
 
     console.log(req.user._id);
-    const order = await orderModel
-      .findById(id)
-      .populate("Medicines.medicine")
-      .populate("Patient")
-      .populate({
-        path: "Medicines.medicine",
-        populate: { path: "Image" },
-      });
+    const order = await orderModel.findById(id).populate("Medicines.medicine").populate("Patient").populate({ 
+      path : 'Medicines.medicine',
+      populate : { path : 'Image'}
+  });
 
     if (!order) {
       return res.status(404).json({ error: "Order not found" });
     }
 
-    if (!order.Patient._id.equals(req.user._id)) {
-      return res
-        .status(400)
-        .json({ error: "You are not authorized to view this order" });
+    if(!order.Patient._id.equals(req.user._id)){
+      return res.status(400).json({ error: "You are not authorized to view this order" });
     }
 
     return res.status(200).json(order);
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
-};
+}
 
-const viewWallet = async (req, res) => {
-  try {
+const viewWallet = async (req,res) => {
+  try{
     const patientId = req.user.id;
     const patient = await Patient.findById(patientId);
     if (!patient) {
       return res.status(404).json({ error: "Patient Not Found" });
     }
-    res.status(200).json(patient.Wallet);
-  } catch (error) {
+    res.status(200).json(patient.Wallet)
+
+  }catch (error) {
     res.status(500).json({ error: error.message });
   }
-};
-const viewShippingAdresses = async (req, res) => {
-  try {
+  
+}
+const viewShippingAdresses = async (req,res) => {
+  try{
     const patientId = req.user.id;
     const patient = await Patient.findById(patientId);
     if (!patient) {
       return res.status(404).json({ error: "Patient Not Found" });
     }
-    res.status(200).json(patient.shippingAddresses);
-  } catch (error) {
+    res.status(200).json(patient.shippingAddresses)
+  }catch (error) {
     res.status(500).json({ error: error.message });
   }
-};
+}
 const addShippingAddress = async (req, res) => {
   try {
     const shipping = req.body.address;
@@ -194,35 +184,34 @@ const addShippingAddress = async (req, res) => {
 
     patient.shippingAddresses.push(shipping);
     await patient.save();
+    
+    return res.status(200).json({ message: "Shipping address added successfully" });
 
-    return res
-      .status(200)
-      .json({ message: "Shipping address added successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-};
+}
 
-const cancelOrder = async (req, res) => {
+const cancelOrder = async (req,res) => {
   try {
     // console.log(req);
-    const { id } = req.params;
+    const {id} = req.params;
     const order = await orderModel.findById(id).populate("Patient");
 
     const patient = order.Patient;
 
-    if (!patient) {
+    if(!patient){
       return res.status(404).json("Patient Not Found");
     }
 
-    if (order.Status == "Shipped") {
-      return res
-        .status(400)
-        .json({ error: "Order is already shipped, you can not cancel it" });
+
+    if(order.Status == "Shipped"){
+      return res.status(400).json({error: "Order is already shipped, you can not cancel it"});
     }
 
-    if (order.Status == "Cancelled") {
-      return res.status(400).json({ error: "Order is already cancelled" });
+    if(order.Status == "Cancelled"){
+      return res.status(400).json({error: "Order is already cancelled"});
+
     }
 
     //return medicines to stock
@@ -231,36 +220,27 @@ const cancelOrder = async (req, res) => {
     for (let i = 0; i < medicines.length; i++) {
       const medicineId = medicines[i].medicine.toString();
       const medicine = await medicineModel.findById(medicineId);
-      await medicine.updateOne({
-        Quantity: medicine.Quantity + medicines[i].quantity,
-        Sales: medicine.Sales - medicines[i].quantity,
-      });
+      await medicine.updateOne({Quantity: medicine.Quantity + medicines[i].quantity, Sales: medicine.Sales - medicines[i].quantity})
     }
 
     //refunding in wallet
-    if (order.PaymentMethod != "Cash On Delivery") {
+    if(order.PaymentMethod != "Cash On Delivery"){
       patient.Wallet += order.TotalPrice;
-      patient.WalletBalance += order.TotalPrice;
       await patient.save();
     }
 
-    //change status
-    await order.updateOne({ Status: "Cancelled" }, { new: true });
+      //change status
+      await order.updateOne({Status:"Cancelled"},{new:true});
 
     res.status(200).json(order);
-  } catch (error) {
+  }
+
+  catch(error) {
     res.status(500).json({ error: error.message });
   }
-};
 
-const getAllPharmacists = async (req, res) => {
-  try {
-    const Doctors = await pharmacistModel.find({});
-    return res.status(200).json(Doctors);
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
-};
+}
+
 //---------------------------------------EXPORTS-----------------------------------------------
 
 module.exports = {
@@ -274,5 +254,4 @@ module.exports = {
   viewAllOrders,
   removeAllOrders,
   cancelOrder,
-  getAllPharmacists,
 };
