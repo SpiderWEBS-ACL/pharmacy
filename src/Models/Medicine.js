@@ -27,8 +27,9 @@ const medicineSchema = new Schema(
       type: String,
       required: false,
     },
-    imageURL: {       //keep both options
-      type: String
+    imageURL: {
+      //keep both options
+      type: String,
     },
     Image: {
       type: Schema.Types.ObjectId,
@@ -38,16 +39,16 @@ const medicineSchema = new Schema(
       type: Number,
       default: 0,
     },
-    Archived:{
+    Archived: {
       type: String,
       enum: ["Archive", "Unarchive"],
-      default: "Archive ",
+      default: "Archive",
     },
-    Type:{
+    Type: {
       type: String,
       enum: ["Prescription", "OTC"],
-      default: "OTC ",
-    }
+      default: "OTC",
+    },
   },
   { timestamps: true }
 );

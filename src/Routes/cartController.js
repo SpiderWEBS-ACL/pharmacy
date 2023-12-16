@@ -10,7 +10,6 @@ require("dotenv").config();
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const nodemailer = require("nodemailer");
 
-
 const createCart = async (req, res) => {
   try {
     const cart = new Cart();
@@ -296,14 +295,17 @@ const getCartTotalHelper2 = async (req, res) => {
 
 const payCartWithWallet = async (req, res) => {
   try {
+    console.log("BODYYYYYYYYYYYYYYYYYYYYYY", req.body);
     const patientId = req.user.id;
     const patient = await Patient.findById(patientId);
     total = await getCartTotalHelper2({ id: patientId });
     console.log("TOTAL:", total);
     patient.Wallet -= total;
+    patient.WalletBalance -= total;
     await patient.save();
-
+    console.log("PATIENTTTT", patient);
     const order = await placeOrder(req, res);
+    return;
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -340,13 +342,16 @@ const payCartWithStripe = async (req, res) => {
 
 const placeOrder = async (req, res) => {
   try {
+    console.log("IN PLACEORDER");
     const { id } = req.user;
     const { shipping, paymentMethod } = req.body;
 
     const patient = await Patient.findById(id);
 
     const cartId = patient.Cart;
+    console.log("cartId", cartId);
     const cart = await Cart.findById(cartId);
+    console.log(cart);
 
     const medicines = cart.medicines;
 
@@ -359,17 +364,16 @@ const placeOrder = async (req, res) => {
 
       console.log(medicine);
 
-      await medicine.updateOne( {Sales: medicine.Sales + medicines[i].quantity})
+      await medicine.updateOne({
+        Sales: medicine.Sales + medicines[i].quantity,
+      });
 
       //out of stock
-      if (medicine.Quantity == 0){
-
+      if (medicine.Quantity == 0) {
         const pharmacists = await Pharmacist.find({});
 
         for(let i = 0; i < pharmacists.length; i++){
-
           await sendNotification(pharmacists[i], medicine);
-        
         }
       }
     }
@@ -385,24 +389,23 @@ const placeOrder = async (req, res) => {
       PaymentMethod: paymentMethod,
       Date: Date.now(),
     });
+    console.log("order", order);
 
     console.log("Order Placed");
     await emptyCart(req, res);
 
     console.log("Cart Emptied");
 
-    res
-      .status(200)
-      .json({
-        url: `${process.env.SERVER_URL}/patient/viewOrder/${order._id}`,
-      });
+    return res.status(200).json({
+      url: `${process.env.SERVER_URL}/patient/viewOrder/${order._id}`,
+      _id: order._id,
+    });
 
     console.log("returned");
   } catch (error) {
     throw error;
   }
 };
-
 
 const sendNotification = async (pharmacist, medicine) => {
   try {
@@ -422,7 +425,13 @@ const sendNotification = async (pharmacist, medicine) => {
       from: "spiderwebsacl@gmail.com",
       to: pharmacist.Email,
       subject: "New Notification",
-      html: ` <img src= ${ medicine.Image? `/images/${medicine.Image.filename}` :medicine.imageURL} width="50" height="50"/> <a style="font-size:20px; letter-spacing:2px;" href= ${viewMedicinePage}> <b><i> ${medicine.Name}</i></b></a>
+      html: ` <img src= ${
+        medicine.Image
+          ? `/images/${medicine.Image.filename}`
+          : medicine.imageURL
+      } width="50" height="50"/> <a style="font-size:20px; letter-spacing:2px;" href= ${viewMedicinePage}> <b><i> ${
+        medicine.Name
+      }</i></b></a>
               <p>is out of stock and needs to be refilled.</p>`,
     };
 
@@ -433,11 +442,10 @@ const sendNotification = async (pharmacist, medicine) => {
       Pharmacist: pharmacist,
       Medicine: medicine,
       message: `${medicine.Name} is out of stock!`,
-      date: Date.now()
+      date: Date.now(),
     });
 
     return notif;
-
   } catch (err) {
     throw err;
   }
