@@ -486,7 +486,7 @@ const viewAllNotifications = async (req, res) => {
       return res.status(404).json({ error: "Pharmacist Not Found" });
     }
     
-    const notifications = await Notification.find({Pharmacist: pharmacistId});
+    const notifications = await Notification.find({Pharmacist: pharmacistId}).populate("Medicine");
 
     // res.status(200).json("Notifications");
 

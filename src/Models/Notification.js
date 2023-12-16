@@ -4,11 +4,11 @@ const notificationSchema = new mongoose.Schema(
   {
     Pharmacist: {
       type: mongoose.Schema.Types.ObjectId,
-      refPath: "Pharmacist",
+      ref: "Pharmacist",
     },
     Medicine: {
       type: mongoose.Schema.Types.ObjectId,
-      refPath: "Medicine"
+      ref: "Medicine"
     },
     message: {
       type: String,
