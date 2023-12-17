@@ -118,6 +118,7 @@ const RegLog: React.FC = () => {
                 src="/logo.png"
                 style={{ width: "150px", marginTop: "5rem" }}
                 alt="logo"
+                onClick={() => {navigate("/")}}
               />
             </div>
 

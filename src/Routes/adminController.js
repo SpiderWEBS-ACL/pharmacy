@@ -7,6 +7,7 @@ const bcrypt = require("bcrypt");
 
 const { default: mongoose } = require("mongoose");
 const fileModel = require("../Models/File");
+const Orders = require("../Models/Orders");
 
 //-------------------------------ADMIN-----------------------------
 
@@ -329,5 +330,5 @@ module.exports = {
   acceptPharmacistRequest,
   rejectPharmacistRequest,
   changePasswordAdmin,
-  deleteFiles
+  deleteFiles,
 };

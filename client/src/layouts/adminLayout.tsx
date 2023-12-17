@@ -7,6 +7,7 @@ import {
   IdcardOutlined,
   TeamOutlined,
   AppstoreOutlined,
+  LineChartOutlined,
 } from "@ant-design/icons";
 import AppRouter from "../AppRouter";
 import ImportedFooter from "../layouts/footer";
@@ -62,6 +63,11 @@ const AdminLayout: React.FC = () => {
           key: "/admin/viewMedicines",
         },
       ],
+    },
+    {
+      label: "Sales Reports",
+      key: "/admin/salesReport",
+      icon: <LineChartOutlined />,
     },
     {
       label: "Logout",

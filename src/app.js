@@ -75,6 +75,8 @@ const {
   getUnreadNotifs,
   openNotification,
   deleteNotifs,
+  viewSalesReport,
+  filterSalesReport,
 } = require("./Routes/pharmacistController");
 
 const {
@@ -186,6 +188,8 @@ app.delete(
   AdminProtect,
   rejectPharmacistRequest
 );
+app.get("/admin/salesReport", AdminProtect, viewSalesReport);
+
 
 //-------------------Pharmacist Endpoints--------------------
 app.get("/pharmacist/me", PharmacistProtect, pharmacistInfo);
@@ -227,6 +231,9 @@ app.get("/pharmacist/allDoctors/", PharmacistProtect, getAllDoctors);
 app.get("/pharmacist/notifications", PharmacistProtect, viewAllNotifications);
 app.get("/pharmacist/unreadNotifications", PharmacistProtect, getUnreadNotifs);
 app.put("/pharmacist/openNotification/:id", openNotification);
+app.get("/pharmacist/salesReport", PharmacistProtect, viewSalesReport);
+app.get("/pharmacist/filterReport", filterSalesReport);
+
 
 //------------------Patient Endpoints---------------------
 app.get("/patient/me", PatientProtect, PatientInfo);
