@@ -187,6 +187,8 @@ app.delete(
   AdminProtect,
   rejectPharmacistRequest
 );
+app.get("/admin/salesReport", AdminProtect, viewSalesReport);
+
 
 //-------------------Pharmacist Endpoints--------------------
 app.get("/pharmacist/me", PharmacistProtect, pharmacistInfo);

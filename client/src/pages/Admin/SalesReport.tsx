@@ -19,7 +19,6 @@ const SalesReport: React.FC = () => {
   const [report, setReport] = useState<any[]>([]);
 //   const [month, setMonth] = useState<Dayjs | null>();
   const [month, setMonth] = useState<String>("");
-  const [medicines, setMedicines] = useState<[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -34,7 +33,7 @@ const SalesReport: React.FC = () => {
   const onDateChange: DatePickerProps['onChange'] = (date, dateString) => {
     setMonth(dateString);
     api
-    .get(`/pharmacist/salesReport`, {params: {"month": dateString} , headers})
+    .get(`/admin/salesReport`, {params: {"month": dateString} , headers})
     .then((response) => {
       setReport(response.data);
       console.log("RES:", response.data);

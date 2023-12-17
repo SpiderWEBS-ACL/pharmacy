@@ -566,7 +566,10 @@ const findMedIndex = (medicines, medicineId) => {
 const viewSalesReport = async (req, res) => {
   try {
 
-    const {startDate, endDate} = req.body;
+    const {month} = req.query;
+
+    const startDate = month + "-01"
+    const endDate = month + "-31"
 
     // Find all orders where the orderDate is within date range
     const orders = await Orders.find({Date: {$gte: startDate, $lte: endDate}});
@@ -599,6 +602,20 @@ const viewSalesReport = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+
+const filterSalesReport = async(req, res) => {
+
+  const medicine = req.query.medicine;
+
+  const date = req.query.date;
+
+  
+
+
+
+
+}
 
 //---------------------------------------EXPORTS-----------------------------------------------
 

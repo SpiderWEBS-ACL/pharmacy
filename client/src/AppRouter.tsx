@@ -49,7 +49,9 @@ import ChatPatient from "./pages/Patient/ChatPatient";
 import ViewAllPharmacists from "./pages/Patient/ViewAllPharmacists";
 import Register from "./pages/Register"
 import Notifications from "./pages/Pharmacist/Notifications";
-import SalesReport from "./pages/Pharmacist/salesReport";
+import SalesReportPharmacist from "./pages/Pharmacist/SalesReport";
+import SalesReportAdmin from "./pages/Admin/SalesReport";
+
 
 const AppRouter: React.FC = () => {
   const navigate = useNavigate();
@@ -80,6 +82,7 @@ const AppRouter: React.FC = () => {
             element={<MedicineDetailsAdmin />}
           />
           <Route path="/admin/Home" element={<AdminHome />} />
+          <Route path="/admin/salesReport" element={<SalesReportAdmin />} />
           <Route
             path="/admin/changePassword"
             element={<ChangePasswordAdmin />}
@@ -115,7 +118,7 @@ const AppRouter: React.FC = () => {
           <Route path="/pharmacist/chat/:id" element={<ChatPharmacist />} />
           <Route path="/pharmacist/doctors/" element={<ViewAllDoctors />} />
           <Route path="/pharmacist/notifications" element={<Notifications />} />
-          <Route path="/pharmacist/salesReport" element={<SalesReport />} />
+          <Route path="/pharmacist/salesReport" element={<SalesReportPharmacist />} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -11,6 +11,7 @@ import {
   BellOutlined,
   CommentOutlined,
   VideoCameraOutlined,
+  LineChartOutlined,
 } from "@ant-design/icons";
 import AppRouter from "../AppRouter";
 import { Chat, ChatBubbleOutline } from "@material-ui/icons";
@@ -87,6 +88,11 @@ const PharmacistLayout: React.FC = () => {
       label: "Wallet",
       key: "/pharmacist/wallet",
       icon: <WalletOutlined />,
+    },
+    {
+      label: "Sales Reports",
+      key: "/pharmacist/salesReport",
+      icon: <LineChartOutlined />,
     },
     {
       label: "Logout",
