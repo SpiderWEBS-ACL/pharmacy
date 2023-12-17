@@ -490,6 +490,10 @@ const viewAllNotifications = async (req, res) => {
       Pharmacist: pharmacistId,
     }).populate("Medicine");
 
+    // res.status(200).json("Notifications");
+
+    // const notifications = await Notification.find().populate("Medicine");
+
     res.status(200).json(notifications);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -527,7 +531,6 @@ const getUnreadNotifs = async (req, res) => {
       Pharmacist: pharmacist,
       opened: false,
     }).populate("Medicine");
-
     res.status(200).json(notifications);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -663,6 +666,7 @@ const filterSalesReport = async (req, res) => {
 
 
 };
+
 
 //---------------------------------------EXPORTS-----------------------------------------------
 

@@ -36,7 +36,6 @@ const MedicineDetails: React.FC = () => {
   const handleEditDetails = async (id: string) => {
     navigate("/pharmacist/editMedicine/" + id);
   };
-  
 
   if (loading) {
     return (
@@ -55,61 +54,94 @@ const MedicineDetails: React.FC = () => {
 
   return (
     <div className="container">
-      <h2 className="text-center mt-4 mb-4"><strong>Medicine Details</strong></h2>
+      <h2 className="text-center mt-4 mb-4">
+        <strong>Medicine Details</strong>
+      </h2>
 
-    <Row className="item" style={{paddingLeft: 100, paddingTop: 30}}>
-     
-      <Col className="info">
-        <strong style={{fontSize: 40}}>{medicineDetails.Name}</strong>
-        <br />
-        <br />
-        <h5>{medicineDetails.Description}</h5><br></br>
-        <h6><strong>Medicinal Use:</strong> {medicineDetails.MedicinalUse}</h6><br></br>
-        <Row>
-          <Col>
-          <h6 style={{fontWeight: "bold"}}> Active Ingredients:</h6>
-        <body style={{backgroundColor: "transparent"}}> {medicineDetails.ActiveIngredients.map((ingredient: any) =>
-          <li>{ingredient}</li>
-        )} </body>  <br></br>
-        </Col>
-        <Col style={{textAlign: "right"}}>
-        <h6><strong>Quantity:</strong> <span style={{color: medicineDetails.Quantity == 0? "red" : "black"}}>{medicineDetails.Quantity} </span></h6>
-        <h6><strong>Sales:</strong> {medicineDetails.Sales}</h6><br></br>
-        </Col>
+      <Row className="item" style={{ paddingLeft: 100, paddingTop: 30 }}>
+        <Col className="info">
+          <strong style={{ fontSize: 40 }}>{medicineDetails.Name}</strong>
+          <br />
+          <br />
+          <h5>{medicineDetails.Description}</h5>
+          <br></br>
+          <h6>
+            <strong>Medicinal Use:</strong> {medicineDetails.MedicinalUse}
+          </h6>
+          <br></br>
+          <Row>
+            <Col>
+              <h6 style={{ fontWeight: "bold" }}> Active Ingredients:</h6>
+              <body style={{ backgroundColor: "transparent" }}>
+                {" "}
+                {medicineDetails.ActiveIngredients.map((ingredient: any) => (
+                  <li>{ingredient}</li>
+                ))}{" "}
+              </body>{" "}
+              <br />
+              <h6>
+                <strong>Type:</strong> {medicineDetails.Type}
+              </h6>
+            </Col>
+            <Col style={{ textAlign: "right" }}>
+              <h6>
+                <strong>Quantity:</strong>{" "}
+                <span
+                  style={{
+                    color: medicineDetails.Quantity == 0 ? "red" : "black",
+                  }}
+                >
+                  {medicineDetails.Quantity}{" "}
+                </span>
+              </h6>
+              <h6>
+                <strong>Sales:</strong> {medicineDetails.Sales}
+              </h6>
+              <br></br>
+            </Col>
+          </Row>
 
-       
-        </Row>
-       
-        <Row className="priceRow"> 
-         <Col>
-           <button
-              className="btn btn-primary"
-              onClick={() => backToMeds()}
-            >
-                  Back To All Medicines
-            </button>
-          </Col>
-        
-          <Col style={{ textAlign: "right" }}>
-            <strong style={{fontSize: 20}}>Price: {medicineDetails.Price} LE</strong>
-          </Col>
-        </Row>
-      </Col>
-      <Col sm={6}>
-        <img src={ medicineDetails.Image? `/images/${medicineDetails.Image.filename}` :medicineDetails.imageURL} width={300} height={300}></img>
-        <br></br>
-        <button
+          <Row className="priceRow">
+            <Col>
+              <button className="btn btn-primary" onClick={() => backToMeds()}>
+                Back To All Medicines
+              </button>
+            </Col>
+
+            <Col style={{ textAlign: "right" }}>
+              <strong style={{ fontSize: 20 }}>
+                Price: {medicineDetails.Price} LE
+              </strong>
+            </Col>
+          </Row>
+        </Col>
+        <Col sm={6}>
+          <img
+            src={
+              medicineDetails.Image
+                ? `/images/${medicineDetails.Image.filename}`
+                : medicineDetails.imageURL
+            }
+            width={300}
+            height={300}
+          ></img>
+          <br></br>
+          <button
             className="btn btn-danger"
             onClick={() => handleEditDetails(medicineDetails._id)}
-            style={{width: 107, position: "relative", marginLeft: 193, marginTop: 10 }}
+            style={{
+              width: 107,
+              position: "relative",
+              marginLeft: 193,
+              marginTop: 10,
+            }}
           >
-              Edit Details
+            Edit Details
           </button>
-
-      </Col>
-    </Row>
-   </div>
+        </Col>
+      </Row>
+    </div>
   );
-}
+};
 
 export default MedicineDetails;
