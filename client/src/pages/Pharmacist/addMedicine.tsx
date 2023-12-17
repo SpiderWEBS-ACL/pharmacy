@@ -24,6 +24,7 @@ const addMedicine = () => {
   const [Ingredient, setIngredient] = useState<string>("");
   const [Quantity, setQuantity] = useState<number>();
   const [MedicinalUse, setMedicinalUse] = useState<string>("");
+  const [Type, setType] = useState<string>("");
   const [imageURL, setImageURL] = useState<string>("");
   const [image, setImage] = useState<File>();
   const [Sales, setSales] = useState<number>(0);
@@ -34,7 +35,7 @@ const addMedicine = () => {
   const [viewMedsHidden, setViewMedsHidden] = useState<boolean>(true);
   const [imgObj, setImgObj] = useState({});
 
-  var img : {}
+  var img: {};
 
   const api = axios.create({
     baseURL: "http://localhost:5000",
@@ -69,7 +70,7 @@ const addMedicine = () => {
         });
     } catch (err) {
       console.error("Error:", err);
-      
+
       if (axios.isAxiosError(err) && err.response) {
         const apiError = err.response.data.error;
         setError(apiError);
@@ -83,21 +84,21 @@ const addMedicine = () => {
   };
 
   type medicineData = {
-    Name? : string,
-    Description? : string,
-    Price? : Number,
-    ActiveIngredients? : string[],
-    Quantity? : Number,
-    MedicinalUse? : string,
-    Image? :  any,
-    imageURL?: string
+    Name?: string;
+    Description?: string;
+    Price?: Number;
+    ActiveIngredients?: string[];
+    Quantity?: Number;
+    MedicinalUse?: string;
+    Image?: any;
+    imageURL?: string;
+    Type?: string;
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      
-      const data : medicineData = {
+      const data: medicineData = {
         Name,
         Description,
         Price,
@@ -105,11 +106,12 @@ const addMedicine = () => {
         Quantity,
         MedicinalUse,
         imageURL,
+        Type,
       };
 
-      if(image) {
-       await uploadImage();
-        data.Image = img
+      if (image) {
+        await uploadImage();
+        data.Image = img;
       }
 
       const response = await api.post(`/pharmacist/addMedicine/`, data, {
@@ -224,6 +226,18 @@ const addMedicine = () => {
                   <Option value="Headaches">Headaches</Option>
                   <Option value="Irritation">Irritation</Option>
                 </Select>
+
+                <label>
+                  <strong>Type:</strong>
+                </label>
+                <Select
+                  style={{ height: 40, marginBottom: 10 }}
+                  onChange={setType}
+                  value={Type}
+                >
+                  <Option value="OTC">Over the Counter</Option>
+                  <Option value="Prescription">Prescription</Option>
+                </Select>
               </div>
             </div>
             <Row>
@@ -278,8 +292,7 @@ const addMedicine = () => {
                 ) : null
               )}{" "}
             </body>{" "}
-      
-            <div className="form-group" >
+            <div className="form-group">
               <label>
                 <strong>Image:</strong>
               </label>
@@ -297,7 +310,7 @@ const addMedicine = () => {
                     }}
                   ></input>
                 </form>
-{/* 
+                {/* 
                 <button
                   style={{
                     marginLeft: "auto",
@@ -312,9 +325,8 @@ const addMedicine = () => {
                   Upload Image
                 </button> */}
               </div>
-              
+
               <br />
-              
             </div>
             <div style={{ justifyContent: "right", display: "flex" }}>
               <button

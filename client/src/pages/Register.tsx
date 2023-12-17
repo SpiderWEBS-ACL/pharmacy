@@ -321,6 +321,10 @@ const Register: React.FC = () => {
                 Register as Pharmacist
               </Button>
             </div>
+            <div className="d-flex flex-row align-items-center justify-content-center pb-3 mb-3">
+              <label style={{ marginRight: 5 }}>Already Registered? </label>
+              <a href="/"> Login</a>
+            </div>
           </div>
         </MDBCol>
       </MDBRow>
