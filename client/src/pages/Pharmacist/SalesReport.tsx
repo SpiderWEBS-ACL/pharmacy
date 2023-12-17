@@ -17,6 +17,8 @@ const SalesReport: React.FC = () => {
   const [report, setReport] = useState<any[]>([]);
   //   const [month, setMonth] = useState<Dayjs | null>();
   const [month, setMonth] = useState<String>("");
+  const [monthName, setMonthName] = useState<String>("");
+  const [year, setYear] = useState<String>("");
   const [medicines, setMedicines] = useState<[]>([]);
   const [medicine, setMedicine] = useState<String>("");
   const [date, setDate] = useState<String>("");
@@ -51,7 +53,8 @@ const SalesReport: React.FC = () => {
   const onMonthChange: DatePickerProps["onChange"] = (date, dateString) => {
     setMonth(dateString);
     setLoading(true);
-
+    date? setMonthName((date?.month()+1).toString()): setMonthName("");
+    date? setYear((date?.year()).toString()): setYear("");
     api
       .get(`/pharmacist/salesReport`, {
         params: { month: dateString },
@@ -84,7 +87,6 @@ const SalesReport: React.FC = () => {
           headers: headers,
         }) //get request
         .then((response) => {
-          // setMedicines(response.data); //store response (medicines) in variable
           setfilteredResults(response.data);
           setLoading(false); //loading screen --> off
           setFiltering(true);
@@ -208,6 +210,9 @@ const SalesReport: React.FC = () => {
         
         </Row>
       </div>
+
+      {month && (<h2 className=" mb-4">Sales Report for {monthName}/{year}</h2>)}
+
 
       <table className="table" id="medicineResults">
         <thead>

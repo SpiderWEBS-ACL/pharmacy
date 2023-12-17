@@ -10,8 +10,6 @@ import type { DatePickerProps } from 'antd';
 import { DatePicker, Space } from 'antd';
 import { Dayjs } from "dayjs";
 
-
-
 const SalesReport: React.FC = () => {
   const accessToken = localStorage.getItem("accessToken");
   const { id } = useParams<{ id: string }>();
@@ -19,6 +17,8 @@ const SalesReport: React.FC = () => {
   const [report, setReport] = useState<any[]>([]);
 //   const [month, setMonth] = useState<Dayjs | null>();
   const [month, setMonth] = useState<String>("");
+  const [monthName, setMonthName] = useState<String>("");
+  const [year, setYear] = useState<String>("");
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -32,6 +32,9 @@ const SalesReport: React.FC = () => {
 
   const onDateChange: DatePickerProps['onChange'] = (date, dateString) => {
     setMonth(dateString);
+    setLoading(true);
+    date? setMonthName((date?.month()+1).toString()): setMonthName("");
+    date? setYear((date?.year()).toString()): setYear("");
     api
     .get(`/admin/salesReport`, {params: {"month": dateString} , headers})
     .then((response) => {
@@ -76,6 +79,8 @@ const SalesReport: React.FC = () => {
 
      <br />
      <br />
+
+     {month && (<h2 className=" mb-4">Sales Report for {monthName}/{year}</h2>)}
 
       <table className="table" id="medicineResults">
         <thead>
