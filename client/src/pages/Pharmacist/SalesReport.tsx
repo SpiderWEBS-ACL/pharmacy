@@ -17,7 +17,8 @@ const SalesReport: React.FC = () => {
   const [report, setReport] = useState<any[]>([]);
   //   const [month, setMonth] = useState<Dayjs | null>();
   const [month, setMonth] = useState<String>("");
-  const [medicine, setMedicine] = useState<string>("");
+  const [medicines, setMedicines] = useState<[]>([]);
+  const [medicine, setMedicine] = useState<String>("");
   const [date, setDate] = useState<String>("");
   const [loading, setLoading] = useState(true);
   const [filteredResults, setfilteredResults] = useState([]);
@@ -30,6 +31,18 @@ const SalesReport: React.FC = () => {
   });
 
   useEffect(() => {
+    api
+    .get(`medicine/viewMedicines`, config) 
+    .then((response) => {
+      setMedicines(response.data); 
+      setLoading(false); 
+      setFiltering(false);
+      console.log(response.data);
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+
     setLoading(false);
   }, []);
 
@@ -37,6 +50,8 @@ const SalesReport: React.FC = () => {
 
   const onMonthChange: DatePickerProps["onChange"] = (date, dateString) => {
     setMonth(dateString);
+    setLoading(true);
+
     api
       .get(`/pharmacist/salesReport`, {
         params: { month: dateString },
@@ -46,6 +61,7 @@ const SalesReport: React.FC = () => {
         setReport(response.data);
         console.log("RES:", response.data);
         setLoading(false);
+        setFiltering(false);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -59,6 +75,7 @@ const SalesReport: React.FC = () => {
   };
 
   const handleFilter = () => {
+    setLoading(true);
     if (medicine != "" || date != "") {
 
       api
@@ -130,9 +147,9 @@ const SalesReport: React.FC = () => {
             onChange={setMedicine}
             value={medicine}
           >
-            {report.map((medicine) => (
-              <Option value={medicine.Medicine._id}>
-                {medicine.Medicine.Name}
+            {medicines.map((medicine: any) => (
+              <Option value={medicine._id}>
+                {medicine.Name}
               </Option>
             ))}
           </Select>
@@ -161,6 +178,35 @@ const SalesReport: React.FC = () => {
           </button>
                   
         </span>
+      </div>
+
+      <div className="popup">
+        <br></br>
+        <Row>
+          <Col md="auto">
+
+            {/* {filtering && date == "" && medicine != "" && (
+              <h4>
+                <b>Showing All Sales for:</b> {medicine}
+              </h4>
+            )}
+
+            {filtering && date != "" && medicine != "" && (
+              <h4>
+                <b>Showing All Sales for:</b> {} <b> starting from: </b> {date}
+              </h4>
+            )} */}
+
+            {/* {filtering && date != "" && medicine == "" && (
+              <h4>
+                <b>Showing all medicine sales starting from: </b> {date}
+              </h4>
+            )} */}
+
+
+          </Col>
+        
+        </Row>
       </div>
 
       <table className="table" id="medicineResults">
