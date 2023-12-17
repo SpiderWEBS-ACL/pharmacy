@@ -79,38 +79,13 @@ const Register: React.FC = () => {
       const response = await api.post(`/patient/register`, data);
       console.log("Response:", response.data);
       message.success("Congrats, you are in!");
+      navigate(`http://localhost:5173/reglog`);
     } catch (error: any) {
       console.error("Error:", error);
       message.error(`${error.response.data.error}`);
     }
   };
 
-  const handleSignIn = async () => {
-    // Placeholder validation, replace with your actual validation logic
-    if (!Username || !Password) {
-      message.warning("Please Fill In All Fields");
-      return;
-    }
-
-    try {
-      // Your sign-in logic here
-      const data = {
-        Username,
-        Password,
-      };
-      const response = await api.post(`/login`, data);
-      console.log(response.data);
-      localStorage.setItem("id", response.data.id);
-      localStorage.setItem("type", response.data.type);
-      Cookies.set("accessToken", response.data.accessToken);
-
-      handleRedirection(response.data);
-      window.location.reload();
-    } catch (error: any) {
-      console.error("Error:", error);
-      message.error(`${error.response.data.error}`);
-    }
-  };
 
   const handleRegisterPharmacist = () => {
     navigate("/pharmacist/register");
