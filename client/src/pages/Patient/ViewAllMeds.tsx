@@ -78,8 +78,10 @@ const AllMedicines = () => {
     if (response.data && checkIfPrescription(id)) {
       addToCart(id);
     } else if (checkIfPrescription(id) && !response.data) {
-      message.error("You need a prescription for this to add it to the cart!");
+      message.error("This medicine need to be prescribed!");
     } else if (!response.data && !checkIfPrescription(id)) {
+      addToCart(id);
+    } else {
       addToCart(id);
     }
   };
