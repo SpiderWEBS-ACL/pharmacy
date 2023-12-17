@@ -250,14 +250,13 @@ const Register: React.FC = () => {
                   Gender
                 </label>
                 <Form.Item style={{margin: 0}}>
-                  <InputField3
-                    id = "gender"
-                    type = "select"
-                    onChange={setGender}
-                    options={["Male", "Female"]}
-                    value ={Gender}
-                  >
-                  </InputField3>
+                <Select
+                  onChange={(value) => setGender(value)}
+                  placeholder="select your gender"
+                >
+                  <Option value="Male">Male</Option>
+                  <Option value="Female">Female</Option>
+                </Select>
                 </Form.Item>
               </div>
               <div className="mb-3 w-50">
@@ -365,7 +364,7 @@ const Register: React.FC = () => {
             {/* Buttons */}
             <div className="text-center pt-1 mb-1 pb-1">
               <Button
-                className="mb-3 w-100 submit"
+                className="mb-3 w-100"
                 onClick={handleSignUp}
                 type="primary"
               >

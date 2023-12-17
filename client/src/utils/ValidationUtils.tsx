@@ -22,9 +22,7 @@ export const validateMobile = (value: string): boolean => {
 };
 
 export const validateEmail = (value: string): boolean => {
-  if (value != undefined && value!= "") {
-    const emailRegex = /^(?=.*[@])/;
-    return emailRegex.test(value);
-  }
-  return true;
+  if (value == "") return true;
+  const emailRegex = /[^@]+@.+\.\w{2,3}$/;
+  return emailRegex.test(value);
 };
