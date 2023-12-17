@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./style.css";
 import { Link, useNavigate } from "react-router-dom";
-import { Layout, message, Button, Input, Select, DatePicker } from "antd";
+import { Layout, message, Button, Input, Select, DatePicker, Form } from "antd";
 import {
   IoAlertCircle,
   IoCheckmarkDoneCircleSharp,
@@ -19,6 +19,15 @@ import {
   MDBInput,
 } from "mdb-react-ui-kit";
 import dayjs from "dayjs";
+import {
+  validateEmail,
+  validateMobile,
+  validatePassword,
+  validateUsername,
+} from "../utils/ValidationUtils";
+
+import InputField3 from "../components/InputField3";
+
 
 const Register: React.FC = () => {
   const [Name, setName] = useState<string>("");
@@ -127,7 +136,7 @@ const Register: React.FC = () => {
         <MDBCol col="6" className="mb-5">
           {/* Left Column */}
           <div className="d-flex flex-column justify-content-center gradient-custom-2 h-100 mb-4">
-            <img src="/2.png" alt="ren" width="740vh" />
+            <img src="/2.png" alt="ren" width="100%" />
           </div>
         </MDBCol>
         <MDBCol col="6" className="mb-5">
@@ -139,6 +148,7 @@ const Register: React.FC = () => {
             <h3 style={{ alignSelf: "center" }}>Time to feel like home</h3>
             <br />
 
+            <Form>
             {/* Input Fields */}
             <div className="d-flex flex-row flex-wrap">
               <div className="mb-3 w-50 pe-2">
@@ -149,12 +159,15 @@ const Register: React.FC = () => {
                 >
                   Name
                 </label>
-                <Input
-                  id="name"
-                  type="text"
-                  onBlur={() => handleBlur("name")}
-                  onChange={(e) => setName(e.target.value)}
-                />
+                <Form.Item style={{margin: 0}}>
+                  <Input
+                    id="name"
+                    type="text"
+                    onBlur={() => handleBlur("name")}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                </Form.Item>
+                
               </div>
               <div className="mb-3 w-50">
                 <label
@@ -164,28 +177,22 @@ const Register: React.FC = () => {
                 >
                   Email
                 </label>
-                <Input
-                  id="email"
-                  type="email"
-                  onBlur={() => handleBlur("email")}
-                  onChange={(e) => setEmail(e.target.value)}
+                <Form.Item style={{margin: 0}}
+                 >
+                <InputField3
+                    id="email"
+                    label="Email"
+                    type="text"
+                    value={Email}
+                    onChange={setEmail}
+                    onBlur={() => handleBlur("email")}
+                    isValid={validateEmail(Email)}
+                    errorMessage="Invalid Email"
+                    required={true}
                 />
+                </Form.Item>
               </div>
-              <div className="mb-3 w-50 pe-2">
-                <label
-                  htmlFor="password"
-                  className="form-label"
-                  style={{ fontSize: "14px" }}
-                >
-                  Password
-                </label>
-                <Input.Password
-                  id="password"
-                  type="password"
-                  onBlur={() => handleBlur("password")}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
+
               <div className="mb-3 w-50">
                 <label
                   htmlFor="username"
@@ -194,12 +201,45 @@ const Register: React.FC = () => {
                 >
                   Username
                 </label>
-                <Input
-                  id="username"
+                <Form.Item style={{margin: 0}}>
+                <InputField3
+                  id="Username"
+                  label="Username"
                   type="text"
+                  value={Username}
+                  onChange={setUsername}
                   onBlur={() => handleBlur("username")}
-                  onChange={(e) => setUsername(e.target.value)}
+                  isValid={validateUsername(Username)}
+                  errorMessage="Username must be at least 3 characters long."
+                  touched={touchedFields.username}
+                  required={true}
                 />
+                </Form.Item>
+              </div>
+
+              <div className="mb-3 w-50 pe-2">
+                <label
+                  htmlFor="password"
+                  className="form-label"
+                  style={{ fontSize: "14px" }}
+                >
+                  Password
+                </label>
+                <Form.Item style={{margin: 0}} >
+
+                <InputField3
+                  id="Password"
+                  label="Password"
+                  type="password"
+                  value={Password}
+                  onChange={setPassword}
+                  onBlur={() => handleBlur("password")}
+                  isValid={validatePassword(Password)}
+                  errorMessage="Password must be at least 6 characters long and contain at least one uppercase letter, one lowercase letter, and one digit."
+                  touched={touchedFields.password}
+                  required={true}
+                />
+                </Form.Item>
               </div>
               <div className="mb-3 w-50 pe-2">
                 <label
@@ -209,14 +249,16 @@ const Register: React.FC = () => {
                 >
                   Gender
                 </label>
-                <Select
-                  style={{ width: "12.8rem" }}
-                  onChange={(value) => setGender(value)}
-                  placeholder="select your gender"
-                >
-                  <Option value="Male">Male</Option>
-                  <Option value="Female">Female</Option>
-                </Select>
+                <Form.Item style={{margin: 0}}>
+                  <InputField3
+                    id = "gender"
+                    type = "select"
+                    onChange={setGender}
+                    options={["Male", "Female"]}
+                    value ={Gender}
+                  >
+                  </InputField3>
+                </Form.Item>
               </div>
               <div className="mb-3 w-50">
                 <label
@@ -226,6 +268,7 @@ const Register: React.FC = () => {
                 >
                   Date of Birth
                 </label>
+                <Form.Item style={{margin: 0}}>
                 <DatePicker
                   value={Dob ? dayjs(Dob) : undefined}
                   onChange={(date, dateString) => {
@@ -235,6 +278,7 @@ const Register: React.FC = () => {
                   }}
                   style={{ width: "100%" }}
                 />
+                </Form.Item>
               </div>
               <div className="mb-3 w-50 pe-2">
                 <label
@@ -245,11 +289,20 @@ const Register: React.FC = () => {
                   Mobile
                 </label>
 
-                <Input
-                  addonBefore={prefixSelector}
-                  style={{ width: "100%" }}
-                  onChange={(e) => setMobile(e.target.value)}
+                <Form.Item style={{margin: 0}}>
+
+                <InputField3
+                  id="MobileNo"
+                  label="Mobile Number"
+                  type="tel"
+                  value={Mobile !== undefined ? Mobile.toString() : ""}
+                  onChange={setMobile}
+                  isValid={Mobile !== undefined ? validateMobile(Mobile + "") : true}
+                  errorMessage='Invalid Mobile Number! Accepted Format: 0123456789'
+                  touched={true}
+                  required={true}
                 />
+                </Form.Item>
               </div>
               <div className="mb-3 w-50">
                 <label
@@ -259,12 +312,14 @@ const Register: React.FC = () => {
                 >
                   Emergency Contact Name
                 </label>
+                <Form.Item style={{margin: 0}}>
                 <Input
                   id="emergencyContactName"
                   type="text"
                   onBlur={() => handleBlur("emergencyContactName")}
                   onChange={(e) => setEmergencyContactName(e.target.value)}
                 />
+                </Form.Item>
               </div>
               <div className="mb-3 w-50 pe-2">
                 <label
@@ -274,13 +329,19 @@ const Register: React.FC = () => {
                 >
                   Emergency Contact Mobile
                 </label>
-                <Input
-                  addonBefore={prefixSelector}
-                  id="emergencyContactMobile"
-                  type="text"
-                  onBlur={() => handleBlur("emergencyContactMobile")}
-                  onChange={(e) => setEmergencyContactMobile(e.target.value)}
+                <Form.Item style={{margin: 0}}>
+                <InputField3
+                  id="EmergMobileNo"
+                  label="Emergency Contact Mobile Number"
+                  type="tel"
+                  value={EmergencyContactMobile !== undefined ? EmergencyContactMobile.toString() : ""}
+                  onChange={setEmergencyContactMobile}
+                  isValid={EmergencyContactMobile !== undefined ? validateMobile(EmergencyContactMobile + "") : true}
+                  errorMessage='Invalid Mobile Number! Accepted Format: 0123456789'
+                  touched={true}
+                  required={true}
                 />
+                </Form.Item>
               </div>
               <div className="mb-3 w-50">
                 <label
@@ -290,25 +351,28 @@ const Register: React.FC = () => {
                 >
                   Emergency Contact Relation
                 </label>
+                <Form.Item style={{margin: 0}}>
                 <Input
                   id="emergencyContactRelation"
                   type="text"
                   onBlur={() => handleBlur("emergencyContactRelation")}
                   onChange={(e) => setEmergencyContactRelation(e.target.value)}
                 />
+                </Form.Item>
               </div>
             </div>
 
             {/* Buttons */}
             <div className="text-center pt-1 mb-1 pb-1">
               <Button
-                className="mb-3 w-100"
+                className="mb-3 w-100 submit"
                 onClick={handleSignUp}
                 type="primary"
               >
                 Register
               </Button>
             </div>
+            </Form>
 
             <div className="d-flex flex-row align-items-center justify-content-center pb-3 mb-3">
               <p className="mb-0">Pharmacist?</p>

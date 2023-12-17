@@ -13,10 +13,18 @@ export const validatePassword = (value: string): boolean => {
   return passwordRegex.test(value);
 };
 
-export const validateMobile = (value: number | undefined): boolean => {
-  if (value != undefined && value.toString() != "") {
-    const mobileRegex = /^([+]\d{1})?\d{11}$/;
-    return mobileRegex.test(value.toString());
+export const validateMobile = (value: string): boolean => {
+  if (value != undefined && value!= "") {
+    const mobileRegex = /^\d{10}$/;
+    return mobileRegex.test(value);
+  }
+  return true;
+};
+
+export const validateEmail = (value: string): boolean => {
+  if (value != undefined && value!= "") {
+    const emailRegex = /^(?=.*[@])/;
+    return emailRegex.test(value);
   }
   return true;
 };
