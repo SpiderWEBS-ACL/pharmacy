@@ -25,10 +25,10 @@ const RegLog: React.FC = () => {
   const [Username, setUsername] = useState<string>("");
   const [Gender, setGender] = useState<string>();
   const [Dob, setDob] = useState<Date>();
-  const [Mobile, setMobile] = useState<number>();
+  const [Mobile, setMobile] = useState<string>("");
   const [EmergencyContactName, setEmergencyContactName] = useState<string>();
   const [EmergencyContactMobile, setEmergencyContactMobile] =
-    useState<number>();
+    useState<string>("");
   const [EmergencyContactRelation, setEmergencyContactRelation] =
     useState<string>("");
   const [error, setError] = useState<string | null>(null);
