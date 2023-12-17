@@ -554,68 +554,115 @@ const deleteNotifs = async (req, res) => {
 };
 
 const findMedIndex = (medicines, medicineId) => {
-
-  for(let i = 0; i < medicines.length; i++){
-
-    if(medicines[i]._id.toString() == medicineId.toString()){
+  for (let i = 0; i < medicines.length; i++) {
+    if (medicines[i]._id.toString() == medicineId.toString()) {
       return i;
     }
   }
-}
+};
 
 const viewSalesReport = async (req, res) => {
   try {
+    const { month } = req.query;
 
-    const {month} = req.query;
-
-    const startDate = month + "-01"
-    const endDate = month + "-31"
+    const startDate = month + "-01";
+    const endDate = month + "-31";
 
     // Find all orders where the orderDate is within date range
-    const orders = await Orders.find({Date: {$gte: startDate, $lte: endDate}});
+    const orders = await Orders.find({
+      Date: { $gte: startDate, $lte: endDate },
+    });
 
     const medicines = await medicineModel.find().populate("Image");
 
     var salesByMedicine = [{}];
 
-    for(let i = 0; i < medicines.length; i++ ){
-
+    for (let i = 0; i < medicines.length; i++) {
       const medicine = medicines[i];
 
-      const salesPerMed = {"Medicine": medicine, "Sales" : 0};
+      const salesPerMed = { Medicine: medicine, Sales: 0 };
 
       salesByMedicine[i] = salesPerMed;
     }
 
     for (const order of orders) {
-        for (const medicine of order.Medicines) {
+      for (const medicine of order.Medicines) {
+        const medicineIndex = findMedIndex(medicines, medicine.medicine._id);
 
-          const medicineIndex = findMedIndex(medicines, medicine.medicine._id);
-
-          salesByMedicine[medicineIndex].Sales += medicine.quantity;
-        }
+        salesByMedicine[medicineIndex].Sales += medicine.quantity;
+      }
     }
 
     res.status(200).json(salesByMedicine);
-
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
+const filterSalesReport = async (req, res) => {
+  try {
+    
+    const medicineId = req.query.medicineId;
 
-const filterSalesReport = async(req, res) => {
-
-  const medicine = req.query.medicine;
-
-  const date = req.query.date;
-
+    const date = req.query.date;
   
+    var orders;
+  
+    var salesByMedicine = [{}];
+  
+    if(date){
+      orders = await Orders.find({ Date: { $gte: date } });
+    }
+    else{
+      orders = await Orders.find({});
+    }
+  
+    if (medicineId) {
+      const medicine = await medicineModel.findById(medicineId);
+
+      const salesByMed = { Medicine: medicine, Sales: 0 };
+  
+      for (const order of orders) {
+        for (const med of order.Medicines) {
+
+          if (med.medicine._id == medicineId) {
+            salesByMed.Sales += med.quantity;
+          }
+        }
+      }
+  
+      salesByMedicine = [salesByMed];
+    }
+    else{ 
+      const medicines = await medicineModel.find().populate("Image");
+  
+      for (let i = 0; i < medicines.length; i++) {
+        const medicine = medicines[i];
+  
+        const salesPerMed = { Medicine: medicine, Sales: 0 };
+  
+        salesByMedicine[i] = salesPerMed;
+      }
+  
+      for (const order of orders) {
+        for (const medicine of order.Medicines) {
+          const medicineIndex = findMedIndex(medicines, medicine.medicine._id);
+  
+          salesByMedicine[medicineIndex].Sales += medicine.quantity;
+        }
+      }
+    }
+  
+    res.status(200).json(salesByMedicine);
+
+  } catch (error) {
+    res.status(500).json({error: error.message});
+
+  }
+ 
 
 
-
-
-}
+};
 
 //---------------------------------------EXPORTS-----------------------------------------------
 
@@ -643,5 +690,5 @@ module.exports = {
   getUnreadNotifs,
   deleteNotifs,
   viewSalesReport,
+  filterSalesReport,
 };
-

@@ -69,7 +69,10 @@ const SalesReport: React.FC = () => {
         {/* <strong>Your Notifications</strong> */}
       </h2>
 
-      <strong>Sales Month: </strong> <DatePicker onChange={onDateChange} picker="month" />
+      <div style={{ display: "flex", justifyContent: "center" , alignItems: "center"}}>
+        <strong>Sales Month: </strong>
+        <DatePicker onChange={onDateChange} picker="month" style={{marginLeft: 10}}/>
+      </div>
 
      <br />
      <br />
