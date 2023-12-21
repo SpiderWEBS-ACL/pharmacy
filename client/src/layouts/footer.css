@@ -1,0 +1,27 @@
+.footer {
+  background-color: rgb(154, 153, 153);
+  color: #fff;
+  text-align: left;
+  padding: 10px;
+  line-height: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Three equal-width columns */
+  gap: 5px; /* Spacing between columns */
+}
+
+.footer p {
+  margin: 0; /* Remove default margins on paragraphs */
+}
+  .header {
+    background-color: #fff;
+    height: 70px;
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+   
+  }
+  .header img {
+    max-width: 60px;
+    max-height: 60px;
+  }
+  

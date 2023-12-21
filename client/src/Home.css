@@ -1,0 +1,88 @@
+
+  .header{
+    color: black;
+    background-color: rgb(255, 255, 255);
+    font-size: 18px;
+    margin-top: 7px;
+  }
+  .header-buttons {
+    display: flex;
+    gap: 16px;
+    margin-left: auto;
+  }
+  
+  /* Button styles */
+  .header-buttons button {
+    color:rgb(57, 132, 237);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  .home-image{
+    justify-content: center;
+    background-color: white;
+  }
+  .ant-card-cover { 
+    height: auto;
+    object-fit: cover;
+  }
+  .card-container {
+    display: flex;
+    justify-content: space-between;
+    width: 70%;
+    margin: auto auto;
+  }
+  
+  .card-container .ant-card {
+    flex: 1;
+  }
+  
+  
+  /* Styles for the last two cards */
+  .card-container .ant-card:nth-child(3),
+  .card-container .ant-card:nth-child(4) {
+    width: 60%; 
+    margin-bottom: 16px;
+  }
+  .about-company-container{
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+  .about-company {
+    color: white;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    width:70%;
+  }
+  
+  .about-item {
+    width: 48%; 
+    margin-bottom: 16px;
+    padding: 16px;
+    box-sizing: border-box;
+    text-align: left;
+  }
+  
+  .about-item h3 {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+  
+  .about-item p {
+    margin: 0;
+  }
+  
+  .about-item svg {
+    margin-right: 8px;
+  }
+  .gradient-container {
+    
+    background: linear-gradient(to bottom, white, rgb(57, 132, 237)); 
+    height: 250vh; 
+    
+  }
